@@ -1,0 +1,18 @@
+{
+  "name": "cryptoinfobot",
+  "version": "1.0.0",
+  "description": "Telegram bot to receive information about my cryptocurrencies.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Arturo Carretero Calvo",
+  "license": "MIT License",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^9.0.2",
+    "node-telegram-bot-api": "^0.53.0",
+    "pg": "^8.7.1"
+  }
+}
