@@ -243,6 +243,38 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      }
 });
 
+function setAlertForNotifyWallet(chatId, userId, data) {
+     var query = "";
+     var message = "";
+
+     if (data == enabledAlertText) {
+          query = `insert into scheduler (user_id, chatId) values (${userId},'${chatId}');`;
+          message = enabledAlertMessageText;
+     } else if (data == disabledAlertText) {
+          query = `delete from scheduler where user_id = '${userId}';`;
+          message = disabledAlertMessageText;
+     }
+
+     console.log(query);
+     console.log(message);
+
+     queryDatabase(query).then(function (result) {
+          bot.sendMessage(chatId, message);
+     }).catch(function (err) {
+          sendErrorMessageToBot(chatId);
+     });
+};
+
+function deleteCryptoFromDatabase(data) {
+     let deleteQuery = `delete from cryptocurrencies where name = '${data}';`
+
+     queryDatabase(deleteQuery).then(function (result) {
+          bot.sendMessage(chatId, `La criptomoneda ${data} se ha eliminado correctamente de tu cartera.`);
+     }).catch(function (err) {
+          sendErrorMessageToBot(chatId);
+     });
+};
+
 function queryDatabase(query) {
      return new Promise(function (resolve, reject) {
           pool.connect(function(err, client, done) {
@@ -259,35 +291,6 @@ function queryDatabase(query) {
                     });
                }
           });
-     });
-};
-
-function setAlertForNotifyWallet(chatId, userId, data) {
-     var query;
-     var message;
-
-     if (data == enabledAlertText) {
-          query = `insert into scheduler (user_id, chatId) values (${userId},'${chatId}');`;
-          message = enabledAlertMessageText;
-     } else if (data == disabledAlertText) {
-          query = `delete from scheduler where user_id = '${userId}';`;
-          message = disabledAlertMessageText;
-     }
-
-     queryDatabase(query).then(function (result) {
-          bot.sendMessage(chatId, message);
-     }).catch(function (err) {
-          sendErrorMessageToBot(chatId);
-     });
-};
-
-function deleteCryptoFromDatabase(data) {
-     let deleteQuery = `delete from cryptocurrencies where name = '${data}';`
-
-     queryDatabase(deleteQuery).then(function (result) {
-          bot.sendMessage(chatId, `La criptomoneda ${data} se ha eliminado correctamente de tu cartera.`);
-     }).catch(function (err) {
-          sendErrorMessageToBot(chatId);
      });
 };
 
