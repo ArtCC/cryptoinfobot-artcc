@@ -248,7 +248,7 @@ function setAlertForNotifyWallet(chatId, userId, data) {
      var message = "";
 
      if (data == enabledAlertText) {
-          query = `insert into scheduler (user_id, chatId) values (${userId},'${chatId}');`;
+          query = `insert into scheduler (user_id, chatId) values ('${userId}'','${chatId}');`;
           message = enabledAlertMessageText;
      } else if (data == disabledAlertText) {
           query = `delete from scheduler where user_id = '${userId}';`;
