@@ -11,6 +11,7 @@ This bot is anonymous, it does not capture data if it is added to a group and th
 <p>cripto - Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10</p>
 <p>borrar - Puedes elegir que criptomoneda quieres eliminar de tu cartera</p>
 <p>cartera - Te digo tu cartera total de criptomonedas en euros</p>
+<p>alertas - Activar o desactivar notificaciones automáticas</p>
 <p>precio - Dime la criptomoneda para darte su precio actual. Ej: /precio cardano</p>
 
 ## LICENSE

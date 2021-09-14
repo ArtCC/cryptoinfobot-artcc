@@ -21,9 +21,14 @@ const currencyParam = "eur";
 const helloMessage = "\n\nEscribe la barra / para ver en qué te puedo ayudar.\n\nAñade tus criptomonedas y recibe el valor total de tu cartera usando el API de Coingecko.\n\nMás información: https://github.com/ArtCC/cryptoinfobot-artcc";
 const cancelText = "Cancelar";
 const deleteText = "¿Qué criptomoneda quieres eliminar de tu cartera?";
-const noDeleteText = "De acuerdo, no eliminaré ninguna criptomoneda de tu cartera.";
 const infoPriceText = "Puedes consultar el listado de criptomonedas disponibles en https://www.coingecko.com/es";
 const errorText = "¡Vaya! Parece que ha habido un problema con tu solicitud. Inténtalo de nuevo por favor.";
+const alertTitleText = "¿Quieres activar las alertas automáticas del valor de tu cartera? (2 al día)";
+const enabledAlertText = "Activar";
+const disabledAlertText = "Desactivar";
+const noText = "De acuerdo.";
+const enabledAlertMessageText = "He activado las alertas para notificarte el valor de tu cartera dos veces al día de forma automática. (En desarrollo)";
+const disabledAlertMessageText = "He desactivado las alertas. (En desarrollo)";
 
 bot.onText(/^\/start/, (msg) => {
      let chatId = msg.chat.id;
@@ -187,6 +192,26 @@ bot.onText(/^\/cartera/, (msg) => {
      });
 });
 
+bot.onText(/^\/alertas/, (msg) => {
+     let chatId = msg.chat.id;
+
+     var buttonData = [
+          {text: enabledAlertText, callback_data: enabledAlertText},
+          {text: disabledAlertText, callback_data: disabledAlertText},
+          {text: cancelText, callback_data: cancelText}
+     ];
+
+     let buttons = {
+          reply_markup: {
+               inline_keyboard: [
+                    buttonData
+               ]
+          }
+     };
+     
+     bot.sendMessage(chatId, alertTitleText, buttons);
+});
+
 bot.onText(/^\/precio (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
      let crypto = match[1];
@@ -206,17 +231,15 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
 
 bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let chatId = buttonAction.message.chat.id;
+     let userId = buttonAction.from.id;
      let data = buttonAction.data;
-     let selectQuery = `delete from cryptocurrencies where name = '${data}';`
 
-     if (data == cancelText) {
-          bot.sendMessage(chatId, noDeleteText);
+     if (data == enabledAlertText || data == disabledAlertText) {
+          setAlertForNotifyWallet(chatId, userId, data);
+     } else if (data == cancelText) {
+          bot.sendMessage(chatId, noText);
      } else {
-          queryDatabase(selectQuery).then(function (result) {
-               bot.sendMessage(chatId, `La criptomoneda ${data} se ha eliminado correctamente de tu cartera.`);
-          }).catch(function (err) {
-               sendErrorMessageToBot(chatId);
-          });
+          deleteCryptoFromDatabase(data);
      }
 });
 
@@ -236,6 +259,35 @@ function queryDatabase(query) {
                     });
                }
           });
+     });
+};
+
+function setAlertForNotifyWallet(chatId, userId, data) {
+     var query;
+     var message;
+
+     if (data == enabledAlertText) {
+          query = `insert into scheduler (user_id, chatId) values (${userId},'${chatId}');`;
+          message = enabledAlertMessageText;
+     } else if (data == disabledAlertText) {
+          query = `delete from scheduler where user_id = '${userId}';`;
+          message = disabledAlertMessageText;
+     }
+
+     queryDatabase(query).then(function (result) {
+          bot.sendMessage(chatId, message);
+     }).catch(function (err) {
+          sendErrorMessageToBot(chatId);
+     });
+};
+
+function deleteCryptoFromDatabase(data) {
+     let deleteQuery = `delete from cryptocurrencies where name = '${data}';`
+
+     queryDatabase(deleteQuery).then(function (result) {
+          bot.sendMessage(chatId, `La criptomoneda ${data} se ha eliminado correctamente de tu cartera.`);
+     }).catch(function (err) {
+          sendErrorMessageToBot(chatId);
      });
 };
 
