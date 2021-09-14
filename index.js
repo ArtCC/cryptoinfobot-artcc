@@ -112,22 +112,6 @@ bot.onText(/^\/borrar/, (msg) => {
      });
 });
 
-bot.on('callback_query', function onCallbackQuery(buttonAction) {
-     let chatId = buttonAction.message.chat.id;
-     let data = buttonAction.data;
-     let selectQuery = `delete from cryptocurrencies where name = '${data}';`
-
-     if (data == cancelText) {
-          bot.sendMessage(chatId, noDeleteText);
-     } else {
-          queryDatabase(selectQuery).then(function (result) {
-               bot.sendMessage(chatId, `La criptomoneda ${data} se ha eliminado correctamente de tu cartera.`);
-          }).catch(function (err) {
-               sendErrorMessageToBot(chatId);
-          });
-     }
-});
-
 bot.onText(/^\/cartera/, (msg) => {
      let chatId = msg.chat.id;
      let userId = msg.from.id;
@@ -218,6 +202,22 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      })).catch(error => {
           sendErrorMessageToBot(chatId);
      });
+});
+
+bot.on('callback_query', function onCallbackQuery(buttonAction) {
+     let chatId = buttonAction.message.chat.id;
+     let data = buttonAction.data;
+     let selectQuery = `delete from cryptocurrencies where name = '${data}';`
+
+     if (data == cancelText) {
+          bot.sendMessage(chatId, noDeleteText);
+     } else {
+          queryDatabase(selectQuery).then(function (result) {
+               bot.sendMessage(chatId, `La criptomoneda ${data} se ha eliminado correctamente de tu cartera.`);
+          }).catch(function (err) {
+               sendErrorMessageToBot(chatId);
+          });
+     }
 });
 
 function queryDatabase(query) {
