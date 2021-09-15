@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const constants = require('./src/constants')
+const helpers = require('./src/helpers')
 const axios = require('axios');
 const TelegramBot = require("node-telegram-bot-api");
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
@@ -12,28 +14,11 @@ const pool = new Pool({
           rejectUnauthorized: false
      }
 });
-const formatter = new Intl.NumberFormat('de-DE', {
-     minimumFractionDigits: 2,
-     maximumFractionDigits: 8,
-});
-const baseUrl = "https://api.coingecko.com/api/v3";
-const currencyParam = "eur";
-const helloMessage = "\n\nEscribe la barra / para ver en qué te puedo ayudar.\n\nAñade tus criptomonedas y recibe el valor total de tu cartera usando el API de Coingecko.\n\nMás información: https://github.com/ArtCC/cryptoinfobot-artcc";
-const cancelText = "Cancelar";
-const deleteText = "¿Qué criptomoneda quieres eliminar de tu cartera?";
-const infoPriceText = "Puedes consultar el listado de criptomonedas disponibles en https://www.coingecko.com/es";
-const errorText = "¡Vaya! Parece que ha habido un problema con tu solicitud. Inténtalo de nuevo por favor.";
-const alertTitleText = "¿Quieres activar las alertas automáticas del valor de tu cartera?";
-const enabledAlertText = "Activar";
-const disabledAlertText = "Desactivar";
-const noText = "De acuerdo.";
-const enabledAlertMessageText = "He activado las alertas para notificarte el valor de tu cartera de forma automática (09:00h - 21:00h)";
-const disabledAlertMessageText = "He desactivado las alertas.";
 
 bot.onText(/^\/start/, (msg) => {
      let chatId = msg.chat.id;
      let name = msg.from.first_name;
-     let message = `¡Hola ${name}!${helloMessage}`;
+     let message = `¡Hola ${name}!${constants.helloMessageText}`;
 
      bot.sendMessage(chatId, message);
 });
@@ -41,7 +26,7 @@ bot.onText(/^\/start/, (msg) => {
 bot.onText(/^\/hola/, (msg) => {
      let chatId = msg.chat.id;
      let name = msg.from.first_name;
-     let message = `¡Hola ${name}!${helloMessage}`;
+     let message = `¡Hola ${name}!${constants.helloMessageText}`;
 
      bot.sendMessage(chatId, message);
 });
@@ -101,7 +86,7 @@ bot.onText(/^\/borrar/, (msg) => {
                let nameText = capitalizeFirstLetter(name);
                buttonData.push({text: nameText, callback_data: `${name}`});
           });
-          buttonData.push({text: cancelText, callback_data: cancelText});
+          buttonData.push({text: constants.cancelText, callback_data: constants.cancelText});
 
           let buttons = {
                reply_markup: {
@@ -111,7 +96,7 @@ bot.onText(/^\/borrar/, (msg) => {
                }
           }
 
-          bot.sendMessage(chatId, deleteText, buttons);
+          bot.sendMessage(chatId, constants.deleteText, buttons);
      }).catch(function (err) {
           sendErrorMessageToBot(chatId);
      });
@@ -196,9 +181,9 @@ bot.onText(/^\/alertas/, (msg) => {
      let chatId = msg.chat.id;
 
      var buttonData = [
-          {text: enabledAlertText, callback_data: enabledAlertText},
-          {text: disabledAlertText, callback_data: disabledAlertText},
-          {text: cancelText, callback_data: cancelText}
+          {text: constants.enabledAlertText, callback_data: constants.enabledAlertText},
+          {text: constants.disabledAlertText, callback_data: constants.disabledAlertText},
+          {text: constants.cancelText, callback_data: constants.cancelText}
      ];
 
      let buttons = {
@@ -209,19 +194,19 @@ bot.onText(/^\/alertas/, (msg) => {
           }
      };
      
-     bot.sendMessage(chatId, alertTitleText, buttons);
+     bot.sendMessage(chatId, constants.alertTitleText, buttons);
 });
 
 bot.onText(/^\/precio (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
      let crypto = match[1];
 
-     bot.sendMessage(chatId, infoPriceText);
+     bot.sendMessage(chatId, constants.infoPriceText);
 
      axios.all([
-          axios.get(baseUrl + `/simple/price?ids=${crypto}&vs_currencies=${currencyParam}`)
+          axios.get(constants.baseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`)
      ]).then(axios.spread((response) => {
-          let price = response.data[crypto][currencyParam];
+          let price = response.data[crypto][constants.currencyParam];
 
           bot.sendMessage(chatId, `El precio actual del ${crypto} es ${formatter.format(price)} €`);
      })).catch(error => {
@@ -235,10 +220,10 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let name = buttonAction.from.first_name;
      let data = buttonAction.data;
 
-     if (data == enabledAlertText || data == disabledAlertText) {
+     if (data == constants.enabledAlertText || data == constants.disabledAlertText) {
           setAlertForNotifyWallet(chatId, userId, name, data);
      } else if (data == cancelText) {
-          bot.sendMessage(chatId, noText);
+          bot.sendMessage(chatId, constants.noText);
      } else {
           deleteCryptoFromDatabase(data);
      }
@@ -248,12 +233,12 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
      var query = "";
      var message = "";
 
-     if (data == enabledAlertText) {
+     if (data == constants.enabledAlertText) {
           query = `insert into scheduler (user_id, name, chat_id) values ('${userId}','${name}','${chatId}');`;
-          message = enabledAlertMessageText;
-     } else if (data == disabledAlertText) {
+          message = constants.enabledAlertMessageText;
+     } else if (data == constants.disabledAlertText) {
           query = `delete from scheduler where user_id = '${userId}';`;
-          message = disabledAlertMessageText;
+          message = constants.disabledAlertMessageText;
      }
 
      queryDatabase(query).then(function (result) {
@@ -302,11 +287,7 @@ function sendMessageToBot(chatId, message, parseMode) {
 };
 
 function sendErrorMessageToBot(chatId) {
-     bot.sendMessage(chatId, errorText);
-};
-
-function capitalizeFirstLetter(string) {
-     return string.charAt(0).toUpperCase() + string.slice(1);
+     bot.sendMessage(chatId, constants.errorText);
 };
 
 /**

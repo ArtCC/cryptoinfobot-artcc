@@ -1,7 +1,6 @@
-// const app = require('./index');
+/**const app = require('./index');
 
 function sendTotalWallet() {
-    /**
     let selectSchedulerQuery = `select * from scheduler`;
 
     app.queryDatabase(selectSchedulerQuery).then(function (result) {
@@ -85,7 +84,7 @@ function sendTotalWallet() {
        }
     }).catch(function (err) {
         console.log(err);
-    });*/
+    });
 };
 
-sendTotalWallet();
+sendTotalWallet();*/
