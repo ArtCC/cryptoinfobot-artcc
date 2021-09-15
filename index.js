@@ -128,7 +128,7 @@ bot.onText(/^\/cartera/, (msg) => {
           
           var urls = [];
           cryptoNames.forEach(name => {
-               urls.push(axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${name}&vs_currencies=${currencyParam}`));
+               urls.push(axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${name}&vs_currencies=${constants.currencyParam}`));
           });
 
           var collection = [];
@@ -139,7 +139,7 @@ bot.onText(/^\/cartera/, (msg) => {
                               let currency = {
                                    name: crypto.name,
                                    alias: crypto.alias,
-                                   price: data.data[crypto.name][currencyParam]
+                                   price: data.data[crypto.name][constants.currencyParam]
                               };
                               collection.push(currency);
                          }
@@ -152,7 +152,7 @@ bot.onText(/^\/cartera/, (msg) => {
                     collection.forEach(currency => {
                          if (crypto.name == currency.name) {
                               let priceAmount = crypto.amount * currency.price;
-                              let message = `<b>${currency.alias} (${currency.price} €):</b> Cantidad: ${formatter.format(crypto.amount)} - Total: ${formatter.format(priceAmount)} €\n`;
+                              let message = `<b>${currency.alias} (${currency.price} €):</b> Cantidad: ${helpers.formatter.format(crypto.amount)} - Total: ${helpers.formatter.format(priceAmount)} €\n`;
                               
                               messages.push(message);
                               
@@ -165,7 +165,7 @@ bot.onText(/^\/cartera/, (msg) => {
                messages.forEach(text => {
                     finalMessage += text;
                });
-               let total = `\n<b>Total en cartera: </b><i> ${formatter.format(totalWallet)} €</i>\n`;
+               let total = `\n<b>Total en cartera: </b><i> ${helpers.formatter.format(totalWallet)} €</i>\n`;
                finalMessage += total;
 
                sendMessageToBot(chatId, finalMessage, "HTML");
@@ -208,7 +208,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      ]).then(axios.spread((response) => {
           let price = response.data[crypto][constants.currencyParam];
 
-          bot.sendMessage(chatId, `El precio actual del ${crypto} es ${formatter.format(price)} €`);
+          bot.sendMessage(chatId, `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €`);
      })).catch(error => {
           sendErrorMessageToBot(chatId);
      });
