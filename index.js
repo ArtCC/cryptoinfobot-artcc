@@ -27,8 +27,8 @@ const alertTitleText = "¿Quieres activar las alertas automáticas del valor de 
 const enabledAlertText = "Activar";
 const disabledAlertText = "Desactivar";
 const noText = "De acuerdo.";
-const enabledAlertMessageText = "He activado las alertas para notificarte el valor de tu cartera dos veces al día de forma automática. (En desarrollo)";
-const disabledAlertMessageText = "He desactivado las alertas. (En desarrollo)";
+const enabledAlertMessageText = "He activado las alertas para notificarte el valor de tu cartera de forma automática (09:00h - 21:00h)";
+const disabledAlertMessageText = "He desactivado las alertas.";
 
 bot.onText(/^\/start/, (msg) => {
      let chatId = msg.chat.id;

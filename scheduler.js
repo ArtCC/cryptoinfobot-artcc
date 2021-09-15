@@ -1,10 +1,26 @@
-const index = require('./index');
+const app = require('./index');
 
 function sendTotalWallet() {
-    let selectQuery = `select * from scheduler`;
+    let selectSchedulerQuery = `select * from scheduler`;
 
-    queryDatabase(selectQuery).then(function (result) {
-        console.log(result);
+    app.pool.queryDatabase(selectSchedulerQuery).then(function (result) {
+        for (let row of result.rows) {
+            let json = JSON.stringify(row);
+            let obj = JSON.parse(json);
+            let scheduler = {
+                 userId: obj.user_id,
+                 name: obj.name,
+                 chatId: obj.chat_id
+            };
+            
+            let selectCryptocurrenciesQuery = `select * from cryptocurrencies where user_id = ${scheduler.userId};`
+
+            app.pool.queryDatabase(selectCryptocurrenciesQuery).then(function (result) {
+                console.log(result);
+            }).catch(function (err) {
+                console.log(err);
+            });
+       }
     }).catch(function (err) {
         console.log(err);
     });
