@@ -13,8 +13,8 @@ function sendTotalWallet() {
                  name: obj.name,
                  chatId: obj.chat_id
             };
-            console.log(scheduler);
-            // main.getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
+            
+            main.getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
        }
    }).catch(function (err) {
        console.log(`sendTotalWallet: ${err}`);
