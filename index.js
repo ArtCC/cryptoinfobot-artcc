@@ -219,7 +219,7 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      } else if (data == constants.cancelText) {
           bot.sendMessage(chatId, constants.noText);
      } else {
-          deleteCryptoFromDatabase(data);
+          deleteCryptoFromDatabase(data, chatId);
      }
 });
 
@@ -242,7 +242,7 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
      });
 };
 
-function deleteCryptoFromDatabase(data) {
+function deleteCryptoFromDatabase(data, chatId) {
      let deleteQuery = `delete from cryptocurrencies where name = '${data}';`
 
      crud.queryDatabase(deleteQuery).then(function (result) {
