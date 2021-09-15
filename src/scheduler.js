@@ -1,3 +1,4 @@
+/**
 const crud = require('./crud');
 const main = require('../index');
 
@@ -21,4 +22,4 @@ function sendTotalWallet() {
    });
 };
 
-sendTotalWallet();
+sendTotalWallet();*/
