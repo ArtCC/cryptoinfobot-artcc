@@ -1,8 +1,8 @@
-const schedule = require('node-schedule');
+function sayToHello() {
+    console.log("Hello World!");
+};
 
-schedule.scheduleJob('*/3 * * * *', () => {
-    console.log("Hello world!");
-});
+sayToHello();
 
 /**
 const crud = require('./crud');
