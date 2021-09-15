@@ -100,6 +100,63 @@ bot.onText(/^\/cartera/, (msg) => {
      let chatId = msg.chat.id;
      let userId = msg.from.id;
      let name = msg.from.first_name;
+
+     getInfoWallet(chatId, userId, name);
+});
+
+bot.onText(/^\/alertas/, (msg) => {
+     let chatId = msg.chat.id;
+
+     var buttonData = [
+          {text: constants.enabledAlertText, callback_data: constants.enabledAlertText},
+          {text: constants.disabledAlertText, callback_data: constants.disabledAlertText},
+          {text: constants.cancelText, callback_data: constants.cancelText}
+     ];
+
+     let buttons = {
+          reply_markup: {
+               inline_keyboard: [
+                    buttonData
+               ]
+          }
+     };
+     
+     bot.sendMessage(chatId, constants.alertTitleText, buttons);
+});
+
+bot.onText(/^\/precio (.+)/, (msg, match) => {
+     let chatId = msg.chat.id;
+     let crypto = match[1];
+
+     bot.sendMessage(chatId, constants.infoPriceText);
+
+     axios.all([
+          axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`)
+     ]).then(axios.spread((response) => {
+          let price = response.data[crypto][constants.currencyParam];
+
+          bot.sendMessage(chatId, `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €`);
+     })).catch(error => {
+          sendErrorMessageToBot(chatId);
+     });
+});
+
+bot.on('callback_query', function onCallbackQuery(buttonAction) {
+     let chatId = buttonAction.message.chat.id;
+     let userId = buttonAction.from.id;
+     let name = buttonAction.from.first_name;
+     let data = buttonAction.data;
+
+     if (data == constants.enabledAlertText || data == constants.disabledAlertText) {
+          setAlertForNotifyWallet(chatId, userId, name, data);
+     } else if (data == constants.cancelText) {
+          bot.sendMessage(chatId, constants.noText);
+     } else {
+          deleteCryptoFromDatabase(data, chatId);
+     }
+});
+
+function getInfoWallet(chatId, userId, name) {
      let selectQuery = `select * from cryptocurrencies where user_id = ${userId};`
 
      var cryptoCurrencies = [];
@@ -169,59 +226,7 @@ bot.onText(/^\/cartera/, (msg) => {
      }).catch(function (err) {
           sendErrorMessageToBot(chatId);
      });
-});
-
-bot.onText(/^\/alertas/, (msg) => {
-     let chatId = msg.chat.id;
-
-     var buttonData = [
-          {text: constants.enabledAlertText, callback_data: constants.enabledAlertText},
-          {text: constants.disabledAlertText, callback_data: constants.disabledAlertText},
-          {text: constants.cancelText, callback_data: constants.cancelText}
-     ];
-
-     let buttons = {
-          reply_markup: {
-               inline_keyboard: [
-                    buttonData
-               ]
-          }
-     };
-     
-     bot.sendMessage(chatId, constants.alertTitleText, buttons);
-});
-
-bot.onText(/^\/precio (.+)/, (msg, match) => {
-     let chatId = msg.chat.id;
-     let crypto = match[1];
-
-     bot.sendMessage(chatId, constants.infoPriceText);
-
-     axios.all([
-          axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`)
-     ]).then(axios.spread((response) => {
-          let price = response.data[crypto][constants.currencyParam];
-
-          bot.sendMessage(chatId, `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €`);
-     })).catch(error => {
-          sendErrorMessageToBot(chatId);
-     });
-});
-
-bot.on('callback_query', function onCallbackQuery(buttonAction) {
-     let chatId = buttonAction.message.chat.id;
-     let userId = buttonAction.from.id;
-     let name = buttonAction.from.first_name;
-     let data = buttonAction.data;
-
-     if (data == constants.enabledAlertText || data == constants.disabledAlertText) {
-          setAlertForNotifyWallet(chatId, userId, name, data);
-     } else if (data == constants.cancelText) {
-          bot.sendMessage(chatId, constants.noText);
-     } else {
-          deleteCryptoFromDatabase(data, chatId);
-     }
-});
+};
 
 function setAlertForNotifyWallet(chatId, userId, name, data) {
      var query = "";
@@ -264,3 +269,5 @@ function sendMessageToBot(chatId, message, parseMode) {
 function sendErrorMessageToBot(chatId) {
      bot.sendMessage(chatId, constants.errorText);
 };
+
+module.exports.getInfoWallet = getInfoWallet;
