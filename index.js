@@ -309,6 +309,7 @@ function capitalizeFirstLetter(string) {
      return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+/**
 module.exports.axios = axios;
 module.exports.bot = bot;
 module.exports.pool = pool;
@@ -317,4 +318,4 @@ module.exports.currencyParam = currencyParam;
 module.exports.formatter = formatter;
 module.exports.queryDatabase = queryDatabase;
 module.exports.sendMessageToBot = sendMessageToBot;
-module.exports.sendErrorMessageToBot = sendErrorMessageToBot;
+module.exports.sendErrorMessageToBot = sendErrorMessageToBot;*/
