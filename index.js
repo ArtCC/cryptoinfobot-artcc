@@ -232,10 +232,11 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
 bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let chatId = buttonAction.message.chat.id;
      let userId = buttonAction.from.id;
+     let name = buttonAction.from.first_name;
      let data = buttonAction.data;
 
      if (data == enabledAlertText || data == disabledAlertText) {
-          setAlertForNotifyWallet(chatId, userId, data);
+          setAlertForNotifyWallet(chatId, userId, name, data);
      } else if (data == cancelText) {
           bot.sendMessage(chatId, noText);
      } else {
@@ -243,12 +244,12 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      }
 });
 
-function setAlertForNotifyWallet(chatId, userId, data) {
+function setAlertForNotifyWallet(chatId, userId, name, data) {
      var query = "";
      var message = "";
 
      if (data == enabledAlertText) {
-          query = `insert into scheduler (user_id, chat_id) values ('${userId}','${chatId}');`;
+          query = `insert into scheduler (user_id, name, chat_id) values ('${userId}','${name}','${chatId}');`;
           message = enabledAlertMessageText;
      } else if (data == disabledAlertText) {
           query = `delete from scheduler where user_id = '${userId}';`;
@@ -307,3 +308,6 @@ function sendErrorMessageToBot(chatId) {
 function capitalizeFirstLetter(string) {
      return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+module.exports.bot = bot;
+module.exports.pool = pool;
