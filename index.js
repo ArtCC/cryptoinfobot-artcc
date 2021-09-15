@@ -128,7 +128,7 @@ bot.onText(/^\/cartera/, (msg) => {
           
           var urls = [];
           cryptoNames.forEach(name => {
-               urls.push(axios.get(baseUrl + `/simple/price?ids=${name}&vs_currencies=${currencyParam}`));
+               urls.push(axios.get(constants.baseUrl + `/simple/price?ids=${name}&vs_currencies=${currencyParam}`));
           });
 
           var collection = [];
