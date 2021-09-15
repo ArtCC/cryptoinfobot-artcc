@@ -198,7 +198,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      bot.sendMessage(chatId, constants.infoPriceText);
 
      axios.all([
-          axios.get(constants.baseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`)
+          axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`)
      ]).then(axios.spread((response) => {
           let price = response.data[crypto][constants.currencyParam];
 
