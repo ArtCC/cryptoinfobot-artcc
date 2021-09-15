@@ -21,4 +21,3 @@ function sendTotalWallet() {
 };
 
 sendTotalWallet();
-process.exit();
