@@ -1,6 +1,6 @@
 const schedule = require('node-schedule');
 
-schedule.scheduleJob('*/15 * * * *', () => {
+schedule.scheduleJob('*/3 * * * *', () => {
     console.log("Hello world!");
 });
 
