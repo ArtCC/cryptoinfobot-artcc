@@ -23,7 +23,7 @@ const cancelText = "Cancelar";
 const deleteText = "¿Qué criptomoneda quieres eliminar de tu cartera?";
 const infoPriceText = "Puedes consultar el listado de criptomonedas disponibles en https://www.coingecko.com/es";
 const errorText = "¡Vaya! Parece que ha habido un problema con tu solicitud. Inténtalo de nuevo por favor.";
-const alertTitleText = "¿Quieres activar las alertas automáticas del valor de tu cartera? (2 al día)";
+const alertTitleText = "¿Quieres activar las alertas automáticas del valor de tu cartera?";
 const enabledAlertText = "Activar";
 const disabledAlertText = "Desactivar";
 const noText = "De acuerdo.";
@@ -309,5 +309,11 @@ function capitalizeFirstLetter(string) {
      return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+module.exports.axios = axios;
 module.exports.bot = bot;
 module.exports.pool = pool;
+module.exports.baseUrl = baseUrl;
+module.exports.currencyParam = currencyParam;
+module.exports.formatter = formatter;
+module.exports.sendMessageToBot = sendMessageToBot;
+module.exports.sendErrorMessageToBot = sendErrorMessageToBot;
