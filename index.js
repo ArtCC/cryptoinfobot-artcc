@@ -84,7 +84,7 @@ bot.onText(/^\/borrar/, (msg) => {
           var buttonData = []
           cryptoNames.forEach(name => {
                let nameText = helpers.capitalizeFirstLetter(name);
-               buttonData.push({text: constants.nameText, callback_data: `${name}`});
+               buttonData.push({text: nameText, callback_data: `${name}`});
           });
           buttonData.push({text: constants.cancelText, callback_data: constants.cancelText});
 
