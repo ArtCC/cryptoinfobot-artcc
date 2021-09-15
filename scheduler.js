@@ -31,7 +31,7 @@ function sendTotalWallet() {
                     cryptoNames.push(currency.name);
                 }
                
-                bot.sendMessage(scheduler.chatId, `Este es el total en euros de tu cartera de criptomonedas ${scheduler.name}\n\n`);
+                app.bot.sendMessage(scheduler.chatId, `Este es el total en euros de tu cartera de criptomonedas ${scheduler.name}\n\n`);
                
                 var urls = [];
                 cryptoNames.forEach(name => {
