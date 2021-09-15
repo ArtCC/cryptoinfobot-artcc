@@ -1,10 +1,3 @@
-function sayToHello() {
-    console.log("Hello World!");
-};
-
-sayToHello();
-
-/**
 const crud = require('./crud');
 const main = require('../index');
 
@@ -23,9 +16,11 @@ function sendTotalWallet() {
             
             main.getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
        }
+
+       main.bot.close();
    }).catch(function (err) {
        console.log(`sendTotalWallet: ${err}`);
    });
 };
 
-sendTotalWallet();*/
+sendTotalWallet();
