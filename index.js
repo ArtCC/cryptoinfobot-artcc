@@ -1,18 +1,12 @@
 require("dotenv").config();
 
-const constants = require('./src/constants')
-const helpers = require('./src/helpers')
+const constants = require('./src/constants');
+const crud = require('./src/crud');
+const helpers = require('./src/helpers');
 const axios = require('axios');
 const TelegramBot = require("node-telegram-bot-api");
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
      polling: true
-});
-const { Pool } = require('pg');
-const pool = new Pool({
-     connectionString: process.env.DATABASE_URL,
-     ssl: {
-          rejectUnauthorized: false
-     }
 });
 
 bot.onText(/^\/start/, (msg) => {
@@ -41,9 +35,9 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
      let updateQuery = `update cryptocurrencies set amount = ${amountCrypto} where user_id = ${userId} and name = '${nameCrypto}' and alias = '${aliasCrypto}';`
      let insertQuery = `insert into cryptocurrencies (user_id, name, alias, amount) values (${userId},'${nameCrypto}','${aliasCrypto}',${amountCrypto});`;
 
-     queryDatabase(updateQuery).then(function (result) {
+     crud.queryDatabase(updateQuery).then(function (result) {
           if (result.rowCount == 0) {
-               queryDatabase(insertQuery).then(function (result) {
+               crud.queryDatabase(insertQuery).then(function (result) {
                     bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
                }).catch(function (err) {
                     sendErrorMessageToBot(chatId);
@@ -52,7 +46,7 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
                bot.sendMessage(chatId, `Has actualizado el valor de ${nameCrypto} correctamente en tu cartera.`);
           }
      }).catch(function (err) {
-          queryDatabase(insertQuery).then(function (result) {
+          crud.queryDatabase(insertQuery).then(function (result) {
                bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
           }).catch(function (err) {
                sendErrorMessageToBot(chatId);
@@ -68,7 +62,7 @@ bot.onText(/^\/borrar/, (msg) => {
      var cryptoCurrencies = [];
      var cryptoNames = [];
 
-     queryDatabase(selectQuery).then(function (result) {          
+     crud.queryDatabase(selectQuery).then(function (result) {          
           for (let row of result.rows) {
                let json = JSON.stringify(row);
                let obj = JSON.parse(json);
@@ -111,7 +105,7 @@ bot.onText(/^\/cartera/, (msg) => {
      var cryptoCurrencies = [];
      var cryptoNames = [];
 
-     queryDatabase(selectQuery).then(function (result) {
+     crud.queryDatabase(selectQuery).then(function (result) {
           for (let row of result.rows) {
                let json = JSON.stringify(row);
                let obj = JSON.parse(json);
@@ -222,7 +216,7 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 
      if (data == constants.enabledAlertText || data == constants.disabledAlertText) {
           setAlertForNotifyWallet(chatId, userId, name, data);
-     } else if (data == cancelText) {
+     } else if (data == constants.cancelText) {
           bot.sendMessage(chatId, constants.noText);
      } else {
           deleteCryptoFromDatabase(data);
@@ -241,7 +235,7 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
           message = constants.disabledAlertMessageText;
      }
 
-     queryDatabase(query).then(function (result) {
+     crud.queryDatabase(query).then(function (result) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
           sendErrorMessageToBot(chatId);
@@ -251,29 +245,10 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
 function deleteCryptoFromDatabase(data) {
      let deleteQuery = `delete from cryptocurrencies where name = '${data}';`
 
-     queryDatabase(deleteQuery).then(function (result) {
+     crud.queryDatabase(deleteQuery).then(function (result) {
           bot.sendMessage(chatId, `La criptomoneda ${data} se ha eliminado correctamente de tu cartera.`);
      }).catch(function (err) {
           sendErrorMessageToBot(chatId);
-     });
-};
-
-function queryDatabase(query) {
-     return new Promise(function (resolve, reject) {
-          pool.connect(function(err, client, done) {
-               if (err) {
-                    reject(err);
-               } else {
-                    client.query(query, function(error, result) {
-                         done();
-                         if (error) {
-                              reject(error);
-                         } else {
-                              resolve(result);
-                         }
-                    });
-               }
-          });
      });
 };
 
@@ -289,14 +264,3 @@ function sendMessageToBot(chatId, message, parseMode) {
 function sendErrorMessageToBot(chatId) {
      bot.sendMessage(chatId, constants.errorText);
 };
-
-/**
-module.exports.axios = axios;
-module.exports.bot = bot;
-module.exports.pool = pool;
-module.exports.baseUrl = baseUrl;
-module.exports.currencyParam = currencyParam;
-module.exports.formatter = formatter;
-module.exports.queryDatabase = queryDatabase;
-module.exports.sendMessageToBot = sendMessageToBot;
-module.exports.sendErrorMessageToBot = sendErrorMessageToBot;*/
