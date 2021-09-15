@@ -1,3 +1,9 @@
+const schedule = require('node-schedule');
+
+schedule.scheduleJob('*/15 * * * *', () => {
+    console.log("Hello world!");
+});
+
 /**
 const crud = require('./crud');
 const main = require('../index');
