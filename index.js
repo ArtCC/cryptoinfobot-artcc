@@ -271,4 +271,3 @@ function sendErrorMessageToBot(chatId) {
 };
 
 module.exports.getInfoWallet = getInfoWallet;
-module.exports.bot = bot;

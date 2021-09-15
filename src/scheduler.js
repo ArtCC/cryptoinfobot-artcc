@@ -17,7 +17,7 @@ function sendTotalWallet() {
             main.getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
        }
 
-       main.bot.close();
+       process.exit();
    }).catch(function (err) {
        console.log(`sendTotalWallet: ${err}`);
    });
