@@ -315,5 +315,6 @@ module.exports.pool = pool;
 module.exports.baseUrl = baseUrl;
 module.exports.currencyParam = currencyParam;
 module.exports.formatter = formatter;
+module.exports.queryDatabase = queryDatabase;
 module.exports.sendMessageToBot = sendMessageToBot;
 module.exports.sendErrorMessageToBot = sendErrorMessageToBot;
