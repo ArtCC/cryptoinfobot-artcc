@@ -1,4 +1,4 @@
-const crud = require('./crud');
+/**const crud = require('./crud');
 const main = require('../index');
 
 function sendTotalWallet() {
@@ -16,11 +16,9 @@ function sendTotalWallet() {
             
             main.getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
        }
-
-       process.exit();
    }).catch(function (err) {
        console.log(`sendTotalWallet: ${err}`);
    });
 };
 
-sendTotalWallet();
+sendTotalWallet();*/
