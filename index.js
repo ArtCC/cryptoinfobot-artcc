@@ -10,9 +10,8 @@ const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
      polling: true
 });
 
+/**
 cron.schedule('* * * * *', () => {
-     console.log('Running a task every minute.');
-
      let selectQuery = "select * from scheduler;";
      
      crud.queryDatabase(selectQuery).then(function (result) {
@@ -30,7 +29,7 @@ cron.schedule('* * * * *', () => {
      }).catch(function (err) {
           console.log(`selectQuery: ${err}`);
      });
-});
+}); */
 
 bot.onText(/^\/start/, (msg) => {
      let chatId = msg.chat.id;
