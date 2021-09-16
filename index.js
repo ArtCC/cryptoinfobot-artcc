@@ -281,8 +281,8 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
                sendErrorMessageToBot(chatId);
           });
      } else if (data == constants.disabledAlertText) {     
-          query = `delete from scheduler where user_id = '${userId}';`;
-          message = constants.disabledAlertMessageText; 
+          query = `delete from scheduler where user_id = '${userId}' and chat_id = ${chatId};`;
+          message = constants.disabledAlertMessageText;
           
           crud.queryDatabase(query).then(function (result) {
                bot.sendMessage(chatId, message);
