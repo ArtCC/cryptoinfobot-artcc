@@ -234,7 +234,7 @@ function getInfoWallet(chatId, userId, name) {
                     });
                });
                
-               var finalMessage = `Este es el total en euros de tu cartera de criptomonedas ${name}\n\n`;
+               var finalMessage = `Este es el total en euros de tu cartera de criptomonedas <b>${name}</b>:\n\n`;
                messages.forEach(text => {
                     finalMessage += text;
                });
