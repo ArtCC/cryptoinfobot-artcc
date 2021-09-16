@@ -11,6 +11,9 @@ const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
 });
 
 /**
+ * Scheduler function for send total wallet to user with alerts enabled.
+ */
+/**
 cron.schedule('* * * * *', () => {
      let selectQuery = "select * from scheduler;";
      
@@ -29,8 +32,18 @@ cron.schedule('* * * * *', () => {
      }).catch(function (err) {
           console.log(`selectQuery: ${err}`);
      });
-}); */
+});*/
 
+cron.schedule('20 22 * * *', () => {
+     console.log('Running a job at 01:00 at America/Sao_Paulo timezone');
+}, {
+     scheduled: true,
+     timezone: "Europe/Madrid"
+});
+
+/**
+ * Telegram bot functions.
+ */
 bot.onText(/^\/start/, (msg) => {
      let chatId = msg.chat.id;
      let name = msg.from.first_name;
@@ -178,6 +191,9 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      }
 });
 
+/**
+ * Helper functions.
+ */
 function getInfoWallet(chatId, userId, name) {
      let selectQuery = `select * from cryptocurrencies where user_id = ${userId};`
 
@@ -196,9 +212,7 @@ function getInfoWallet(chatId, userId, name) {
                cryptoCurrencies.push(currency);
                cryptoNames.push(currency.name);
           }
-          
-          bot.sendMessage(chatId, `Este es el total en euros de tu cartera de criptomonedas ${name}\n\n`);
-          
+                    
           var urls = [];
           cryptoNames.forEach(name => {
                urls.push(axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${name}&vs_currencies=${constants.currencyParam}`));
@@ -234,7 +248,7 @@ function getInfoWallet(chatId, userId, name) {
                     });
                });
                
-               var finalMessage = "";
+               var finalMessage = `Este es el total en euros de tu cartera de criptomonedas ${name}\n\n`;
                messages.forEach(text => {
                     finalMessage += text;
                });
