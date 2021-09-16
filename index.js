@@ -163,18 +163,25 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 /**
  * Scheduler function for send total wallet to user with alerts enabled.
  */
- cron.schedule('0 9 * * *', () => {
+cron.schedule('0 8 * * *', () => {
      sendTotalWalletAlerts();
 }, {
      scheduled: true,
-     timezone: "Europe/Madrid"
+     timezone: constants.timezone
 });
 
-cron.schedule('0 21 * * *', () => {
+cron.schedule('0 15 * * *', () => {
      sendTotalWalletAlerts();
 }, {
      scheduled: true,
-     timezone: "Europe/Madrid"
+     timezone: constants.timezone
+});
+
+cron.schedule('0 22 * * *', () => {
+     sendTotalWalletAlerts();
+}, {
+     scheduled: true,
+     timezone: constants.timezone
 });
 
 /**
@@ -255,18 +262,34 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
      var message = "";
 
      if (data == constants.enabledAlertText) {
-          query = `insert into scheduler (user_id, name, chat_id) values ('${userId}','${name}','${chatId}');`;
-          message = constants.enabledAlertMessageText;
-     } else if (data == constants.disabledAlertText) {
-          query = `delete from scheduler where user_id = '${userId}';`;
-          message = constants.disabledAlertMessageText;
-     }
+          let selectQuery = `select * from scheduler where user_id = ${userId} and chat_id = ${chatId};`;
+          
+          crud.queryDatabase(selectQuery).then(function (result) {
+               if (result.rowCount > 0) {
+                    bot.sendMessage(chatId, constants.statusEnabledAlertText);
+               } else {
+                    query = `insert into scheduler (user_id, name, chat_id) values ('${userId}','${name}','${chatId}');`;
+                    message = constants.enabledAlertMessageText;
 
-     crud.queryDatabase(query).then(function (result) {
-          bot.sendMessage(chatId, message);
-     }).catch(function (err) {
-          sendErrorMessageToBot(chatId);
-     });
+                    crud.queryDatabase(query).then(function (result) {
+                         bot.sendMessage(chatId, message);
+                    }).catch(function (err) {
+                         sendErrorMessageToBot(chatId);
+                    });
+               }
+          }).catch(function (err) {
+               sendErrorMessageToBot(chatId);
+          });
+     } else if (data == constants.disabledAlertText) {     
+          query = `delete from scheduler where user_id = '${userId}';`;
+          message = constants.disabledAlertMessageText; 
+          
+          crud.queryDatabase(query).then(function (result) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               sendErrorMessageToBot(chatId);
+          });
+     }
 };
 
 function deleteCryptoFromDatabase(data, chatId) {

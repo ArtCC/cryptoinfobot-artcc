@@ -1,4 +1,5 @@
 module.exports = {
+    timezone : "Europe/Madrid",
     coingeckoBaseUrl : "https://api.coingecko.com/api/v3",
     currencyParam : "eur",
     helloMessageText : "\n\nEscribe la barra / para ver en qué te puedo ayudar.\n\nAñade tus criptomonedas y recibe el valor total de tu cartera usando el API de Coingecko.\n\nMás información: https://github.com/ArtCC/cryptoinfobot-artcc",
@@ -10,6 +11,7 @@ module.exports = {
     enabledAlertText : "Activar",
     disabledAlertText : "Desactivar",
     noText : "De acuerdo.",
-    enabledAlertMessageText : "He activado las alertas para notificarte el valor de tu cartera de forma automática (09:00h - 21:00h)",
-    disabledAlertMessageText : "He desactivado las alertas."
+    enabledAlertMessageText : "He activado las alertas para notificarte el valor de tu cartera de forma automática (08h - 15h - 21h)",
+    disabledAlertMessageText : "He desactivado las alertas.",
+    statusEnabledAlertText : "Ya tienes activadas las alertas en este chat."
 };
