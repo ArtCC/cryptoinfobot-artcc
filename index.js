@@ -4,9 +4,14 @@ const constants = require('./src/constants');
 const crud = require('./src/crud');
 const helpers = require('./src/helpers');
 const axios = require('axios');
+const cron = require('node-cron');
 const TelegramBot = require("node-telegram-bot-api");
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
      polling: true
+});
+
+cron.schedule('* * * * *', () => {
+     console.log('running a task every minute');
 });
 
 bot.onText(/^\/start/, (msg) => {
@@ -269,5 +274,3 @@ function sendMessageToBot(chatId, message, parseMode) {
 function sendErrorMessageToBot(chatId) {
      bot.sendMessage(chatId, constants.errorText);
 };
-
-// module.exports.getInfoWallet = getInfoWallet;
