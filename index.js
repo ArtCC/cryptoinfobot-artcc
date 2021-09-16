@@ -11,37 +11,6 @@ const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
 });
 
 /**
- * Scheduler function for send total wallet to user with alerts enabled.
- */
-/**
-cron.schedule('* * * * *', () => {
-     let selectQuery = "select * from scheduler;";
-     
-     crud.queryDatabase(selectQuery).then(function (result) {
-          for (let row of result.rows) {
-               let json = JSON.stringify(row);
-               let obj = JSON.parse(json);
-               let scheduler = {
-                    userId: obj.user_id,
-                    name: obj.name,
-                    chatId: obj.chat_id
-               };
-               
-               getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
-          }
-     }).catch(function (err) {
-          console.log(`selectQuery: ${err}`);
-     });
-});*/
-
-cron.schedule('20 22 * * *', () => {
-     console.log('Running a job at 01:00 at America/Sao_Paulo timezone');
-}, {
-     scheduled: true,
-     timezone: "Europe/Madrid"
-});
-
-/**
  * Telegram bot functions.
  */
 bot.onText(/^\/start/, (msg) => {
@@ -192,6 +161,23 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 });
 
 /**
+ * Scheduler function for send total wallet to user with alerts enabled.
+ */
+ cron.schedule('0 9 * * *', () => {
+     sendTotalWalletAlerts();
+}, {
+     scheduled: true,
+     timezone: "Europe/Madrid"
+});
+
+cron.schedule('0 21 * * *', () => {
+     sendTotalWalletAlerts();
+}, {
+     scheduled: true,
+     timezone: "Europe/Madrid"
+});
+
+/**
  * Helper functions.
  */
 function getInfoWallet(chatId, userId, name) {
@@ -290,6 +276,26 @@ function deleteCryptoFromDatabase(data, chatId) {
           bot.sendMessage(chatId, `La criptomoneda ${data} se ha eliminado correctamente de tu cartera.`);
      }).catch(function (err) {
           sendErrorMessageToBot(chatId);
+     });
+};
+
+function sendTotalWalletAlerts() {
+     let selectQuery = "select * from scheduler;";
+     
+     crud.queryDatabase(selectQuery).then(function (result) {
+          for (let row of result.rows) {
+               let json = JSON.stringify(row);
+               let obj = JSON.parse(json);
+               let scheduler = {
+                    userId: obj.user_id,
+                    name: obj.name,
+                    chatId: obj.chat_id
+               };
+               
+               getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
+          }
+     }).catch(function (err) {
+          console.log(`selectQuery: ${err}`);
      });
 };
 
