@@ -60,18 +60,24 @@ bot.onText(/^\/alertas/, (msg) => {
      crud.queryDatabase(selectQuery).then(function (result) {
           var message = `${name}, estas son tus alertas de precios para todas las criptomonedas:\n\n`;
 
-          for (let row of result.rows) {
-               let json = JSON.stringify(row);
-               let obj = JSON.parse(json);
-               let alert = {
-                    userId: obj.user_id,
-                    name: obj.name,
-                    chatId: obj.chat_id,
-                    crypto: obj.crypto,
-                    price: obj.price
-               };
-               
-               message += `${helpers.capitalizeFirstLetter(alert.crypto)}: >${helpers.formatter.format(price)} €.\n`;
+          if (result.rowCount > 0) {
+               for (let row of result.rows) {
+                    let json = JSON.stringify(row);
+                    let obj = JSON.parse(json);
+                    let alert = {
+                         userId: obj.user_id,
+                         name: obj.name,
+                         chatId: obj.chat_id,
+                         crypto: obj.crypto,
+                         price: obj.price
+                    };
+                    
+                    message += `${helpers.capitalizeFirstLetter(alert.crypto)}: >${helpers.formatter.format(price)} €.\n`;
+               }
+
+               bot.sendMessage(chatId, message);
+          } else {
+               bot.sendMessage(chatId, constants.emptyAlertText);
           }
      }).catch(function (err) {
      });
