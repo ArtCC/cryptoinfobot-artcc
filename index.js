@@ -166,7 +166,7 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 /**
  * Scheduler function for send total wallet to user with alerts enabled.
  */
-cron.schedule('5 * * * *', () => {
+cron.schedule('* * * * *', () => {
      console.log("cron every 5 minutes for alert crypto prices");
 });
 
