@@ -350,7 +350,7 @@ function getInfoWallet(chatId, userId, name) {
 
                var totalWallet = 0;
                var messages = [];
-               collection.sortBy('name');
+               collection.sort();
                cryptoCurrencies.forEach(crypto => {
                     collection.forEach(currency => {
                          if (crypto.name == currency.name) {
