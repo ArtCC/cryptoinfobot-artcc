@@ -241,12 +241,12 @@ cron.schedule('* * * * *', () => {
                     if (price >= alert.price) {
                          let message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos.`;
 
-                         bot.sendMessage(chatId, message);
+                         bot.sendMessage(alert.chatId, message);
 
                          let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and crypto = '${alert.nameCrypto}';`
                          
                          crud.queryDatabase(deleteQuery).then(function (result) {
-                              bot.sendMessage(chatId, constants.disabledAlertText);
+                              bot.sendMessage(alert.chatId, constants.disabledAlertText);
                          }).catch(function (err) {
                               sendErrorMessageToBot(chatId);
                          });
