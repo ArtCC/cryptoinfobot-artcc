@@ -167,7 +167,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      ]).then(axios.spread((response) => {
           let price = response.data[crypto][constants.currencyParam];
 
-          message += `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.`;
+          message += `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.\n\n`;
 
           bot.sendMessage(chatId, message);
      })).catch(error => {
@@ -213,6 +213,8 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
  * Scheduler function for send total wallet to user with alerts enabled.
  */
 cron.schedule('* * * * *', () => {
+     console.log("cron every 1 minute ok.");
+
      let selectQuery = "select * from alerts;";
      
      crud.queryDatabase(selectQuery).then(function (result) {
@@ -226,11 +228,16 @@ cron.schedule('* * * * *', () => {
                     crypto: obj.crypto,
                     price: obj.price
                };
+
+               console.log(alert);
                
                axios.all([
                     axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${alert.crypto}&vs_currencies=${constants.currencyParam}`)
                ]).then(axios.spread((response) => {
                     let price = response.data[crypto][constants.currencyParam];
+
+                    console.log(price);
+                    console.log(alert.price);
                     
                     if (price >= alert.price) {
                          let message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos.`;
@@ -244,6 +251,8 @@ cron.schedule('* * * * *', () => {
                          }).catch(function (err) {
                               sendErrorMessageToBot(chatId);
                          });
+                    } else {
+                         console.log("El precio no supera la alerta.");
                     }
                })).catch(error => {
                });
