@@ -233,7 +233,7 @@ cron.schedule('* * * * *', () => {
                axios.all([
                     axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${alert.crypto}&vs_currencies=${constants.currencyParam}`)
                ]).then(axios.spread((response) => {
-                    let price = response.data[crypto][constants.currencyParam];
+                    let price = response.data[alert.crypto][constants.currencyParam];
 
                     console.log(price);
                     console.log(alert.price);
