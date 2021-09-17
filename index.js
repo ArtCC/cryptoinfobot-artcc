@@ -350,7 +350,6 @@ function getInfoWallet(chatId, userId, name) {
 
                var totalWallet = 0;
                var messages = [];
-               collection.sort();
                cryptoCurrencies.forEach(crypto => {
                     collection.forEach(currency => {
                          if (crypto.name == currency.name) {
@@ -365,6 +364,7 @@ function getInfoWallet(chatId, userId, name) {
                });
                
                var finalMessage = `Este es el total en euros de tu cartera de criptomonedas <b>${name}</b>:\n\n`;
+               messages.sort();
                messages.forEach(text => {
                     finalMessage += text;
                });
