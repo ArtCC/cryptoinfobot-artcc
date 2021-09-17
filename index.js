@@ -185,7 +185,7 @@ function sendInfo(chatId, name) {
 
      bot.getMyCommands().then(function (info) {
           for (let obj of info) {
-               message += `/${obj.command} - ${obj.description}`;
+               message += `/${obj.command} - ${obj.description}\n`;
           }
 
           bot.sendMessage(chatId, message);
