@@ -181,12 +181,14 @@ bot.onText(/^\/start/, (msg) => {
 });
 
 function sendInfo(chatId, name) {
-     let message = `¡Hola ${name}!${constants.helloMessageText}`;
-
-     bot.sendMessage(chatId, message);
+     var message = `¡Hola ${name}!${constants.helloMessageText}`;
 
      bot.getMyCommands().then(function (info) {
-          console.log(info);
+          for (let obj of info) {
+               message += `/${obj.command} - ${obj.description}`;
+          }
+
+          bot.sendMessage(chatId, message);
      });
 };
 
