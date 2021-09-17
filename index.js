@@ -232,7 +232,7 @@ cron.schedule('* * * * *', () => {
                     let price = response.data[alert.crypto][constants.currencyParam];
                     
                     if (price >= alert.price) {
-                         var message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos.\n`;
+                         var message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos. `;
 
                          let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
                          
