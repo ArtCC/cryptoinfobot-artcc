@@ -219,7 +219,7 @@ cron.schedule('* * * * *', () => {
                let json = JSON.stringify(row);
                let obj = JSON.parse(json);
                let alert = {
-                    identifier = obj.id,
+                    id = obj.id,
                     userId: obj.user_id,
                     name: obj.name,
                     chatId: obj.chat_id,
@@ -235,7 +235,7 @@ cron.schedule('* * * * *', () => {
                     if (price >= alert.price) {
                          var message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos.\n`;
 
-                         let deleteQuery = `delete from alerts where id = ${alert.identifier};`
+                         let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
                          
                          crud.queryDatabase(deleteQuery).then(function (result) {
                               message += constants.disabledAlertText;
