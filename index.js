@@ -72,7 +72,7 @@ bot.onText(/^\/alertas/, (msg) => {
                          price: obj.price
                     };
                     
-                    message += `${helpers.capitalizeFirstLetter(alert.crypto)}: >${helpers.formatter.format(price)} €.\n`;
+                    message += `${helpers.capitalizeFirstLetter(alert.crypto)}: >${helpers.formatter.format(alert.price)} €.\n`;
                }
 
                bot.sendMessage(chatId, message);
