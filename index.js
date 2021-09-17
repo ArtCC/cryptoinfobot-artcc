@@ -60,6 +60,7 @@ bot.onText(/^\/alertas/, (msg) => {
      crud.queryDatabase(selectQuery).then(function (result) {
           var message = `${name}, actualmente tienes añadidas las siguientes alertas de precios:\n\n`;
 
+          var dataMessage = [];
           if (result.rowCount > 0) {
                for (let row of result.rows) {
                     let json = JSON.stringify(row);
@@ -71,9 +72,14 @@ bot.onText(/^\/alertas/, (msg) => {
                          crypto: obj.crypto,
                          price: obj.price
                     };
-                    
-                    message += `${helpers.capitalizeFirstLetter(alert.crypto)}: ${helpers.formatter.format(alert.price)} €.\n`;
+
+                    dataMessage.push(`${helpers.capitalizeFirstLetter(alert.crypto)}: ${helpers.formatter.format(alert.price)} €.\n`);
                }
+
+               dataMessage.sort();
+               dataMessage.forEach((text) => {
+                    message += text
+               });
 
                bot.sendMessage(chatId, message);
           } else {
