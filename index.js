@@ -13,49 +13,7 @@ const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
 /**
  * Telegram bot functions.
  */
-bot.onText(/^\/start/, (msg) => {
-     let chatId = msg.chat.id;
-     let name = msg.from.first_name;
-     let message = `¡Hola ${name}!${constants.helloMessageText}`;
-
-     bot.sendMessage(chatId, message);
-});
-
-bot.onText(/^\/hola/, (msg) => {
-     let chatId = msg.chat.id;
-     let name = msg.from.first_name;
-     let message = `¡Hola ${name}!${constants.helloMessageText}`;
-
-     bot.sendMessage(chatId, message);
-});
-
-bot.onText(/^\/cripto (.+)/, (msg, match) => {
-     let chatId = msg.chat.id;
-     let userId = msg.from.id;
-     let data = match[1].split(" ");
-     let nameCrypto = data[0];
-     let aliasCrypto = data[1];
-     let amountCrypto = data[2];
-     let updateQuery = `update cryptocurrencies set amount = ${amountCrypto} where user_id = ${userId} and name = '${nameCrypto}' and alias = '${aliasCrypto}';`
-     let insertQuery = `insert into cryptocurrencies (user_id, name, alias, amount) values (${userId},'${nameCrypto}','${aliasCrypto}',${amountCrypto});`;
-
-     crud.queryDatabase(updateQuery).then(function (result) {
-          if (result.rowCount == 0) {
-               crud.queryDatabase(insertQuery).then(function (result) {
-                    bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
-               }).catch(function (err) {
-                    sendErrorMessageToBot(chatId);
-               });
-          } else {
-               bot.sendMessage(chatId, `Has actualizado el valor de ${nameCrypto} correctamente en tu cartera.`);
-          }
-     }).catch(function (err) {
-          crud.queryDatabase(insertQuery).then(function (result) {
-               bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
-          }).catch(function (err) {
-               sendErrorMessageToBot(chatId);
-          });
-     });
+bot.onText(/^\/alerta (.+)/, (msg, match) => {
 });
 
 bot.onText(/^\/borrar/, (msg) => {
@@ -108,6 +66,43 @@ bot.onText(/^\/cartera/, (msg) => {
      getInfoWallet(chatId, userId, name);
 });
 
+bot.onText(/^\/cripto (.+)/, (msg, match) => {
+     let chatId = msg.chat.id;
+     let userId = msg.from.id;
+     let data = match[1].split(" ");
+     let nameCrypto = data[0];
+     let aliasCrypto = data[1];
+     let amountCrypto = data[2];
+     let updateQuery = `update cryptocurrencies set amount = ${amountCrypto} where user_id = ${userId} and name = '${nameCrypto}' and alias = '${aliasCrypto}';`
+     let insertQuery = `insert into cryptocurrencies (user_id, name, alias, amount) values (${userId},'${nameCrypto}','${aliasCrypto}',${amountCrypto});`;
+
+     crud.queryDatabase(updateQuery).then(function (result) {
+          if (result.rowCount == 0) {
+               crud.queryDatabase(insertQuery).then(function (result) {
+                    bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
+               }).catch(function (err) {
+                    sendErrorMessageToBot(chatId);
+               });
+          } else {
+               bot.sendMessage(chatId, `Has actualizado el valor de ${nameCrypto} correctamente en tu cartera.`);
+          }
+     }).catch(function (err) {
+          crud.queryDatabase(insertQuery).then(function (result) {
+               bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
+          }).catch(function (err) {
+               sendErrorMessageToBot(chatId);
+          });
+     });
+});
+
+bot.onText(/^\/hola/, (msg) => {
+     let chatId = msg.chat.id;
+     let name = msg.from.first_name;
+     let message = `¡Hola ${name}!${constants.helloMessageText}`;
+
+     bot.sendMessage(chatId, message);
+});
+
 bot.onText(/^\/notificaciones/, (msg) => {
      let chatId = msg.chat.id;
 
@@ -145,6 +140,14 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      });
 });
 
+bot.onText(/^\/start/, (msg) => {
+     let chatId = msg.chat.id;
+     let name = msg.from.first_name;
+     let message = `¡Hola ${name}!${constants.helloMessageText}`;
+
+     bot.sendMessage(chatId, message);
+});
+
 bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let chatId = buttonAction.message.chat.id;
      let userId = buttonAction.from.id;
@@ -163,6 +166,10 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 /**
  * Scheduler function for send total wallet to user with alerts enabled.
  */
+cron.schedule('5 * * * *', () => {
+     console.log("cron every 5 minutes for alert crypto prices");
+});
+
 cron.schedule('0 8 * * *', () => {
      sendTotalWalletAlerts();
 }, {

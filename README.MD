@@ -7,6 +7,7 @@ This bot is anonymous, it does not capture data if it is added to a group and th
 <p><strong>Commands in Spanish language to use the bot:</p></strong>
 
 <p>hola - Te saludo amablemente por tu nombre y te doy información sobre mí</p>
+<p>alerta - Activa una alerta de precios para una criptomoneda. Ej: /alerta ethereum 3500</p>
 <p>borrar - Puedes borrar una criptomoneda de tu cartera</p>
 <p>cartera - Te digo el valor total de tu cartera de criptomonedas en euros</p>
 <p>cripto - Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10</p>
@@ -31,6 +32,16 @@ CREATE TABLE SCHEDULER(
    USER_ID INT NOT NULL,
    NAME TEXT NOT NULL,
    CHAT_ID INT NOT NULL
+);
+```
+
+```
+CREATE TABLE ALERTS(
+   ID SERIAL PRIMARY KEY NOT NULL,
+   USER_ID INT NOT NULL,
+   CHAT_ID INT NOT NULL,
+   CRYPTO TEXT NOT NULL,
+   PRICE DOUBLE PRECISION NOT NULL
 );
 ```
 
