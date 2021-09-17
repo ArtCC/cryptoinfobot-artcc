@@ -212,8 +212,6 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
  * Scheduler function for send total wallet to user with alerts enabled.
  */
 cron.schedule('* * * * *', () => {
-     console.log("cron every 1 minute ok.");
-
      let selectQuery = "select * from alerts;";
      
      crud.queryDatabase(selectQuery).then(function (result) {
@@ -221,6 +219,7 @@ cron.schedule('* * * * *', () => {
                let json = JSON.stringify(row);
                let obj = JSON.parse(json);
                let alert = {
+                    id = obj.id,
                     userId: obj.user_id,
                     name: obj.name,
                     chatId: obj.chat_id,
@@ -228,33 +227,25 @@ cron.schedule('* * * * *', () => {
                     price: obj.price
                };
 
-               console.log(alert);
-               
                axios.all([
                     axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${alert.crypto}&vs_currencies=${constants.currencyParam}`)
                ]).then(axios.spread((response) => {
                     let price = response.data[alert.crypto][constants.currencyParam];
-
-                    console.log(price);
-                    console.log(alert.price);
                     
                     if (price >= alert.price) {
-                         let message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos.`;
+                         var message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos.\n`;
 
-                         bot.sendMessage(alert.chatId, message);
-
-                         let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and crypto = '${alert.nameCrypto}';`
+                         let deleteQuery = `delete from alerts where id = ${alert.id};`
                          
                          crud.queryDatabase(deleteQuery).then(function (result) {
-                              bot.sendMessage(alert.chatId, constants.disabledAlertText);
+                              message += constants.disabledAlertText;
+
+                              bot.sendMessage(alert.chatId, message);
                          }).catch(function (err) {
                               sendErrorMessageToBot(chatId);
                          });
-                    } else {
-                         console.log("El precio no supera la alerta.");
                     }
                })).catch(error => {
-                    console.log(error);
                });
           }
      }).catch(function (err) {
