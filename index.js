@@ -22,7 +22,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let priceCrypto = data[1];
 
      if (priceCrypto == "0") {
-          let deleteQuery = `delete from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = ${nameCrypto};`
+          let deleteQuery = `delete from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${nameCrypto}';`
           
           crud.queryDatabase(deleteQuery).then(function (result) {
                bot.sendMessage(chatId, constants.disabledAlertText);
@@ -31,7 +31,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
                sendErrorMessageToBot(chatId);
           });
      } else {
-          let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = ${nameCrypto} and price = ${priceCrypto};`
+          let selectQuery = `select * from alerts where user_id = '${userId}' and chat_id = ${chatId} and crypto = '${nameCrypto}' and price = ${priceCrypto};`
           
           crud.queryDatabase(selectQuery).then(function (result) {
                if (result.rowCount > 0) {
