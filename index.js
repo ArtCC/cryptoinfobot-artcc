@@ -14,6 +14,40 @@ const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
  * Telegram bot functions.
  */
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
+     let chatId = msg.chat.id;
+     let userId = msg.from.id;
+     let name = msg.from.first_name;
+     let data = match[1].split(" ");
+     let nameCrypto = data[0];
+     let priceCrypto = data[1];
+
+     if (priceCrypto == "0") {
+          let deleteQuery = `delete from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = ${nameCrypto};`
+          
+          crud.queryDatabase(deleteQuery).then(function (result) {
+               bot.sendMessage(chatId, constants.disabledAlertText);
+          }).catch(function (err) {
+               sendErrorMessageToBot(chatId);
+          });
+     } else {
+          let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = ${nameCrypto} and price = ${priceCrypto};`
+          
+          crud.queryDatabase(selectQuery).then(function (result) {
+               if (result.rowCount > 0) {
+                    bot.sendMessage(chatId, constants.statusEnabledAlertText);
+               } else {
+                    let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},${name},'${chatId}','${nameCrypto}',${priceCrypto});`;
+                    
+                    crud.queryDatabase(insertQuery).then(function (result) {
+                         bot.sendMessage(chatId, constants.enabledAlertText);
+                    }).catch(function (err) {
+                         sendErrorMessageToBot(chatId);
+                    });
+               }
+          }).catch(function (err) {
+               sendErrorMessageToBot(chatId);
+          });
+     }
 });
 
 bot.onText(/^\/borrar/, (msg) => {
@@ -98,17 +132,16 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
 bot.onText(/^\/hola/, (msg) => {
      let chatId = msg.chat.id;
      let name = msg.from.first_name;
-     let message = `¡Hola ${name}!${constants.helloMessageText}`;
-
-     bot.sendMessage(chatId, message);
+     
+     sendInfo(chatId, name);
 });
 
 bot.onText(/^\/notificaciones/, (msg) => {
      let chatId = msg.chat.id;
 
      var buttonData = [
-          {text: constants.enabledAlertText, callback_data: constants.enabledAlertText},
-          {text: constants.disabledAlertText, callback_data: constants.disabledAlertText},
+          {text: constants.enabledNotificationsText, callback_data: constants.enabledNotificationsText},
+          {text: constants.disabledNotificationsText, callback_data: constants.disabledNotificationsText},
           {text: constants.cancelText, callback_data: constants.cancelText}
      ];
 
@@ -120,7 +153,7 @@ bot.onText(/^\/notificaciones/, (msg) => {
           }
      };
      
-     bot.sendMessage(chatId, constants.alertTitleText, buttons);
+     bot.sendMessage(chatId, constants.notificationsTitleText, buttons);
 });
 
 bot.onText(/^\/precio (.+)/, (msg, match) => {
@@ -134,7 +167,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      ]).then(axios.spread((response) => {
           let price = response.data[crypto][constants.currencyParam];
 
-          bot.sendMessage(chatId, `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €`);
+          bot.sendMessage(chatId, `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.`);
      })).catch(error => {
           sendErrorMessageToBot(chatId);
      });
@@ -143,10 +176,19 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
 bot.onText(/^\/start/, (msg) => {
      let chatId = msg.chat.id;
      let name = msg.from.first_name;
+
+     sendInfo(chatId, name);
+});
+
+function sendInfo(chatId, name) {
      let message = `¡Hola ${name}!${constants.helloMessageText}`;
 
      bot.sendMessage(chatId, message);
-});
+
+     bot.getMyCommands().then(function (info) {
+          console.log(info);
+     });
+};
 
 bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let chatId = buttonAction.message.chat.id;
@@ -154,7 +196,7 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let name = buttonAction.from.first_name;
      let data = buttonAction.data;
 
-     if (data == constants.enabledAlertText || data == constants.disabledAlertText) {
+     if (data == constants.enabledNotificationsText || data == constants.disabledNotificationsText) {
           setAlertForNotifyWallet(chatId, userId, name, data);
      } else if (data == constants.cancelText) {
           bot.sendMessage(chatId, constants.noText);
@@ -167,7 +209,22 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
  * Scheduler function for send total wallet to user with alerts enabled.
  */
 cron.schedule('* * * * *', () => {
-     // console.log("cron every 1 minutes for alert crypto prices");
+     let selectQuery = "select * from alerts;";
+     
+     crud.queryDatabase(selectQuery).then(function (result) {
+          for (let row of result.rows) {
+               let json = JSON.stringify(row);
+               let obj = JSON.parse(json);
+               let alert = {
+                    userId: obj.user_id,
+                    name: obj.name,
+                    chatId: obj.chat_id,
+                    crypto: obj.crypto,
+                    price: obj.price
+               };
+          }
+     }).catch(function (err) {
+     });
 });
 
 cron.schedule('0 8 * * *', () => {
@@ -268,15 +325,15 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
      var query = "";
      var message = "";
 
-     if (data == constants.enabledAlertText) {
+     if (data == constants.enabledNotificationsText) {
           let selectQuery = `select * from scheduler where user_id = ${userId} and chat_id = ${chatId};`;
           
           crud.queryDatabase(selectQuery).then(function (result) {
                if (result.rowCount > 0) {
-                    bot.sendMessage(chatId, constants.statusEnabledAlertText);
+                    bot.sendMessage(chatId, constants.statusEnabledNotificationsText);
                } else {
                     query = `insert into scheduler (user_id, name, chat_id) values ('${userId}','${name}','${chatId}');`;
-                    message = constants.enabledAlertMessageText;
+                    message = constants.enabledNotificationsMessageText;
 
                     crud.queryDatabase(query).then(function (result) {
                          bot.sendMessage(chatId, message);
@@ -287,9 +344,9 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
           }).catch(function (err) {
                sendErrorMessageToBot(chatId);
           });
-     } else if (data == constants.disabledAlertText) {     
+     } else if (data == constants.disabledNotificationsText) {     
           query = `delete from scheduler where user_id = '${userId}' and chat_id = ${chatId};`;
-          message = constants.disabledAlertMessageText;
+          message = constants.disabledNotificationsMessageText;
           
           crud.queryDatabase(query).then(function (result) {
                bot.sendMessage(chatId, message);
@@ -325,7 +382,6 @@ function sendTotalWalletAlerts() {
                getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
           }
      }).catch(function (err) {
-          console.log(`selectQuery: ${err}`);
      });
 };
 

@@ -7,11 +7,14 @@ module.exports = {
     deleteText : "¿Qué criptomoneda quieres borrar de tu cartera?",
     infoPriceText : "Puedes consultar el listado de criptomonedas disponibles en https://www.coingecko.com/es",
     errorText : "¡Vaya! Parece que ha habido un problema con tu solicitud. Inténtalo de nuevo por favor.",
-    alertTitleText : "¿Quieres activar las notificaciones automáticas del valor de tu cartera?",
-    enabledAlertText : "Activar",
-    disabledAlertText : "Desactivar",
-    noText : "De acuerdo.",
-    enabledAlertMessageText : "He activado las notificaciones para darte el valor de tu cartera de forma automática (08h - 15h - 21h)",
-    disabledAlertMessageText : "He desactivado las notificaciones.",
-    statusEnabledAlertText : "Ya tienes activadas las notificaciones en este chat."
+    notificationsTitleText : "¿Quieres activar las notificaciones automáticas del valor de tu cartera?",
+    enabledNotificationsText : "Activar",
+    disabledNotificationsText : "Desactivar",
+    enabledNotificationsMessageText : "He activado las notificaciones para darte el valor de tu cartera de forma automática (08h - 15h - 21h).",
+    disabledNotificationsMessageText : "He desactivado las notificaciones.",
+    statusEnabledNotificationsText : "Ya tienes activadas las notificaciones en este chat.",
+    statusEnabledAlertText : "Ya tienes activadas las alertas de precio para esta criptomoneda en este chat.",
+    enabledAlertText : "He activado la alerta correctamente.",
+    disabledAlertText : "He borrado la alerta correctamente.",
+    noText : "De acuerdo."
 };
