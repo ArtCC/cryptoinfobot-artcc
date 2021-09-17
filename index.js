@@ -105,6 +105,7 @@ bot.onText(/^\/borrar/, (msg) => {
           }
 
           var buttonData = []
+          cryptoNames.sort();
           cryptoNames.forEach(name => {
                let nameText = helpers.capitalizeFirstLetter(name);
                buttonData.push({text: nameText, callback_data: `${name}`});
@@ -237,7 +238,7 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      } else if (data == constants.cancelText) {
           bot.sendMessage(chatId, constants.noText);
      } else {
-          deleteCryptoFromDatabase(data, chatId);
+          deleteCryptoFromDatabase(data, chatId, userId);
      }
 });
 
@@ -349,6 +350,7 @@ function getInfoWallet(chatId, userId, name) {
 
                var totalWallet = 0;
                var messages = [];
+               collection.sortBy('name');
                cryptoCurrencies.forEach(crypto => {
                     collection.forEach(currency => {
                          if (crypto.name == currency.name) {
@@ -413,8 +415,8 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
      }
 };
 
-function deleteCryptoFromDatabase(data, chatId) {
-     let deleteQuery = `delete from cryptocurrencies where name = '${data}';`
+function deleteCryptoFromDatabase(data, chatId, userId) {
+     let deleteQuery = `delete from cryptocurrencies where name = '${data}' and user_id = ${userId};`
 
      crud.queryDatabase(deleteQuery).then(function (result) {
           bot.sendMessage(chatId, `La criptomoneda ${data} se ha borrado correctamente de tu cartera.`);
