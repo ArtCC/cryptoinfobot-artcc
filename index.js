@@ -237,7 +237,7 @@ cron.schedule('*/5 * * * *', () => {
                          let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
                          
                          crud.queryDatabase(deleteQuery).then(function (result) {
-                              message += constants.disabledAlertText;
+                              message += `He borrado la alerta para ${alert.crypto} de ${helpers.formatter.format(alert.price)} € correctamente.`;
 
                               bot.sendMessage(alert.chatId, message);
                          }).catch(function (err) {
