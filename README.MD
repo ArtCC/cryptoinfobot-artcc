@@ -6,13 +6,33 @@ This bot is anonymous, it does not capture data if it is added to a group and th
 
 <p><strong>Commands in Spanish language to use the bot:</p></strong>
 
-<p>start - Te muestro información básica</p>
-<p>hola - Te saludo amablemente por tu nombre</p>
+<p>hola - Te saludo amablemente por tu nombre y te doy información sobre mí</p>
+<p>borrar - Puedes borrar una criptomoneda de tu cartera</p>
+<p>cartera - Te digo el valor total de tu cartera de criptomonedas en euros</p>
 <p>cripto - Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10</p>
-<p>borrar - Puedes elegir que criptomoneda quieres eliminar de tu cartera</p>
-<p>cartera - Te digo tu cartera total de criptomonedas en euros</p>
-<p>alertas - Activar o desactivar notificaciones automáticas</p>
-<p>precio - Dime la criptomoneda para darte su precio actual. Ej: /precio cardano</p>
+<p>notificaciones - Puedes activar o desactivar notificaciones automáticas del valor de tu cartera</p>
+<p>precio - Dime una criptomoneda para darte su precio actual. Ej: /precio cardano</p>
+
+### Database in Heroku Postgres:
+
+```
+CREATE TABLE CRYPTOCURRENCIES(
+   ID SERIAL PRIMARY KEY NOT NULL,
+   USER_ID INT NOT NULL,
+   NAME TEXT NOT NULL,
+   ALIAS TEXT NOT NULL,
+   AMOUNT DOUBLE PRECISION NOT NULL
+);
+```
+
+```
+CREATE TABLE SCHEDULER(
+   ID SERIAL PRIMARY KEY NOT NULL,
+   USER_ID INT NOT NULL,
+   NAME TEXT NOT NULL,
+   CHAT_ID INT NOT NULL
+);
+```
 
 ## LICENSE
 

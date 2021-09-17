@@ -108,7 +108,7 @@ bot.onText(/^\/cartera/, (msg) => {
      getInfoWallet(chatId, userId, name);
 });
 
-bot.onText(/^\/alertas/, (msg) => {
+bot.onText(/^\/notificaciones/, (msg) => {
      let chatId = msg.chat.id;
 
      var buttonData = [
@@ -296,7 +296,7 @@ function deleteCryptoFromDatabase(data, chatId) {
      let deleteQuery = `delete from cryptocurrencies where name = '${data}';`
 
      crud.queryDatabase(deleteQuery).then(function (result) {
-          bot.sendMessage(chatId, `La criptomoneda ${data} se ha eliminado correctamente de tu cartera.`);
+          bot.sendMessage(chatId, `La criptomoneda ${data} se ha borrado correctamente de tu cartera.`);
      }).catch(function (err) {
           sendErrorMessageToBot(chatId);
      });
