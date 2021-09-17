@@ -8,6 +8,7 @@ This bot is anonymous, it does not capture data if it is added to a group and th
 
 <p>hola - Te saludo amablemente por tu nombre y te doy información sobre mí</p>
 <p>alerta - Activa una alerta de precios para una criptomoneda (Para borrar enviar el precio 0. Ej: /alerta ethereum 3500</p>
+<p>alertas - Te muestro todas las alertas de precios que tienes añadidas</p>
 <p>borrar - Puedes borrar una criptomoneda de tu cartera</p>
 <p>cartera - Te digo el valor total de tu cartera de criptomonedas en euros</p>
 <p>cripto - Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10</p>
