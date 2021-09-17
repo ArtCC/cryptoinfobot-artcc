@@ -160,14 +160,13 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
      let crypto = match[1];
 
-     var message = constants.infoPriceText;
-
      axios.all([
           axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`)
      ]).then(axios.spread((response) => {
           let price = response.data[crypto][constants.currencyParam];
 
-          message += `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.\n\n`;
+          var message = `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.\n\n`;
+          message += constants.infoPriceText;
 
           bot.sendMessage(chatId, message);
      })).catch(error => {
@@ -255,6 +254,7 @@ cron.schedule('* * * * *', () => {
                          console.log("El precio no supera la alerta.");
                     }
                })).catch(error => {
+                    console.log(error);
                });
           }
      }).catch(function (err) {
