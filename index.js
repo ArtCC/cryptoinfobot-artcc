@@ -27,6 +27,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
           crud.queryDatabase(deleteQuery).then(function (result) {
                bot.sendMessage(chatId, constants.disabledAlertText);
           }).catch(function (err) {
+               console("Error 1");
                sendErrorMessageToBot(chatId);
           });
      } else {
@@ -41,10 +42,12 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
                     crud.queryDatabase(insertQuery).then(function (result) {
                          bot.sendMessage(chatId, constants.enabledAlertText);
                     }).catch(function (err) {
+                         console("Error 2");
                          sendErrorMessageToBot(chatId);
                     });
                }
           }).catch(function (err) {
+               console("Error 3");
                sendErrorMessageToBot(chatId);
           });
      }
