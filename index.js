@@ -80,7 +80,6 @@ bot.onText(/^\/alertas/, (msg) => {
                bot.sendMessage(chatId, constants.emptyAlertText);
           }
      }).catch(function (err) {
-          console.log(err);
      });
 });
 
