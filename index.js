@@ -30,7 +30,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
                sendErrorMessageToBot(chatId);
           });
      } else {
-          let selectQuery = `select * from alerts where user_id = '${userId}' and chat_id = ${chatId} and crypto = '${nameCrypto}' and price = ${priceCrypto};`
+          let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${nameCrypto}' and price = ${priceCrypto};`
           
           crud.queryDatabase(selectQuery).then(function (result) {
                if (result.rowCount > 0) {
@@ -55,7 +55,7 @@ bot.onText(/^\/alertas/, (msg) => {
      let userId = msg.from.id;
      let name = msg.from.first_name;
 
-     let selectQuery = `select * from alerts where user_id = '${userId}' and chat_id = ${chatId};`
+     let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId};`
 
      crud.queryDatabase(selectQuery).then(function (result) {
           var message = `${name}, estas son tus alertas de precios para todas las criptomonedas:\n\n`;
@@ -389,7 +389,7 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
                if (result.rowCount > 0) {
                     bot.sendMessage(chatId, constants.statusEnabledNotificationsText);
                } else {
-                    query = `insert into scheduler (user_id, name, chat_id) values ('${userId}','${name}','${chatId}');`;
+                    query = `insert into scheduler (user_id, name, chat_id) values (${userId},'${name}','${chatId}');`;
                     message = constants.enabledNotificationsMessageText;
 
                     crud.queryDatabase(query).then(function (result) {
@@ -402,7 +402,7 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
                sendErrorMessageToBot(chatId);
           });
      } else if (data == constants.disabledNotificationsText) {     
-          query = `delete from scheduler where user_id = '${userId}' and chat_id = ${chatId};`;
+          query = `delete from scheduler where user_id = ${userId} and chat_id = ${chatId};`;
           message = constants.disabledNotificationsMessageText;
           
           crud.queryDatabase(query).then(function (result) {
