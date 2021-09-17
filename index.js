@@ -219,7 +219,6 @@ cron.schedule('* * * * *', () => {
                let json = JSON.stringify(row);
                let obj = JSON.parse(json);
                let alert = {
-                    id = obj.id,
                     userId: obj.user_id,
                     name: obj.name,
                     chatId: obj.chat_id,
