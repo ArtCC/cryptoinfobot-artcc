@@ -211,7 +211,7 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 /**
  * Scheduler function for send total wallet to user with alerts enabled.
  */
-cron.schedule('* * * * *', () => {
+cron.schedule('5 * * * *', () => {
      let selectQuery = "select * from alerts;";
      
      crud.queryDatabase(selectQuery).then(function (result) {
