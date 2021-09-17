@@ -27,7 +27,6 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
           crud.queryDatabase(deleteQuery).then(function (result) {
                bot.sendMessage(chatId, constants.disabledAlertText);
           }).catch(function (err) {
-               console.log("Error 1");
                sendErrorMessageToBot(chatId);
           });
      } else {
@@ -37,17 +36,15 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
                if (result.rowCount > 0) {
                     bot.sendMessage(chatId, constants.statusEnabledAlertText);
                } else {
-                    let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},${name},'${chatId}','${nameCrypto}',${priceCrypto});`;
+                    let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},'${name}',${chatId},'${nameCrypto}',${priceCrypto});`;
                     
                     crud.queryDatabase(insertQuery).then(function (result) {
                          bot.sendMessage(chatId, constants.enabledAlertText);
                     }).catch(function (err) {
-                         console.log("Error 2");
                          sendErrorMessageToBot(chatId);
                     });
                }
           }).catch(function (err) {
-               console.log("Error 3");
                sendErrorMessageToBot(chatId);
           });
      }
