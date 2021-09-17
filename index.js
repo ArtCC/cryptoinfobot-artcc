@@ -160,14 +160,16 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
      let crypto = match[1];
 
-     bot.sendMessage(chatId, constants.infoPriceText);
+     var message = constants.infoPriceText;
 
      axios.all([
           axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`)
      ]).then(axios.spread((response) => {
           let price = response.data[crypto][constants.currencyParam];
 
-          bot.sendMessage(chatId, `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.`);
+          message += `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.`;
+
+          bot.sendMessage(chatId, message);
      })).catch(error => {
           sendErrorMessageToBot(chatId);
      });
@@ -224,6 +226,27 @@ cron.schedule('* * * * *', () => {
                     crypto: obj.crypto,
                     price: obj.price
                };
+               
+               axios.all([
+                    axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${alert.crypto}&vs_currencies=${constants.currencyParam}`)
+               ]).then(axios.spread((response) => {
+                    let price = response.data[crypto][constants.currencyParam];
+                    
+                    if (price >= alert.price) {
+                         let message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos.`;
+
+                         bot.sendMessage(chatId, message);
+
+                         let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and crypto = '${alert.nameCrypto}';`
+                         
+                         crud.queryDatabase(deleteQuery).then(function (result) {
+                              bot.sendMessage(chatId, constants.disabledAlertText);
+                         }).catch(function (err) {
+                              sendErrorMessageToBot(chatId);
+                         });
+                    }
+               })).catch(error => {
+               });
           }
      }).catch(function (err) {
      });
