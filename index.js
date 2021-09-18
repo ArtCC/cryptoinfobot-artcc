@@ -257,7 +257,7 @@ bot.onText(/^\/update (.+)/, (msg, match) => {
                     let update = {
                          chatId: obj.chat_id
                     };
-                    collection.push(update);
+                    collection.push(update.chatId);
                }
                collection.forEach(chatId => {
                     bot.sendMessage(chatId, message);
