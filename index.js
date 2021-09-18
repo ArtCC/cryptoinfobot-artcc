@@ -246,8 +246,6 @@ bot.onText(/^\/update (.+)/, (msg, match) => {
      let token = data[0];
      let message = data[1];
 
-     console.log(updateToken);
-
      if (token == updateToken) {
           let selectQuery = "select * from update;";
 
@@ -261,13 +259,14 @@ bot.onText(/^\/update (.+)/, (msg, match) => {
                     };
                     collection.push(update);
                }
-               console.log(collection);
-               console.log(message);
+               collection.forEach(chatId => {
+                    bot.sendMessage(chatId, message);
+               });
           }).catch(function (err) {
                log(err);
           });
      } else {
-          console.log("El token es incorrecto.");
+          log(constants.tokenError);
      }
 });
 
