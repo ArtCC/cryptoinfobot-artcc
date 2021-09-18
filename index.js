@@ -246,6 +246,8 @@ bot.onText(/^\/update (.+)/, (msg, match) => {
      let token = data[0];
      let message = data[1];
 
+     console.log(updateToken);
+
      if (token == updateToken) {
           let selectQuery = "select * from update;";
 
