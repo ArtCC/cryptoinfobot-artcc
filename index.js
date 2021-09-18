@@ -246,8 +246,12 @@ bot.onText(/^\/update (.+)/, (msg, match) => {
      let token = data[0];
      let message = data[1];
 
-     if (token == updateToken) {
-          console.log(`Update token: ${updateToken}`);
+     console.log(`Data: ${data}`);
+     console.log(`Update token: ${token}`);
+     console.log(`Message: ${message}`);
+
+     if (token === updateToken) {
+          console.log(`Update token: ${token}`);
           console.log(`Message: ${message}`);
           
           let selectQuery = "select * from update;";
