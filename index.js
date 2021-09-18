@@ -1,7 +1,6 @@
 require("dotenv").config();
 
 const TelegramBot = require("node-telegram-bot-api");
-
 const axios = require('axios');
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
      polling: true
@@ -10,6 +9,7 @@ const constants = require('./src/constants');
 const cron = require('node-cron');
 const database = require('./src/database');
 const helpers = require('./src/helpers');
+const updateToken = process.env.UPDATE_TOKEN;
 
 /**
  * Telegram bot functions.
@@ -229,22 +229,47 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
 
 bot.onText(/^\/start/, (msg) => {
      let chatId = msg.chat.id;
-     let name = msg.from.first_name;
-
+     let name = msg.from.first_name;                    
+     let insertQuery = `insert into update (chat_id) values (${chatId});`;
+     
+     database.queryDatabase(insertQuery).then(function (result) {
+          log(result);
+     }).catch(function (err) {
+          log(err);
+     });
+     
      sendInfo(chatId, name);
 });
 
-function sendInfo(chatId, name) {
-     var message = `¡Hola ${name}!${constants.helloMessageText}`;
+bot.onText(/^\/update (.+)/, (msg, match) => {
+     let data = match[1].split("-");
+     let token = data[0];
+     let message = data[1];
 
-     bot.getMyCommands().then(function (info) {
-          for (let obj of info) {
-               message += `/${obj.command} - ${obj.description}\n`;
-          }
+     if (token == updateToken) {
+          console.log(`Update token: ${updateToken}`);
+          console.log(`Message: ${message}`);
+          
+          let selectQuery = "select * from update;";
 
-          bot.sendMessage(chatId, message);
-     });
-};
+          database.queryDatabase(selectQuery).then(function (result) {
+               var collection = [];
+               for (let row of result.rows) {
+                    let json = JSON.stringify(row);
+                    let obj = JSON.parse(json);
+                    let update = {
+                         chatId: obj.chat_id
+                    };
+                    collection.push(update);
+               }
+               console.log(collection);
+          }).catch(function (err) {
+               log(err);
+          });
+     } else {
+          console.log("El token es incorrecto.");
+     }
+});
 
 bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let chatId = buttonAction.message.chat.id;
@@ -473,6 +498,18 @@ function sendTotalWalletAlerts() {
           }
      }).catch(function (err) {
           log(err);
+     });
+};
+
+function sendInfo(chatId, name) {
+     var message = `¡Hola ${name}!${constants.helloMessageText}`;
+
+     bot.getMyCommands().then(function (info) {
+          for (let obj of info) {
+               message += `/${obj.command} - ${obj.description}\n`;
+          }
+
+          bot.sendMessage(chatId, message);
      });
 };
 
