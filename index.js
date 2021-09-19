@@ -198,13 +198,7 @@ function getInfoWallet(chatId, userId, userName) {
                     chatId,
                     response.message, { parse_mode: "HTML" }
                );
-               bot.sendPhoto(chatId, response.urlChart).then(function (result) {
-                    helpers.log(result);
-                    resolve("Success.")
-               }).catch(function (err) {
-                    helpers.log(err);
-                    resolve("Success with error in send image.")
-               });
+               bot.sendPhoto(chatId, response.urlChart);
           }).catch(function (err) {
                helpers.log(err);
                sendErrorMessageToBot(chatId);
@@ -242,13 +236,6 @@ function sendTotalWalletAlerts() {
           helpers.log(err);
      });
 };
-
-cron.schedule('*/3 * * * *', () => {
-     sendTotalWalletAlerts();
-}, {
-     scheduled: true,
-     timezone: constants.timezone
-});
 
 cron.schedule('*/5 * * * *', () => {
      database.getAllAlerts().then(function (data) {
