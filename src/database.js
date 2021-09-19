@@ -230,7 +230,6 @@ function getInfoWalletForUserId(userId, userName) {
                     };
                     cryptoCurrencies.push(currency);
                     cryptoNames.push(currency.name);
-                    cryptoAmount.push(currency.amount);
                }
 
                var urls = [];
@@ -249,6 +248,7 @@ function getInfoWalletForUserId(userId, userName) {
                                         price: data.data[crypto.name][constants.currencyParam]
                                    };
                                    collection.push(currency);
+                                   cryptoAmount.push(price);
                               }
                          });
                     });
