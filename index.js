@@ -238,12 +238,13 @@ function sendTotalWalletAlerts() {
      });
 };
 
-cron.schedule('*/3 * * * *', () => {
-     sendTotalWalletAlerts();
-}, {
-     scheduled: true,
-     timezone: constants.timezone
-});
+
+// cron.schedule('*/3 * * * *', () => {
+//      sendTotalWalletAlerts();
+// }, {
+//      scheduled: true,
+//      timezone: constants.timezone
+// });
 
 cron.schedule('*/5 * * * *', () => {
      database.getAllAlerts().then(function (data) {
