@@ -30,9 +30,9 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
 bot.onText(/^\/alertas/, (msg) => {
      let chatId = msg.chat.id;
      let userId = msg.from.id;
-     let name = msg.from.first_name;
+     let userName = msg.from.first_name;
 
-     database.getAllAlertsForUserId(userId, chatId, name).then(function (message) {
+     database.getAllAlertsForUserId(userId, chatId, userName).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
           helpers.log(err);
@@ -43,7 +43,7 @@ bot.onText(/^\/borrar/, (msg) => {
      let chatId = msg.chat.id;
      let userId = msg.from.id;
 
-     database.getCryptocurrenciesForUserId(userId).then(function (buttons) {
+     database.getCryptocurrenciesForUserId(userId).then(function (buttonData) {
           let buttons = {
                reply_markup: {
                     inline_keyboard: [
@@ -62,9 +62,9 @@ bot.onText(/^\/borrar/, (msg) => {
 bot.onText(/^\/cartera/, (msg) => {
      let chatId = msg.chat.id;
      let userId = msg.from.id;
-     let name = msg.from.first_name;
+     let userName = msg.from.first_name;
 
-     getInfoWallet(chatId, userId, name);
+     getInfoWallet(chatId, userId, userName);
 });
 
 bot.onText(/^\/cripto (.+)/, (msg, match) => {
@@ -74,37 +74,20 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
      let nameCrypto = data[0];
      let aliasCrypto = data[1];
      let amountCrypto = data[2];
-     let updateQuery = `update cryptocurrencies set amount = ${amountCrypto} where user_id = ${userId} and name = '${nameCrypto}' and alias = '${aliasCrypto}';`
-     let insertQuery = `insert into cryptocurrencies (user_id, name, alias, amount) values (${userId},'${nameCrypto}','${aliasCrypto}',${amountCrypto});`;
 
-     database.queryDatabase(updateQuery).then(function (result) {
-          if (result.rowCount == 0) {
-               database.queryDatabase(insertQuery).then(function (result) {
-                    bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
-               }).catch(function (err) {
-                    helpers.log(err);
-                    sendErrorMessageToBot(chatId);
-               });
-          } else {
-               bot.sendMessage(chatId, `Has actualizado el valor de ${nameCrypto} correctamente en tu cartera.`);
-          }
+     database.setCryptoForUserId(amountCrypto, userId, nameCrypto, aliasCrypto).then(function (message) {
+          bot.sendMessage(chatId, message);
      }).catch(function (err) {
           helpers.log(err);
-          database.queryDatabase(insertQuery).then(function (result) {
-               helpers.log(result);
-               bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
-          }).catch(function (err) {
-               helpers.log(err);
-               sendErrorMessageToBot(chatId);
-          });
+          sendErrorMessageToBot(chatId);
      });
 });
 
 bot.onText(/^\/hola/, (msg) => {
      let chatId = msg.chat.id;
-     let name = msg.from.first_name;
+     let userName = msg.from.first_name;
 
-     sendInfo(chatId, name);
+     sendInfo(chatId, userName);
 });
 
 bot.onText(/^\/notificaciones/, (msg) => {
@@ -148,16 +131,15 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
 
 bot.onText(/^\/start/, (msg) => {
      let chatId = msg.chat.id;
-     let name = msg.from.first_name;
-     let insertQuery = `insert into update (chat_id) values (${chatId});`;
+     let userName = msg.from.first_name;
 
-     database.queryDatabase(insertQuery).then(function (result) {
+     database.setChatIdForUpdate(chatId).then(function (result) {
           helpers.log(result);
      }).catch(function (err) {
           helpers.log(err);
      });
 
-     sendInfo(chatId, name);
+     sendInfo(chatId, userName);
 });
 
 bot.onText(/^\/update (.+)/, (msg, match) => {
@@ -166,18 +148,7 @@ bot.onText(/^\/update (.+)/, (msg, match) => {
      let message = data[1];
 
      if (token == updateToken) {
-          let selectQuery = "select * from update;";
-
-          database.queryDatabase(selectQuery).then(function (result) {
-               var collection = [];
-               for (let row of result.rows) {
-                    let json = JSON.stringify(row);
-                    let obj = JSON.parse(json);
-                    let update = {
-                         chatId: obj.chat_id
-                    };
-                    collection.push(update.chatId);
-               }
+          database.getAllChatId().then(function (collection) {
                collection.forEach(chatId => {
                     bot.sendMessage(chatId, message);
                });
@@ -192,11 +163,11 @@ bot.onText(/^\/update (.+)/, (msg, match) => {
 bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let chatId = buttonAction.message.chat.id;
      let userId = buttonAction.from.id;
-     let name = buttonAction.from.first_name;
+     let userName = buttonAction.from.first_name;
      let data = buttonAction.data;
 
      if (data == constants.enabledNotificationsText || data == constants.disabledNotificationsText) {
-          setAlertForNotifyWallet(chatId, userId, name, data);
+          setAlertForNotifyWallet(chatId, userId, userName, data);
      } else if (data == constants.cancelText) {
           bot.sendMessage(chatId, constants.noText);
      } else {
@@ -205,43 +176,8 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 });
 
 cron.schedule('*/5 * * * *', () => {
-     let selectQuery = "select * from alerts;";
-
-     database.queryDatabase(selectQuery).then(function (result) {
-          for (let row of result.rows) {
-               let json = JSON.stringify(row);
-               let obj = JSON.parse(json);
-               let alert = {
-                    userId: obj.user_id,
-                    name: obj.name,
-                    chatId: obj.chat_id,
-                    crypto: obj.crypto,
-                    price: obj.price
-               };
-
-               axios.all([
-                    axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${alert.crypto}&vs_currencies=${constants.currencyParam}`)
-               ]).then(axios.spread((response) => {
-                    let price = response.data[alert.crypto][constants.currencyParam];
-
-                    if (price >= alert.price) {
-                         var message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos. `;
-
-                         let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
-
-                         database.queryDatabase(deleteQuery).then(function (result) {
-                              message += `He borrado la alerta para ${alert.crypto} de ${helpers.formatter.format(alert.price)} € correctamente.`;
-
-                              bot.sendMessage(alert.chatId, message);
-                         }).catch(function (err) {
-                              helpers.log(err);
-                              sendErrorMessageToBot(chatId);
-                         });
-                    }
-               })).catch(error => {
-                    helpers.log(error);
-               });
-          }
+     database.getAllAlerts().then(function (data) {
+          bot.sendMessage(data.chatId, data.message);
      }).catch(function (err) {
           helpers.log(err);
      });
@@ -268,110 +204,26 @@ cron.schedule('0 22 * * *', () => {
      timezone: constants.timezone
 });
 
-function getInfoWallet(chatId, userId, name) {
-     let selectQuery = `select * from cryptocurrencies where user_id = ${userId};`
-
-     var cryptoCurrencies = [];
-     var cryptoNames = [];
-
-     database.queryDatabase(selectQuery).then(function (result) {
-          for (let row of result.rows) {
-               let json = JSON.stringify(row);
-               let obj = JSON.parse(json);
-               let currency = {
-                    name: obj.name,
-                    alias: obj.alias,
-                    amount: obj.amount
-               };
-               cryptoCurrencies.push(currency);
-               cryptoNames.push(currency.name);
-          }
-
-          var urls = [];
-          cryptoNames.forEach(name => {
-               urls.push(axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${name}&vs_currencies=${constants.currencyParam}`));
-          });
-
-          var collection = [];
-          axios.all(urls).then(responseArr => {
-               cryptoCurrencies.forEach(crypto => {
-                    responseArr.forEach(data => {
-                         if (crypto.name == Object.keys(data.data)) {
-                              let currency = {
-                                   name: crypto.name,
-                                   alias: crypto.alias,
-                                   price: data.data[crypto.name][constants.currencyParam]
-                              };
-                              collection.push(currency);
-                         }
-                    });
-               });
-
-               var totalWallet = 0;
-               var messages = [];
-               cryptoCurrencies.forEach(crypto => {
-                    collection.forEach(currency => {
-                         if (crypto.name == currency.name) {
-                              let priceAmount = crypto.amount * currency.price;
-                              let message = `<b>${currency.alias} (${currency.price} €):</b> Cantidad: ${helpers.formatter.format(crypto.amount)} - Total: ${helpers.formatter.format(priceAmount)} €\n`;
-
-                              messages.push(message);
-
-                              totalWallet += priceAmount;
-                         }
-                    });
-               });
-
-               var finalMessage = `Este es el total en euros de tu cartera de criptomonedas <b>${name}</b>:\n\n`;
-               messages.sort();
-               messages.forEach(text => {
-                    finalMessage += text;
-               });
-               let total = `\n<b>Total en cartera: </b><i> ${helpers.formatter.format(totalWallet)} €</i>\n`;
-               finalMessage += total;
-
-               sendMessageToBot(chatId, finalMessage, "HTML");
-          }).catch(error => {
-               helpers.log(error);
-               sendErrorMessageToBot(chatId);
-          });
+function getInfoWallet(chatId, userId, userName) {
+     database.getInfoWalletForUserId(userId, userName).then(function (message) {
+          sendMessageToBot(chatId, message, "HTML");
      }).catch(function (err) {
           helpers.log(err);
           sendErrorMessageToBot(chatId);
      });
 };
 
-function setAlertForNotifyWallet(chatId, userId, name, data) {
-     var query = "";
-     var message = "";
-
+function setAlertForNotifyWallet(chatId, userId, userName, data) {
      if (data == constants.enabledNotificationsText) {
-          let selectQuery = `select * from scheduler where user_id = ${userId} and chat_id = ${chatId};`;
-
-          database.queryDatabase(selectQuery).then(function (result) {
-               if (result.rowCount > 0) {
-                    bot.sendMessage(chatId, constants.statusEnabledNotificationsText);
-               } else {
-                    query = `insert into scheduler (user_id, name, chat_id) values (${userId},'${name}','${chatId}');`;
-                    message = constants.enabledNotificationsMessageText;
-
-                    database.queryDatabase(query).then(function (result) {
-                         helpers.log(result);
-                         bot.sendMessage(chatId, message);
-                    }).catch(function (err) {
-                         helpers.log(err);
-                         sendErrorMessageToBot(chatId);
-                    });
-               }
+          database.setSchedulerForUserId(userId, chatId, userName).then(function (message) {
+               helpers.log(result);
+               bot.sendMessage(chatId, message);
           }).catch(function (err) {
                helpers.log(err);
                sendErrorMessageToBot(chatId);
           });
      } else if (data == constants.disabledNotificationsText) {
-          query = `delete from scheduler where user_id = ${userId} and chat_id = ${chatId};`;
-          message = constants.disabledNotificationsMessageText;
-
-          database.queryDatabase(query).then(function (result) {
+          database.deleteSchedulerForUserId(userId, chatId).then(function (message) {
                helpers.log(result);
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
@@ -381,12 +233,9 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
      }
 };
 
-function deleteCryptoFromDatabase(data, chatId, userId) {
-     let deleteQuery = `delete from cryptocurrencies where name = '${data}' and user_id = ${userId};`
-
-     database.queryDatabase(deleteQuery).then(function (result) {
-          helpers.log(result);
-          bot.sendMessage(chatId, `La criptomoneda ${data} se ha borrado correctamente de tu cartera.`);
+function deleteCryptoFromDatabase(cryptoName, chatId, userId) {
+     database.deleteCryptoForUserId(cryptoName, userId).then(function (message) {
+          bot.sendMessage(chatId, message);
      }).catch(function (err) {
           helpers.log(err);
           sendErrorMessageToBot(chatId);
@@ -394,20 +243,8 @@ function deleteCryptoFromDatabase(data, chatId, userId) {
 };
 
 function sendTotalWalletAlerts() {
-     let selectQuery = "select * from scheduler;";
-
-     database.queryDatabase(selectQuery).then(function (result) {
-          for (let row of result.rows) {
-               let json = JSON.stringify(row);
-               let obj = JSON.parse(json);
-               let scheduler = {
-                    userId: obj.user_id,
-                    name: obj.name,
-                    chatId: obj.chat_id
-               };
-
-               getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
-          }
+     database.getAllSchedulers().then(function (scheduler) {
+          getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
      }).catch(function (err) {
           helpers.log(err);
      });
