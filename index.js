@@ -11,49 +11,20 @@ const database = require('./src/database');
 const helpers = require('./src/helpers');
 const updateToken = process.env.UPDATE_TOKEN;
 
-/**
- * Telegram bot functions.
- */
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
      let userId = msg.from.id;
-     let name = msg.from.first_name;
+     let userName = msg.from.first_name;
      let data = match[1].split(" ");
-     let nameCrypto = data[0];
-     let priceCrypto = data[1];
+     let cryptoName = data[0];
+     let cryptoPrice = data[1];
 
-     if (priceCrypto == "0") {
-          let deleteQuery = `delete from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${nameCrypto}';`
-
-          database.queryDatabase(deleteQuery).then(function (result) {
-               helpers.log(result);
-               bot.sendMessage(chatId, constants.disabledAlertText);
-          }).catch(function (err) {
-               helpers.log(err);
-               sendErrorMessageToBot(chatId);
-          });
-     } else {
-          let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${nameCrypto}' and price = ${priceCrypto};`
-
-          database.queryDatabase(selectQuery).then(function (result) {
-               if (result.rowCount > 0) {
-                    bot.sendMessage(chatId, constants.statusEnabledAlertText);
-               } else {
-                    let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},'${name}',${chatId},'${nameCrypto}',${priceCrypto});`;
-
-                    database.queryDatabase(insertQuery).then(function (result) {
-                         helpers.log(result);
-                         bot.sendMessage(chatId, constants.enabledAlertText);
-                    }).catch(function (err) {
-                         helpers.log(err);
-                         sendErrorMessageToBot(chatId);
-                    });
-               }
-          }).catch(function (err) {
-               helpers.log(err);
-               sendErrorMessageToBot(chatId);
-          });
-     }
+     database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice).then(function (message) {
+          bot.sendMessage(chatId, message);
+     }).catch(function (err) {
+          helpers.log(err);
+          sendErrorMessageToBot(chatId);
+     });
 });
 
 bot.onText(/^\/alertas/, (msg) => {
@@ -61,7 +32,7 @@ bot.onText(/^\/alertas/, (msg) => {
      let userId = msg.from.id;
      let name = msg.from.first_name;
 
-     database.getAllAlerts(userId, chatId, name).then(function (message) {
+     database.getAllAlertsForUserId(userId, chatId, name).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
           helpers.log(err);
@@ -71,32 +42,8 @@ bot.onText(/^\/alertas/, (msg) => {
 bot.onText(/^\/borrar/, (msg) => {
      let chatId = msg.chat.id;
      let userId = msg.from.id;
-     let selectQuery = `select * from cryptocurrencies where user_id = ${userId};`
 
-     var cryptoCurrencies = [];
-     var cryptoNames = [];
-
-     database.queryDatabase(selectQuery).then(function (result) {
-          for (let row of result.rows) {
-               let json = JSON.stringify(row);
-               let obj = JSON.parse(json);
-               let currency = {
-                    name: obj.name,
-                    alias: obj.alias,
-                    amount: obj.amount
-               };
-               cryptoCurrencies.push(currency);
-               cryptoNames.push(currency.name);
-          }
-
-          var buttonData = []
-          cryptoNames.sort();
-          cryptoNames.forEach(name => {
-               let nameText = helpers.capitalizeFirstLetter(name);
-               buttonData.push({ text: nameText, callback_data: `${name}` });
-          });
-          buttonData.push({ text: constants.cancelText, callback_data: constants.cancelText });
-
+     database.getCryptocurrenciesForUserId(userId).then(function (buttons) {
           let buttons = {
                reply_markup: {
                     inline_keyboard: [
@@ -257,9 +204,6 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      }
 });
 
-/**
- * Scheduler function for send total wallet to user with alerts enabled.
- */
 cron.schedule('*/5 * * * *', () => {
      let selectQuery = "select * from alerts;";
 
@@ -324,9 +268,6 @@ cron.schedule('0 22 * * *', () => {
      timezone: constants.timezone
 });
 
-/**
- * Helper functions.
- */
 function getInfoWallet(chatId, userId, name) {
      let selectQuery = `select * from cryptocurrencies where user_id = ${userId};`
 
