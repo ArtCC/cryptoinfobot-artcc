@@ -62,7 +62,11 @@ bot.onText(/^\/cartera/, (msg) => {
      let userId = msg.from.id;
      let userName = msg.from.first_name;
 
-     getInfoWallet(chatId, userId, userName);
+     getInfoWallet(chatId, userId, userName).then(function (message) {
+          helpers.log(message);
+     }).catch(function (err) {
+          helpers.log(err);
+     });
 });
 
 bot.onText(/^\/cripto (.+)/, (msg, match) => {
@@ -188,15 +192,19 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 });
 
 function getInfoWallet(chatId, userId, userName) {
-     database.getInfoWalletForUserId(userId, userName).then(function (response) {
-          bot.sendMessage(
-               chatId,
-               response.message, { parse_mode: "HTML" }
-          );
-          bot.sendPhoto(chatId, response.urlChart);
-     }).catch(function (err) {
-          helpers.log(err);
-          sendErrorMessageToBot(chatId);
+     return new Promise(function (resolve, reject) {
+          database.getInfoWalletForUserId(userId, userName).then(function (response) {
+               bot.sendMessage(
+                    chatId,
+                    response.message, { parse_mode: "HTML" }
+               );
+               bot.sendPhoto(chatId, response.urlChart);
+               resolve("Success");
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId);
+               reject(err);
+          });
      });
 };
 
@@ -219,7 +227,11 @@ function sendInfo(chatId, name) {
 function sendTotalWalletAlerts() {
      database.getAllSchedulers().then(function (schedulers) {
           schedulers.forEach(scheduler => {
-               getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
+               getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name).then(function (message) {
+                    helpers.log(message);
+               }).catch(function (err) {
+                    helpers.log(err);
+               });
           })
      }).catch(function (err) {
           helpers.log(err);
