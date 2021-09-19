@@ -26,7 +26,7 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                         },
                         doughnutlabel: {
                             labels: [{
-                                text: `${helpers.formatter.format(totalWallet)} €\nCartera de ${userName}`,
+                                text: `Cartera de ${userName}:\n${helpers.formatter.format(totalWallet)} €`,
                                 font: {
                                     size: 20,
                                     weight: 'bold'
