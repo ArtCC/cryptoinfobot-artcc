@@ -1,4 +1,5 @@
 const axios = require('axios');
+const charts = require('./charts');
 const constants = require('./constants');
 const helpers = require('./helpers');
 const { Pool } = require('pg');
@@ -8,7 +9,6 @@ const pool = new Pool({
           rejectUnauthorized: false
      }
 });
-const QuickChart = require('quickchart-js');
 
 function deleteCryptoForUserId(cryptoName, userId) {
      return new Promise(function (resolve, reject) {
@@ -157,6 +157,7 @@ function getAllSchedulers() {
           let selectQuery = "select * from scheduler;";
 
           queryDatabase(selectQuery).then(function (result) {
+               var schedulers = [];
                for (let row of result.rows) {
                     let json = JSON.stringify(row);
                     let obj = JSON.parse(json);
@@ -165,9 +166,9 @@ function getAllSchedulers() {
                          name: obj.name,
                          chatId: obj.chat_id
                     };
-
-                    resolve(scheduler);
+                    schedulers.push(scheduler);
                }
+               resolve(schedulers);
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
@@ -276,23 +277,12 @@ function getInfoWalletForUserId(userId, userName) {
                     let total = `\n<b>Total en cartera: </b><i> ${helpers.formatter.format(totalWallet)} €</i>\n`;
                     finalMessage += total;
 
-                    const myChart = new QuickChart();
-                    myChart
-                         .setConfig({
-                              type: 'doughnut',
-                              data: { labels: cryptoNames, datasets: [{ label: constants.amountText, data: cryptoAmount }] },
-                              options: { plugins: { doughnutlabel: { labels: [{ text: `${helpers.formatter.format(totalWallet)}`, font: { size: 20 } }, { text: constants.totalText }] } } }
-                         })
-                         .setWidth(800)
-                         .setHeight(400)
-                         .setBackgroundColor('transparent');
-
-                    let response = {
-                         message: finalMessage,
-                         urlChart: myChart.getUrl()
-                    }
-
-                    resolve(response);
+                    charts.createChartForTotalWallet(cryptoNames, cryptoAmount, finalMessage).then(function (response) {
+                         resolve(response);
+                    }).catch(function (err) {
+                         helpers.log(err);
+                         reject(error);
+                    });
                }).catch(error => {
                     helpers.log(error);
                     reject(error);

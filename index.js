@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-const TelegramBot = require("node-telegram-bot-api");
 const axios = require('axios');
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 const constants = require('./src/constants');
@@ -8,6 +7,7 @@ const cron = require('node-cron');
 const database = require('./src/database');
 const helpers = require('./src/helpers');
 const updateToken = process.env.UPDATE_TOKEN;
+const TelegramBot = require("node-telegram-bot-api");
 
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
@@ -200,12 +200,8 @@ function getInfoWallet(chatId, userId, userName) {
      });
 };
 
-function sendTotalWalletAlerts() {
-     database.getAllSchedulers().then(function (scheduler) {
-          getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
-     }).catch(function (err) {
-          helpers.log(err);
-     });
+function sendErrorMessageToBot(chatId) {
+     bot.sendMessage(chatId, constants.errorText);
 };
 
 function sendInfo(chatId, name) {
@@ -220,9 +216,19 @@ function sendInfo(chatId, name) {
      });
 };
 
-function sendErrorMessageToBot(chatId) {
-     bot.sendMessage(chatId, constants.errorText);
+function sendTotalWalletAlerts() {
+     database.getAllSchedulers().then(function (schedulers) {
+          schedulers.forEach(scheduler => {
+               getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
+          })
+     }).catch(function (err) {
+          helpers.log(err);
+     });
 };
+
+cron.schedule('*/3 * * * *', () => {
+     sendTotalWalletAlerts();
+});
 
 cron.schedule('*/5 * * * *', () => {
      database.getAllAlerts().then(function (data) {
