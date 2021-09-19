@@ -6,7 +6,6 @@ const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 const constants = require('./src/constants');
 const cron = require('node-cron');
 const database = require('./src/database');
-const delay = require('delay');
 const helpers = require('./src/helpers');
 const updateToken = process.env.UPDATE_TOKEN;
 
@@ -199,11 +198,13 @@ function getInfoWallet(chatId, userId, userName) {
                     chatId,
                     response.message, { parse_mode: "HTML" }
                );
-               bot.sendPhoto(chatId, response.urlChart);
-
-               (async () => {
-                    await delay(100, { value: resolve("Success") });
-               })();
+               bot.sendPhoto(chatId, response.urlChart).then(function (result) {
+                    helpers.log(result);
+                    resolve("Success.")
+               }).catch(function (err) {
+                    helpers.log(err);
+                    resolve("Success with error in send image.")
+               });
           }).catch(function (err) {
                helpers.log(err);
                sendErrorMessageToBot(chatId);
