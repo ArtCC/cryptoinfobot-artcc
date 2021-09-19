@@ -17,13 +17,18 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                 options: {
                     plugins: {
                         datalabels: {
-                            color: '#fff',
-                            backgroundColor: '#404040'
-                        },
-                        labels: [{
-                            text: `${helpers.formatter.format(totalWallet)}`,
+                            display: true,
+                            backgroundColor: '#ccc',
+                            borderRadius: 3,
                             font: {
-                                size: 22
+                                weight: 'bold'
+                            }
+                        },
+                        doughnutlabel: [{
+                            text: `${helpers.formatter.format(totalWallet)} €`,
+                            font: {
+                                size: 22,
+                                weight: 'bold'
                             }
                         }, {
                             text: constants.totalText
