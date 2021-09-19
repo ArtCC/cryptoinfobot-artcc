@@ -10,30 +10,24 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                 type: 'doughnut',
                 data: {
                     labels: cryptoNames,
-                    datasets:
-                        [
-                            {
-                                label: constants.amountText,
-                                data: cryptoAmount,
-                                color: 'white'
-                            }
-                        ]
+                    datasets: [{
+                        data: cryptoAmount
+                    }]
                 },
                 options: {
                     plugins: {
-                        doughnutlabel: {
-                            labels:
-                                [
-                                    {
-                                        text: `${helpers.formatter.format(totalWallet)}`,
-                                        font: {
-                                            size: 22
-                                        }
-                                    }, {
-                                        text: constants.totalText
-                                    }
-                                ]
-                        }
+                        datalabels: {
+                            color: '#fff',
+                            backgroundColor: '#404040'
+                        },
+                        labels: [{
+                            text: `${helpers.formatter.format(totalWallet)}`,
+                            font: {
+                                size: 22
+                            }
+                        }, {
+                            text: constants.totalText
+                        }]
                     }
                 }
             })
