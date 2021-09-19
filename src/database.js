@@ -281,7 +281,7 @@ function getInfoWalletForUserId(userId, userName) {
                          resolve(response);
                     }).catch(function (err) {
                          helpers.log(err);
-                         reject(error);
+                         reject(err);
                     });
                }).catch(error => {
                     helpers.log(error);
