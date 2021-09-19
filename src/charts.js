@@ -2,7 +2,7 @@ const constants = require('./constants');
 const helpers = require('./helpers');
 const QuickChart = require('quickchart-js');
 
-function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage) {
+function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName) {
     return new Promise(function (resolve, reject) {
         const myChart = new QuickChart();
         myChart
@@ -26,7 +26,7 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                         },
                         doughnutlabel: {
                             labels: [{
-                                text: `${helpers.formatter.format(totalWallet)} €`,
+                                text: `${helpers.formatter.format(totalWallet)} €\nCartera de ${userName}`,
                                 font: {
                                     size: 20,
                                     weight: 'bold'
