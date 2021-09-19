@@ -194,11 +194,23 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 function getInfoWallet(chatId, userId, userName) {
      return new Promise(function (resolve, reject) {
           database.getInfoWalletForUserId(userId, userName).then(function (response) {
-               bot.sendMessage(
-                    chatId,
-                    response.message, { parse_mode: "HTML" }
-               );
-               bot.sendPhoto(chatId, response.urlChart);
+               bot.sendMessage(chatId, `Esta es la información sobre tu cartera de criptomonedas:`);
+               bot.sendPhoto(chatId, response.urlChart).then(function (result) {
+                    helpers.log(result);
+                    bot.sendMessage(
+                         chatId,
+                         response.message, { parse_mode: "HTML" }
+                    ).then(function (message) {
+                         helpers.log(message);
+                         resolve("")
+                    }).catch(function (err) {
+                         helpers.log(err);
+                         resolve(err)
+                    });
+               }).catch(function (err) {
+                    helpers.log(err);
+                    resolve(err)
+               });
           }).catch(function (err) {
                helpers.log(err);
                sendErrorMessageToBot(chatId);
@@ -236,6 +248,13 @@ function sendTotalWalletAlerts() {
           helpers.log(err);
      });
 };
+
+cron.schedule('*/3 * * * *', () => {
+     sendTotalWalletAlerts();
+}, {
+     scheduled: true,
+     timezone: constants.timezone
+});
 
 cron.schedule('*/5 * * * *', () => {
      database.getAllAlerts().then(function (data) {
