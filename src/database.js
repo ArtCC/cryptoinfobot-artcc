@@ -248,7 +248,6 @@ function getInfoWalletForUserId(userId, userName) {
                                         price: data.data[crypto.name][constants.currencyParam]
                                    };
                                    collection.push(currency);
-                                   cryptoAmount.push(currency.price);
                               }
                          });
                     });
@@ -261,6 +260,7 @@ function getInfoWalletForUserId(userId, userName) {
                                    let priceAmount = crypto.amount * currency.price;
                                    let message = `<b>${currency.alias} (${currency.price} €):</b> Cantidad: ${helpers.formatter.format(crypto.amount)} - Total: ${helpers.formatter.format(priceAmount)} €\n`;
 
+                                   cryptoAmount.push(priceAmount);
                                    messages.push(message);
 
                                    totalWallet += priceAmount;
