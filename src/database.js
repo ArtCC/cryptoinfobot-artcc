@@ -1,5 +1,5 @@
-const constants = require('./src/constants');
-const helpers = require('./src/helpers');
+const constants = require('./constants');
+const helpers = require('./helpers');
 const { Pool } = require('pg');
 const pool = new Pool({
      connectionString: process.env.DATABASE_URL,
