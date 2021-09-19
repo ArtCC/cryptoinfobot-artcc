@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const QuickChart = require('quickchart-js');
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require('axios');
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
@@ -8,6 +9,21 @@ const cron = require('node-cron');
 const database = require('./src/database');
 const helpers = require('./src/helpers');
 const updateToken = process.env.UPDATE_TOKEN;
+
+bot.onText(/^\/grafica/, (msg) => {
+     const myChart = new QuickChart();
+     myChart
+          .setConfig({
+               type: 'bar',
+               data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+          })
+          .setWidth(800)
+          .setHeight(400)
+          .setBackgroundColor('transparent');
+
+     // Print the chart URL
+     console.log(myChart.getUrl());
+});
 
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
@@ -193,6 +209,8 @@ function getInfoWallet(chatId, userId, userName) {
                chatId,
                message, { parse_mode: "HTML" }
           );
+
+          // Añadir aquí la descarga de la gráfica.
      }).catch(function (err) {
           helpers.log(err);
           sendErrorMessageToBot(chatId);
