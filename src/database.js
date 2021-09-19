@@ -248,7 +248,7 @@ function getInfoWalletForUserId(userId, userName) {
                                         price: data.data[crypto.name][constants.currencyParam]
                                    };
                                    collection.push(currency);
-                                   cryptoAmount.push(price);
+                                   cryptoAmount.push(currency.price);
                               }
                          });
                     });
