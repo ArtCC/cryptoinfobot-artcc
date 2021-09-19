@@ -216,7 +216,6 @@ function getInfoWallet(chatId, userId, userName) {
 function setAlertForNotifyWallet(chatId, userId, userName, data) {
      if (data == constants.enabledNotificationsText) {
           database.setSchedulerForUserId(userId, chatId, userName).then(function (message) {
-               helpers.log(result);
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
                helpers.log(err);
@@ -224,7 +223,6 @@ function setAlertForNotifyWallet(chatId, userId, userName, data) {
           });
      } else if (data == constants.disabledNotificationsText) {
           database.deleteSchedulerForUserId(userId, chatId).then(function (message) {
-               helpers.log(result);
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
                helpers.log(err);
