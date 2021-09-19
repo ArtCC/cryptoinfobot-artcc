@@ -93,9 +93,11 @@ bot.onText(/^\/notificaciones/, (msg) => {
      let buttons = {
           reply_markup: {
                inline_keyboard: [
-                    { text: constants.enabledNotificationsText, callback_data: constants.enabledNotificationsText },
-                    { text: constants.disabledNotificationsText, callback_data: constants.disabledNotificationsText },
-                    { text: constants.cancelText, callback_data: constants.cancelText }
+                    [
+                         { text: constants.enabledNotificationsText, callback_data: constants.enabledNotificationsText },
+                         { text: constants.disabledNotificationsText, callback_data: constants.disabledNotificationsText },
+                         { text: constants.cancelText, callback_data: constants.cancelText }
+                    ]
                ]
           }
      };
