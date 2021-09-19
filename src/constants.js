@@ -18,5 +18,7 @@ module.exports = {
     disabledAlertText: "He borrado la alerta correctamente.",
     emptyAlertText: "No tienes ninguna alerta de precios añadida actualmente. Puedes añadirlas por ejemplo con /alerta ethereum 3500",
     noText: "De acuerdo.",
-    tokenError: "El token es incorrecto."
+    tokenError: "El token es incorrecto.",
+    amountText: "Importe",
+    totalText: "Total"
 };

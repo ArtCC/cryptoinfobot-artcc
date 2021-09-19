@@ -8,6 +8,7 @@ const pool = new Pool({
           rejectUnauthorized: false
      }
 });
+const QuickChart = require('quickchart-js');
 
 function deleteCryptoForUserId(cryptoName, userId) {
      return new Promise(function (resolve, reject) {
@@ -216,6 +217,7 @@ function getInfoWalletForUserId(userId, userName) {
 
           var cryptoCurrencies = [];
           var cryptoNames = [];
+          var cryptoAmount = [];
 
           queryDatabase(selectQuery).then(function (result) {
                for (let row of result.rows) {
@@ -228,6 +230,7 @@ function getInfoWalletForUserId(userId, userName) {
                     };
                     cryptoCurrencies.push(currency);
                     cryptoNames.push(currency.name);
+                    cryptoAmount.push(currency.amount);
                }
 
                var urls = [];
@@ -273,7 +276,23 @@ function getInfoWalletForUserId(userId, userName) {
                     let total = `\n<b>Total en cartera: </b><i> ${helpers.formatter.format(totalWallet)} €</i>\n`;
                     finalMessage += total;
 
-                    resolve(finalMessage);
+                    const myChart = new QuickChart();
+                    myChart
+                         .setConfig({
+                              type: 'doughnut',
+                              data: { labels: cryptoNames, datasets: [{ label: constants.amountText, data: cryptoAmount }] },
+                              options: { plugins: { doughnutlabel: { labels: [{ text: `${helpers.formatter.format(totalWallet)}`, font: { size: 20 } }, { text: constants.totalText }] } } }
+                         })
+                         .setWidth(800)
+                         .setHeight(400)
+                         .setBackgroundColor('transparent');
+
+                    let response = {
+                         message: finalMessage,
+                         urlChart: myChart.getUrl()
+                    }
+
+                    resolve(response);
                }).catch(error => {
                     helpers.log(error);
                     reject(error);

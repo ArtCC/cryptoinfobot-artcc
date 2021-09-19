@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-const QuickChart = require('quickchart-js');
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require('axios');
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
@@ -9,23 +8,6 @@ const cron = require('node-cron');
 const database = require('./src/database');
 const helpers = require('./src/helpers');
 const updateToken = process.env.UPDATE_TOKEN;
-
-bot.onText(/^\/grafica/, (msg) => {
-     let total = 436.96436406 + 1189.80561641 + 133.00987544;
-     const myChart = new QuickChart();
-     myChart
-          .setConfig({
-               type: 'doughnut',
-               data: { labels: ['Cardano', 'Ethereum', 'Shiba-Inu'], datasets: [{ label: 'Importe', data: [436.96436406, 1189.80561641, 133.00987544] }] },
-               options: {plugins: {doughnutlabel: {labels: [{text: total, font: {size: 20}}, {text: 'Total'}]}}}
-          })
-          .setWidth(800)
-          .setHeight(400)
-          .setBackgroundColor('transparent');
-
-     const url = myChart.getUrl();
-     bot.sendPhoto(msg.chat.id, url);
-});
 
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
@@ -206,13 +188,12 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 });
 
 function getInfoWallet(chatId, userId, userName) {
-     database.getInfoWalletForUserId(userId, userName).then(function (message) {
+     database.getInfoWalletForUserId(userId, userName).then(function (response) {
           bot.sendMessage(
                chatId,
-               message, { parse_mode: "HTML" }
+               response.message, { parse_mode: "HTML" }
           );
-
-          // Añadir aquí la descarga de la gráfica.
+          bot.sendPhoto(chatId, response.urlChart);
      }).catch(function (err) {
           helpers.log(err);
           sendErrorMessageToBot(chatId);
