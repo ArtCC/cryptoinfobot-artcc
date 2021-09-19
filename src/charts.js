@@ -32,8 +32,6 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                                     size: 16,
                                     weight: 'bold'
                                 }
-                            }, {
-                                text: constants.totalText
                             }]
                         }
                     }
