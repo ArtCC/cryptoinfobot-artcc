@@ -276,6 +276,9 @@ function getInfoWalletForUserId(userId, userName) {
                     let total = `\n<b>Total en cartera: </b><i> ${helpers.formatter.format(totalWallet)} €</i>\n`;
                     finalMessage += total;
 
+                    console.log(cryptoNames);
+                    console.log(cryptoAmount);
+
                     const myChart = new QuickChart();
                     myChart
                          .setConfig({
@@ -291,6 +294,8 @@ function getInfoWalletForUserId(userId, userName) {
                          message: finalMessage,
                          urlChart: myChart.getUrl()
                     }
+
+                    console.log(response.urlChart);
 
                     resolve(response);
                }).catch(error => {

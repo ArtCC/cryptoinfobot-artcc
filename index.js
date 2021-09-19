@@ -193,7 +193,7 @@ function getInfoWallet(chatId, userId, userName) {
                chatId,
                response.message, { parse_mode: "HTML" }
           );
-          bot.sendPhoto(chatId, response.urlChart);
+          // bot.sendPhoto(chatId, response.urlChart);
      }).catch(function (err) {
           helpers.log(err);
           sendErrorMessageToBot(chatId);
