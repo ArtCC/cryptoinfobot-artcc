@@ -14,14 +14,13 @@ bot.onText(/^\/grafica/, (msg) => {
      const myChart = new QuickChart();
      myChart
           .setConfig({
-               type: 'bar',
-               data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+               type: 'pie',
+               data: { labels: ['Cardano', 'Ethereum', 'Shiba-Inu'], datasets: [{ label: 'Importe', data: [436.96436406, 1189.80561641, 133.00987544] }] },
           })
           .setWidth(800)
           .setHeight(400)
           .setBackgroundColor('transparent');
 
-     // Print the chart URL
      console.log(myChart.getUrl());
 });
 
