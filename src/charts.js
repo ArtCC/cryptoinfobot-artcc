@@ -24,15 +24,17 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                                 weight: 'bold'
                             }
                         },
-                        doughnutlabel: [{
-                            text: `${helpers.formatter.format(totalWallet)}`,
-                            font: {
-                                size: 22,
-                                weight: 'bold'
-                            }
-                        }, {
-                            text: constants.totalText
-                        }]
+                        doughnutlabel: {
+                            labels: [{
+                                text: `${helpers.formatter.format(totalWallet)}`,
+                                font: {
+                                    size: 20,
+                                    weight: 'bold'
+                                }
+                            }, {
+                                text: constants.totalText
+                            }]
+                        }
                     }
                 }
             })
