@@ -6,6 +6,7 @@ const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 const constants = require('./src/constants');
 const cron = require('node-cron');
 const database = require('./src/database');
+const delay = require('delay');
 const helpers = require('./src/helpers');
 const updateToken = process.env.UPDATE_TOKEN;
 
@@ -199,7 +200,10 @@ function getInfoWallet(chatId, userId, userName) {
                     response.message, { parse_mode: "HTML" }
                );
                bot.sendPhoto(chatId, response.urlChart);
-               resolve("Success");
+
+               (async () => {
+                    await delay(100, { value: resolve("Success") });
+               })();
           }).catch(function (err) {
                helpers.log(err);
                sendErrorMessageToBot(chatId);
@@ -238,13 +242,12 @@ function sendTotalWalletAlerts() {
      });
 };
 
-
-// cron.schedule('*/3 * * * *', () => {
-//      sendTotalWalletAlerts();
-// }, {
-//      scheduled: true,
-//      timezone: constants.timezone
-// });
+cron.schedule('*/3 * * * *', () => {
+     sendTotalWalletAlerts();
+}, {
+     scheduled: true,
+     timezone: constants.timezone
+});
 
 cron.schedule('*/5 * * * *', () => {
      database.getAllAlerts().then(function (data) {
