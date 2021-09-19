@@ -21,6 +21,7 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                             backgroundColor: '#ccc',
                             borderRadius: 3,
                             font: {
+                                size: 16,
                                 weight: 'bold'
                             }
                         },
@@ -28,7 +29,7 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                             labels: [{
                                 text: `Cartera de ${userName}:\n${helpers.formatter.format(totalWallet)} €`,
                                 font: {
-                                    size: 20,
+                                    size: 16,
                                     weight: 'bold'
                                 }
                             }, {
