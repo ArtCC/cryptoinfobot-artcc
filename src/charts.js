@@ -2,7 +2,7 @@ const constants = require('./constants');
 const helpers = require('./helpers');
 const QuickChart = require('quickchart-js');
 
-function createChartForTotalWallet(cryptoNames, cryptoAmount, finalMessage) {
+function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage) {
     return new Promise(function (resolve, reject) {
         const myChart = new QuickChart();
         myChart

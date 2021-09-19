@@ -277,7 +277,7 @@ function getInfoWalletForUserId(userId, userName) {
                     let total = `\n<b>Total en cartera: </b><i> ${helpers.formatter.format(totalWallet)} €</i>\n`;
                     finalMessage += total;
 
-                    charts.createChartForTotalWallet(cryptoNames, cryptoAmount, finalMessage).then(function (response) {
+                    charts.createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage).then(function (response) {
                          resolve(response);
                     }).catch(function (err) {
                          helpers.log(err);
