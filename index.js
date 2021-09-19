@@ -2,9 +2,7 @@ require("dotenv").config();
 
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require('axios');
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
-     polling: true
-});
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 const constants = require('./src/constants');
 const cron = require('node-cron');
 const database = require('./src/database');
@@ -92,17 +90,12 @@ bot.onText(/^\/hola/, (msg) => {
 
 bot.onText(/^\/notificaciones/, (msg) => {
      let chatId = msg.chat.id;
-
-     var buttonData = [
-          { text: constants.enabledNotificationsText, callback_data: constants.enabledNotificationsText },
-          { text: constants.disabledNotificationsText, callback_data: constants.disabledNotificationsText },
-          { text: constants.cancelText, callback_data: constants.cancelText }
-     ];
-
      let buttons = {
           reply_markup: {
                inline_keyboard: [
-                    buttonData
+                    { text: constants.enabledNotificationsText, callback_data: constants.enabledNotificationsText },
+                    { text: constants.disabledNotificationsText, callback_data: constants.disabledNotificationsText },
+                    { text: constants.cancelText, callback_data: constants.cancelText }
                ]
           }
      };
@@ -166,14 +159,67 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let userName = buttonAction.from.first_name;
      let data = buttonAction.data;
 
-     if (data == constants.enabledNotificationsText || data == constants.disabledNotificationsText) {
-          setAlertForNotifyWallet(chatId, userId, userName, data);
+     if (data == constants.enabledNotificationsText) {
+          database.setSchedulerForUserId(userId, chatId, userName).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId);
+          });
+     } else if (data == constants.disabledNotificationsText) {
+          database.deleteSchedulerForUserId(userId, chatId).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId);
+          });
      } else if (data == constants.cancelText) {
           bot.sendMessage(chatId, constants.noText);
      } else {
-          deleteCryptoFromDatabase(data, chatId, userId);
+          database.deleteCryptoForUserId(data, userId).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId);
+          });
      }
 });
+
+function getInfoWallet(chatId, userId, userName) {
+     database.getInfoWalletForUserId(userId, userName).then(function (message) {
+          bot.sendMessage(
+               chatId,
+               message, { parse_mode: "HTML" }
+          );
+     }).catch(function (err) {
+          helpers.log(err);
+          sendErrorMessageToBot(chatId);
+     });
+};
+
+function sendTotalWalletAlerts() {
+     database.getAllSchedulers().then(function (scheduler) {
+          getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
+     }).catch(function (err) {
+          helpers.log(err);
+     });
+};
+
+function sendInfo(chatId, name) {
+     var message = `¡Hola ${name}!${constants.helloMessageText}`;
+
+     bot.getMyCommands().then(function (info) {
+          for (let obj of info) {
+               message += `/${obj.command} - ${obj.description}\n`;
+          }
+
+          bot.sendMessage(chatId, message);
+     });
+};
+
+function sendErrorMessageToBot(chatId) {
+     bot.sendMessage(chatId, constants.errorText);
+};
 
 cron.schedule('*/5 * * * *', () => {
      database.getAllAlerts().then(function (data) {
@@ -203,72 +249,3 @@ cron.schedule('0 22 * * *', () => {
      scheduled: true,
      timezone: constants.timezone
 });
-
-function getInfoWallet(chatId, userId, userName) {
-     database.getInfoWalletForUserId(userId, userName).then(function (message) {
-          sendMessageToBot(chatId, message, "HTML");
-     }).catch(function (err) {
-          helpers.log(err);
-          sendErrorMessageToBot(chatId);
-     });
-};
-
-function setAlertForNotifyWallet(chatId, userId, userName, data) {
-     if (data == constants.enabledNotificationsText) {
-          database.setSchedulerForUserId(userId, chatId, userName).then(function (message) {
-               bot.sendMessage(chatId, message);
-          }).catch(function (err) {
-               helpers.log(err);
-               sendErrorMessageToBot(chatId);
-          });
-     } else if (data == constants.disabledNotificationsText) {
-          database.deleteSchedulerForUserId(userId, chatId).then(function (message) {
-               bot.sendMessage(chatId, message);
-          }).catch(function (err) {
-               helpers.log(err);
-               sendErrorMessageToBot(chatId);
-          });
-     }
-};
-
-function deleteCryptoFromDatabase(cryptoName, chatId, userId) {
-     database.deleteCryptoForUserId(cryptoName, userId).then(function (message) {
-          bot.sendMessage(chatId, message);
-     }).catch(function (err) {
-          helpers.log(err);
-          sendErrorMessageToBot(chatId);
-     });
-};
-
-function sendTotalWalletAlerts() {
-     database.getAllSchedulers().then(function (scheduler) {
-          getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
-     }).catch(function (err) {
-          helpers.log(err);
-     });
-};
-
-function sendInfo(chatId, name) {
-     var message = `¡Hola ${name}!${constants.helloMessageText}`;
-
-     bot.getMyCommands().then(function (info) {
-          for (let obj of info) {
-               message += `/${obj.command} - ${obj.description}\n`;
-          }
-
-          bot.sendMessage(chatId, message);
-     });
-};
-
-function sendMessageToBot(chatId, message, parseMode) {
-     bot.sendMessage(
-          chatId,
-          message, {
-          parse_mode: parseMode
-     }
-     );
-};
-
-function sendErrorMessageToBot(chatId) {
-     bot.sendMessage(chatId, constants.errorText);
-};
