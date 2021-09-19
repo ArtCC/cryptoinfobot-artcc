@@ -26,10 +26,10 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
           let deleteQuery = `delete from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${nameCrypto}';`
 
           database.queryDatabase(deleteQuery).then(function (result) {
-               log(result);
+               helpers.log(result);
                bot.sendMessage(chatId, constants.disabledAlertText);
           }).catch(function (err) {
-               log(err);
+               helpers.log(err);
                sendErrorMessageToBot(chatId);
           });
      } else {
@@ -42,15 +42,15 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
                     let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},'${name}',${chatId},'${nameCrypto}',${priceCrypto});`;
 
                     database.queryDatabase(insertQuery).then(function (result) {
-                         log(result);
+                         helpers.log(result);
                          bot.sendMessage(chatId, constants.enabledAlertText);
                     }).catch(function (err) {
-                         log(err);
+                         helpers.log(err);
                          sendErrorMessageToBot(chatId);
                     });
                }
           }).catch(function (err) {
-               log(err);
+               helpers.log(err);
                sendErrorMessageToBot(chatId);
           });
      }
@@ -61,38 +61,10 @@ bot.onText(/^\/alertas/, (msg) => {
      let userId = msg.from.id;
      let name = msg.from.first_name;
 
-     let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId};`
-
-     database.queryDatabase(selectQuery).then(function (result) {
-          var message = `${name}, actualmente tienes añadidas las siguientes alertas de precios:\n\n`;
-
-          var dataMessage = [];
-          if (result.rowCount > 0) {
-               for (let row of result.rows) {
-                    let json = JSON.stringify(row);
-                    let obj = JSON.parse(json);
-                    let alert = {
-                         userId: obj.user_id,
-                         name: obj.name,
-                         chatId: obj.chat_id,
-                         crypto: obj.crypto,
-                         price: obj.price
-                    };
-
-                    dataMessage.push(`${helpers.capitalizeFirstLetter(alert.crypto)}: ${helpers.formatter.format(alert.price)} €.\n`);
-               }
-
-               dataMessage.sort();
-               dataMessage.forEach((text) => {
-                    message += text
-               });
-
-               bot.sendMessage(chatId, message);
-          } else {
-               bot.sendMessage(chatId, constants.emptyAlertText);
-          }
+     database.getAllAlerts(userId, chatId, name).then(function (message) {
+          bot.sendMessage(chatId, message);
      }).catch(function (err) {
-          log(err);
+          helpers.log(err);
      });
 });
 
@@ -135,7 +107,7 @@ bot.onText(/^\/borrar/, (msg) => {
 
           bot.sendMessage(chatId, constants.deleteText, buttons);
      }).catch(function (err) {
-          log(err);
+          helpers.log(err);
           sendErrorMessageToBot(chatId);
      });
 });
@@ -163,19 +135,19 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
                database.queryDatabase(insertQuery).then(function (result) {
                     bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
                }).catch(function (err) {
-                    log(err);
+                    helpers.log(err);
                     sendErrorMessageToBot(chatId);
                });
           } else {
                bot.sendMessage(chatId, `Has actualizado el valor de ${nameCrypto} correctamente en tu cartera.`);
           }
      }).catch(function (err) {
-          log(err);
+          helpers.log(err);
           database.queryDatabase(insertQuery).then(function (result) {
-               log(result);
+               helpers.log(result);
                bot.sendMessage(chatId, `Has añadido ${nameCrypto} correctamente a tu cartera.`);
           }).catch(function (err) {
-               log(err);
+               helpers.log(err);
                sendErrorMessageToBot(chatId);
           });
      });
@@ -222,7 +194,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
 
           bot.sendMessage(chatId, message);
      })).catch(error => {
-          log(error);
+          helpers.log(error);
           sendErrorMessageToBot(chatId);
      });
 });
@@ -233,9 +205,9 @@ bot.onText(/^\/start/, (msg) => {
      let insertQuery = `insert into update (chat_id) values (${chatId});`;
 
      database.queryDatabase(insertQuery).then(function (result) {
-          log(result);
+          helpers.log(result);
      }).catch(function (err) {
-          log(err);
+          helpers.log(err);
      });
 
      sendInfo(chatId, name);
@@ -263,10 +235,10 @@ bot.onText(/^\/update (.+)/, (msg, match) => {
                     bot.sendMessage(chatId, message);
                });
           }).catch(function (err) {
-               log(err);
+               helpers.log(err);
           });
      } else {
-          log(constants.tokenError);
+          helpers.log(constants.tokenError);
      }
 });
 
@@ -318,16 +290,16 @@ cron.schedule('*/5 * * * *', () => {
 
                               bot.sendMessage(alert.chatId, message);
                          }).catch(function (err) {
-                              log(err);
+                              helpers.log(err);
                               sendErrorMessageToBot(chatId);
                          });
                     }
                })).catch(error => {
-                    log(error);
+                    helpers.log(error);
                });
           }
      }).catch(function (err) {
-          log(err);
+          helpers.log(err);
      });
 });
 
@@ -419,11 +391,11 @@ function getInfoWallet(chatId, userId, name) {
 
                sendMessageToBot(chatId, finalMessage, "HTML");
           }).catch(error => {
-               log(error);
+               helpers.log(error);
                sendErrorMessageToBot(chatId);
           });
      }).catch(function (err) {
-          log(err);
+          helpers.log(err);
           sendErrorMessageToBot(chatId);
      });
 };
@@ -443,15 +415,15 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
                     message = constants.enabledNotificationsMessageText;
 
                     database.queryDatabase(query).then(function (result) {
-                         log(result);
+                         helpers.log(result);
                          bot.sendMessage(chatId, message);
                     }).catch(function (err) {
-                         log(err);
+                         helpers.log(err);
                          sendErrorMessageToBot(chatId);
                     });
                }
           }).catch(function (err) {
-               log(err);
+               helpers.log(err);
                sendErrorMessageToBot(chatId);
           });
      } else if (data == constants.disabledNotificationsText) {
@@ -459,10 +431,10 @@ function setAlertForNotifyWallet(chatId, userId, name, data) {
           message = constants.disabledNotificationsMessageText;
 
           database.queryDatabase(query).then(function (result) {
-               log(result);
+               helpers.log(result);
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
-               log(err);
+               helpers.log(err);
                sendErrorMessageToBot(chatId);
           });
      }
@@ -472,10 +444,10 @@ function deleteCryptoFromDatabase(data, chatId, userId) {
      let deleteQuery = `delete from cryptocurrencies where name = '${data}' and user_id = ${userId};`
 
      database.queryDatabase(deleteQuery).then(function (result) {
-          log(result);
+          helpers.log(result);
           bot.sendMessage(chatId, `La criptomoneda ${data} se ha borrado correctamente de tu cartera.`);
      }).catch(function (err) {
-          log(err);
+          helpers.log(err);
           sendErrorMessageToBot(chatId);
      });
 };
@@ -496,7 +468,7 @@ function sendTotalWalletAlerts() {
                getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name);
           }
      }).catch(function (err) {
-          log(err);
+          helpers.log(err);
      });
 };
 
@@ -523,11 +495,4 @@ function sendMessageToBot(chatId, message, parseMode) {
 
 function sendErrorMessageToBot(chatId) {
      bot.sendMessage(chatId, constants.errorText);
-};
-
-/**
- * Logs.
- */
-function log(message) {
-     // console.log(message);
 };
