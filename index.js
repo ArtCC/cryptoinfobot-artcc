@@ -11,11 +11,13 @@ const helpers = require('./src/helpers');
 const updateToken = process.env.UPDATE_TOKEN;
 
 bot.onText(/^\/grafica/, (msg) => {
+     let total = 436.96436406 + 1189.80561641 + 133.00987544;
      const myChart = new QuickChart();
      myChart
           .setConfig({
                type: 'doughnut',
                data: { labels: ['Cardano', 'Ethereum', 'Shiba-Inu'], datasets: [{ label: 'Importe', data: [436.96436406, 1189.80561641, 133.00987544] }] },
+               options: {plugins: {doughnutlabel: {labels: [{text: total, font: {size: 20}}, {text: 'Total'}]}}}
           })
           .setWidth(800)
           .setHeight(400)
@@ -23,9 +25,6 @@ bot.onText(/^\/grafica/, (msg) => {
 
      const url = myChart.getUrl();
      bot.sendPhoto(msg.chat.id, url);
-
-     const image = myChart.toFile('./tmp/mychart.png');
-     bot.sendPhoto(msg.chat.id, image);
 });
 
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
