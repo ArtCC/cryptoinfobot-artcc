@@ -226,10 +226,6 @@ function sendTotalWalletAlerts() {
      });
 };
 
-cron.schedule('*/3 * * * *', () => {
-     sendTotalWalletAlerts();
-});
-
 cron.schedule('*/5 * * * *', () => {
      database.getAllAlerts().then(function (data) {
           bot.sendMessage(data.chatId, data.message);
