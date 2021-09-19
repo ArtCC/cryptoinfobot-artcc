@@ -202,15 +202,7 @@ function getCryptocurrenciesForUserId(userId) {
                });
                buttonData.push({ text: constants.cancelText, callback_data: constants.cancelText });
 
-               let buttons = {
-                    reply_markup: {
-                         inline_keyboard: [
-                              buttonData
-                         ]
-                    }
-               }
-
-               resolve(buttons);
+               resolve(buttonData);
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
