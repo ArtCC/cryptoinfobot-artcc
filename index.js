@@ -14,14 +14,18 @@ bot.onText(/^\/grafica/, (msg) => {
      const myChart = new QuickChart();
      myChart
           .setConfig({
-               type: 'pie',
+               type: 'doughnut',
                data: { labels: ['Cardano', 'Ethereum', 'Shiba-Inu'], datasets: [{ label: 'Importe', data: [436.96436406, 1189.80561641, 133.00987544] }] },
           })
           .setWidth(800)
           .setHeight(400)
           .setBackgroundColor('transparent');
 
-     console.log(myChart.getUrl());
+     const url = myChart.getUrl();
+     bot.sendPhoto(msg.chat.id, url);
+
+     const image = myChart.toFile('./tmp/mychart.png');
+     bot.sendPhoto(msg.chat.id, image);
 });
 
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
