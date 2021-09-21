@@ -20,5 +20,11 @@ module.exports = {
     noText: "De acuerdo.",
     tokenError: "El token es incorrecto.",
     amountText: "Importe",
-    totalText: "Total"
+    totalText: "Total",
+    paymentTitleText: "Gracias por apoyar el proyecto",
+    paymentDescriptionText: "Con tu apoyo económico podremos mejorar el servidor donde se aloja el bot para que más usuarios puedan utilizarlo y dar más funcionalidad al mismo para que sea el mejor bot de Telegram sobre criptomonedas y tu cartera.",
+    paymentPayloadText: "cryptoinfobot-artcc",
+    paymentStartParameterText: "",
+    paymentCurrencyText: "EUR",
+    paymentPriceLabelText: "Donación"
 };
