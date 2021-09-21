@@ -8,7 +8,7 @@ function capitalizeFirstLetter(string) {
 };
 
 function log(message) {
-    // console.log(message);
+    console.log(message);
 };
 
 module.exports.formatter = formatter;
