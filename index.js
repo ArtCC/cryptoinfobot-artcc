@@ -95,7 +95,9 @@ bot.onText(/^\/dona/, (msg) => {
      let currency = constants.paymentCurrencyText;
      let prices = [{"label": constants.paymentPriceLabelText, "amount": 300}];
      let options = {
-          photo_url: "https://cdn.pixabay.com/photo/2017/12/17/14/12/bitcoin-3024279_960_720.jpg"
+          photo_url: "https://cdn.pixabay.com/photo/2020/04/22/11/59/thank-you-5077738_960_720.jpg",
+          photo_width: 480,
+          photo_height: 320
      }
 
      bot.sendInvoice(chatId, title, description, payload, providerToken, startParameter, currency, prices, options).then(function (result) {
