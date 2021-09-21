@@ -85,6 +85,25 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
      });
 });
 
+bot.onText(/^\/dona/, (msg) => {
+     let chatId = msg.chat.id;
+     let userId = msg.from.id;
+     let userName = msg.from.first_name;
+
+     let title = "Gracias por apoyar el proyecto.";
+     let description = "Con tu apoyo podremos mejorar el servidor donde se aloja el bot y dar más funcionalidad al mismo.";
+     let payload = "cryptoinfobot-artcc";
+     let provider_token = process.env.STRIPE_TEST_TOKEN;
+     let currency = "EUR";
+     let prices = [{"label": "Dona 1", "amount": 100}, {"label": "Dona 2", "amount": 200}, {"label": "Dona 3", "amount": 300}];
+
+     bot.sendInvoice(chatId, title, description, payload, provider_token, currency, prices).then(function (result) {
+          helpers.log(result);
+     }).catch(function (err) {
+          helpers.log(err);
+     });
+});
+
 bot.onText(/^\/hola/, (msg) => {
      let chatId = msg.chat.id;
      let userName = msg.from.first_name;
