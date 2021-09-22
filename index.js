@@ -85,12 +85,12 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
      });
 });
 
-bot.onText(/^\/dona/, (msg) => {
+bot.onText(/^\/donar/, (msg) => {
      let chatId = msg.chat.id;
      let title = constants.paymentTitleText;
      let description = constants.paymentDescriptionText;
      let payload = constants.paymentPayloadText;
-     let providerToken = process.env.STRIPE_PAYMENT_TOKEN;
+     let providerToken = process.env.STRIPE_PAYMENT_TEST_TOKEN;
      let startParameter = constants.paymentStartParameterText;
      let currency = constants.paymentCurrencyText;
      let prices = [{"label": constants.paymentPriceLabelText, "amount": 300}];
@@ -106,6 +106,11 @@ bot.onText(/^\/dona/, (msg) => {
           helpers.log(err);
      });
 });
+
+bot.on('pre_checkout_query', ({ answerPreCheckoutQuery }) => answerPreCheckoutQuery(true))
+bot.on('successful_payment', (ctx) => {
+     console.log(`${ctx.from.first_name} (${ctx.from.username}) just payed ${ctx.message.successful_payment.total_amount / 100} €.`)
+ })
 
 bot.onText(/^\/hola/, (msg) => {
      let chatId = msg.chat.id;

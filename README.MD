@@ -11,7 +11,7 @@ This bot is anonymous, it does not capture data if it is added to a group and th
 <p>alertas - Te muestro todas las alertas de precios que tienes añadidas</p>
 <p>borrar - Puedes borrar una criptomoneda de tu cartera</p>
 <p>cartera - Te digo el valor total de tu cartera de criptomonedas en euros</p>
-<p>dona - Puedes apoyar económicamente el proyecto con 3 euros</p>
+<p>donar - Puedes apoyar económicamente el proyecto</p>
 <p>cripto - Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10</p>
 <p>notificaciones - Puedes activar o desactivar notificaciones automáticas del valor de tu cartera</p>
 <p>precio - Dime una criptomoneda para darte su precio actual. Ej: /precio cardano</p>
