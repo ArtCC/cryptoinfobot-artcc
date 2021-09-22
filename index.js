@@ -197,11 +197,11 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
                helpers.log(err);
                sendErrorMessageToBot(chatId);
           });
-     } else if (data = constants.oneCoinText) {
+     } else if (data == constants.oneCoinText) {
           paymentWithAmount(chatId, 100);
-     } else if (data = constants.threeCoinText) {
+     } else if (data == constants.threeCoinText) {
           paymentWithAmount(chatId, 300);
-     } else if (data = constants.fiveCoinText) {
+     } else if (data == constants.fiveCoinText) {
           paymentWithAmount(chatId, 500);
      } else if (data == constants.cancelText) {
           bot.sendMessage(chatId, constants.noText);
