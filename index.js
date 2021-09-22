@@ -215,9 +215,19 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      }
 });
 
-bot.on('pre_checkout_query', ({ answerPreCheckoutQuery }) => answerPreCheckoutQuery(true))
-bot.on('shipping_query', ({ answerShippingQuery }) => answerShippingQuery(true, shippingOptions))
-bot.on('successful_payment', () => console.log('Successful payment'))
+bot.on('pre_checkout_query', function onCallbackQuery(result) {
+     helpers.log(`pre_checkout_query: ${result}`)
+     bot.answerPreCheckoutQuery(result.id, true);
+});
+
+bot.on('shipping_query', function onCallbackQuery(result) {
+     helpers.log(`shipping_query: ${result}`)
+     bot.answerShippingQuery(result.id, false);
+});
+
+bot.on('successful_payment', function onCallbackQuery(result) {
+     helpers.log(`successful_payment: ${result}`);
+});
 
 function getInfoWallet(chatId, userId, userName) {
      return new Promise(function (resolve, reject) {
