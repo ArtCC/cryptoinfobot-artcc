@@ -90,7 +90,7 @@ bot.onText(/^\/donar/, (msg) => {
      let title = constants.paymentTitleText;
      let description = constants.paymentDescriptionText;
      let payload = constants.paymentPayloadText;
-     let providerToken = process.env.STRIPE_PAYMENT_TEST_TOKEN;
+     let providerToken = process.env.STRIPE_PAYMENT_TOKEN;
      let startParameter = constants.paymentStartParameterText;
      let currency = constants.paymentCurrencyText;
      let prices = [{"label": constants.paymentPriceLabelText, "amount": 300}];
@@ -106,11 +106,6 @@ bot.onText(/^\/donar/, (msg) => {
           helpers.log(err);
      });
 });
-
-bot.on('pre_checkout_query', ({ answerPreCheckoutQuery }) => answerPreCheckoutQuery(true))
-bot.on('successful_payment', (ctx) => {
-     console.log(`${ctx.from.first_name} (${ctx.from.username}) just payed ${ctx.message.successful_payment.total_amount / 100} €.`)
- })
 
 bot.onText(/^\/hola/, (msg) => {
      let chatId = msg.chat.id;
@@ -217,6 +212,10 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
           });
      }
 });
+
+bot.on('pre_checkout_query', ({ answerPreCheckoutQuery }) => answerPreCheckoutQuery(true))
+bot.on('shipping_query', ({ answerShippingQuery }) => answerShippingQuery(true, shippingOptions))
+bot.on('successful_payment', () => console.log('Successful payment'))
 
 function getInfoWallet(chatId, userId, userName) {
      return new Promise(function (resolve, reject) {
