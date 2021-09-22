@@ -26,5 +26,9 @@ module.exports = {
     paymentPayloadText: "cryptoinfobot-artcc",
     paymentStartParameterText: "",
     paymentCurrencyText: "EUR",
-    paymentPriceLabelText: "Donación"
+    paymentPriceLabelText: "Donación",
+    coinPaymentTitleText: "Gracias por apoyar el proyecto. ¿Cuánto quieres donar?",
+    oneCoinText: "1 €",
+    threeCoinText: "3 €",
+    fiveCoinText: "5 €"
 };

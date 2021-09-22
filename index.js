@@ -87,24 +87,20 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
 
 bot.onText(/^\/donar/, (msg) => {
      let chatId = msg.chat.id;
-     let title = constants.paymentTitleText;
-     let description = constants.paymentDescriptionText;
-     let payload = constants.paymentPayloadText;
-     let providerToken = process.env.STRIPE_PAYMENT_TOKEN;
-     let startParameter = constants.paymentStartParameterText;
-     let currency = constants.paymentCurrencyText;
-     let prices = [{"label": constants.paymentPriceLabelText, "amount": 300}];
-     let options = {
-          photo_url: "https://cdn.pixabay.com/photo/2020/04/22/11/59/thank-you-5077738_960_720.jpg",
-          photo_width: 480,
-          photo_height: 320
-     }
+     let buttons = {
+          reply_markup: {
+               inline_keyboard: [
+                    [
+                         { text: constants.oneCoinText, callback_data: constants.oneCoinText },
+                         { text: constants.threeCoinText, callback_data: constants.threeCoinText },
+                         { text: constants.fiveCoinText, callback_data: constants.fiveCoinText },
+                         { text: constants.cancelText, callback_data: constants.cancelText }
+                    ]
+               ]
+          }
+     };
 
-     bot.sendInvoice(chatId, title, description, payload, providerToken, startParameter, currency, prices, options).then(function (result) {
-          helpers.log(result);
-     }).catch(function (err) {
-          helpers.log(err);
-     });
+     bot.sendMessage(chatId, constants.coinPaymentTitleText, buttons);
 });
 
 bot.onText(/^\/hola/, (msg) => {
@@ -201,6 +197,12 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
                helpers.log(err);
                sendErrorMessageToBot(chatId);
           });
+     } else if (data = constants.oneCoinText) {
+          paymentWithAmount(chatId, 100);
+     } else if (data = constants.threeCoinText) {
+          paymentWithAmount(chatId, 300);
+     } else if (data = constants.fiveCoinText) {
+          paymentWithAmount(chatId, 500);
      } else if (data == constants.cancelText) {
           bot.sendMessage(chatId, constants.noText);
      } else {
@@ -241,6 +243,27 @@ function getInfoWallet(chatId, userId, userName) {
                sendErrorMessageToBot(chatId);
                reject(err);
           });
+     });
+};
+
+function paymentWithAmount(chatId, amount) {
+     let title = constants.paymentTitleText;
+     let description = constants.paymentDescriptionText;
+     let payload = constants.paymentPayloadText;
+     let providerToken = process.env.STRIPE_PAYMENT_TOKEN;
+     let startParameter = constants.paymentStartParameterText;
+     let currency = constants.paymentCurrencyText;
+     let prices = [{ "label": constants.paymentPriceLabelText, "amount": amount }];
+     let options = {
+          photo_url: "https://cdn.pixabay.com/photo/2020/04/22/11/59/thank-you-5077738_960_720.jpg",
+          photo_width: 480,
+          photo_height: 320
+     }
+
+     bot.sendInvoice(chatId, title, description, payload, providerToken, startParameter, currency, prices, options).then(function (result) {
+          helpers.log(result);
+     }).catch(function (err) {
+          helpers.log(err);
      });
 };
 
