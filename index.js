@@ -257,7 +257,9 @@ function paymentWithAmount(chatId, amount) {
      let options = {
           photo_url: "https://cdn.pixabay.com/photo/2020/04/22/11/59/thank-you-5077738_960_720.jpg",
           photo_width: 480,
-          photo_height: 320
+          photo_height: 320,
+          is_flexible: false,
+          need_shipping_address: false
      }
 
      bot.sendInvoice(chatId, title, description, payload, providerToken, startParameter, currency, prices, options).then(function (result) {
