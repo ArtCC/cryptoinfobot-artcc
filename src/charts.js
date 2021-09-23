@@ -50,4 +50,47 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
     });
 };
 
+function createLinechartForMarketPrices(cryptoName, marketChart) {
+    return new Promise(function (resolve, reject) {
+        var timestamp = [];
+        var marketPrice = [];
+        marketChart.forEach(value => {
+            timestamp.push(value.timestamp);
+            marketPrice.push(value.price);
+        });
+
+        const labels = timestamp;
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: `Precio de ${cryptoName}`,
+                data: marketPrice,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        };
+        const config = {
+            type: 'line',
+            data: data,
+        };
+
+        const myChart = new QuickChart();
+
+        myChart
+            .setConfig(config)
+            .setWidth(800)
+            .setHeight(400)
+            .setBackgroundColor('transparent');
+
+        let response = {
+            message: "",
+            urlChart: myChart.getUrl()
+        }
+
+        resolve(response);
+    });
+};
+
 module.exports.createChartForTotalWallet = createChartForTotalWallet;
+module.exports.createLinechartForMarketPrices = createLinechartForMarketPrices;

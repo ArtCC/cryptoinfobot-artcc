@@ -3,6 +3,7 @@ require("dotenv").config();
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require('axios');
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
+const charts = require('./charts');
 const constants = require('./src/constants');
 const cron = require('node-cron');
 const database = require('./src/database');
@@ -145,7 +146,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
 
           bot.sendMessage(chatId, message);
 
-          let marketChart = [];
+          var marketChart = [];
           responseMarketChart.data["prices"].forEach(price => {
                let value = {
                     timestamp: price[0],
@@ -153,8 +154,11 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
                };
                marketChart.push(value);
           });
-          console.log(marketChart);
-
+          charts.createLinechartForMarketPrice(crypto, marketChart).then(function (response) {
+               helpers.log(response);
+          }).catch(function (err) {
+               helpers.log(err);
+          });
      })).catch(error => {
           helpers.log(error);
           sendErrorMessageToBot(chatId);
