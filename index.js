@@ -134,18 +134,20 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      let days = data[1];
 
      let requestPrice = axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`);
-     let requestChart = axios.get(constants.coingeckoBaseUrl + `/coins/${crypto}/market_chart?vs_currency=${constants.currencyParam}&days=${days}`);
-     let request = [requestPrice, requestChart];
+     let requestMarketChart = axios.get(constants.coingeckoBaseUrl + `/coins/${crypto}/market_chart?vs_currency=${constants.currencyParam}&days=${days}`);
+     let request = [requestPrice, requestMarketChart];
 
-     axios.all(request).then(axios.spread(function(responsePrice, responseChart) {
-          console.log(responseChart);
-          
+     axios.all(request).then(axios.spread(function(responsePrice, responseMarketChart) {          
           let price = responsePrice.data[crypto][constants.currencyParam];
 
           var message = `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.\n\n`;
           message += constants.infoPriceText;
 
           bot.sendMessage(chatId, message);
+
+          let prices = responseMarketChart.data["prices"];
+          console.log(prices);
+          
      })).catch(error => {
           helpers.log(error);
           sendErrorMessageToBot(chatId);
