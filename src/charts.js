@@ -88,9 +88,7 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
             urlChart: myChart.getUrl()
         }
 
-        myChart.toFile('/tmp/mychart.png');
-
-        resolve("");
+        resolve(response);
     });
 };
 
