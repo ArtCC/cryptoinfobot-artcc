@@ -58,8 +58,6 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
             timestamp.push(value.timestamp);
             marketPrice.push(value.price);
         });
-
-        console.log("OK");
         
         const labels = createDateCollectionFromTimestamp(timestamp);
         const data = {
