@@ -4,7 +4,7 @@ const QuickChart = require('quickchart-js');
 
 function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName) {
     return new Promise(function (resolve, reject) {
-        const myChart = new QuickChart();
+        let myChart = new QuickChart();
         myChart
             .setConfig({
                 type: 'doughnut',
@@ -58,25 +58,25 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
             timestamp.push(value.timestamp);
             marketPrice.push(value.price);
         });
-        
-        const labels = createDateCollectionFromTimestamp(timestamp);
-        const data = {
+
+        let labels = createDateCollectionFromTimestamp(timestamp);
+        let titleLabel = "23/09/2021"; // getDateFromTimestamp(timestamp[0]);
+        let data = {
             labels: labels,
             datasets: [{
-                label: `Precio de ${cryptoName} (${getDateFromTimestamp(timestamp[0])})`,
+                label: `Precio de ${cryptoName} (${titleLabel})`,
                 data: marketPrice,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
             }]
         };
-        const config = {
+        let config = {
             type: 'line',
             data: data,
         };
 
-        const myChart = new QuickChart();
-
+        let myChart = new QuickChart();
         myChart
             .setConfig(config)
             .setWidth(800)
