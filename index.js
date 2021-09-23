@@ -129,7 +129,12 @@ bot.onText(/^\/notificaciones/, (msg) => {
 
 bot.onText(/^\/precio (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
-     let crypto = match[1];
+     let data = match[1].split(" ");
+     let crypto = data[0];
+     let days = data[1];
+
+     console.log(crypto);
+     console.log(days);
 
      axios.all([
           axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`)

@@ -14,7 +14,7 @@ This bot is anonymous, it does not capture data if it is added to a group and th
 <p>donar - Puedes apoyar económicamente el proyecto</p>
 <p>cripto - Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10</p>
 <p>notificaciones - Puedes activar o desactivar notificaciones automáticas del valor de tu cartera</p>
-<p>precio - Dime una criptomoneda para darte su precio actual. Ej: /precio cardano</p>
+<p>precio - Dime una criptomoneda para darte su precio actual y evolución por días. Ej: /precio cardano 1</p>
 
 ### Database in Heroku Postgres:
 
