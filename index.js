@@ -134,7 +134,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      let crypto = data[0];
      var days = data[1];
 
-     if (days.length == undefined || days == 0) {
+     if (days === undefined || days === 0) {
           days = 1;
      }
 
