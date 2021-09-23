@@ -18,7 +18,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let cryptoName = data[0];
      let cryptoPrice = data[1];
 
-     if (cryptoName === undefined || cryptoPrice === undefined) {
+     if (data === undefined) {
           sendErrorMessageToBot(chatId);
           return
      }
