@@ -63,7 +63,7 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
         const data = {
             labels: labels,
             datasets: [{
-                label: `Precio de ${cryptoName} (${getDateFromTimeStamp(timestamp[0])})`,
+                label: `Precio de ${cryptoName} (${getDateFromTimestamp(timestamp[0])})`,
                 data: marketPrice,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
@@ -102,7 +102,8 @@ function createDateCollectionFromTimestamp(data) {
     return collection;
 };
 
-function getDateFromTimeStamp(timestamp) {
+function getDateFromTimestamp(timestamp) {
+    console.log(timestamp);
     let date = new Date(timestamp);
     let dateString = `${date.getDate()}/${date.getMonth() + 1()}/${date.getFullYear()}`;
     return dateString;
