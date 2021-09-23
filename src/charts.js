@@ -61,6 +61,7 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
 
         let labels = createDateCollectionFromTimestamp(timestamp);
         let titleLabel = "23/09/2021"; // getDateFromTimestamp(timestamp[0]);
+        console(getDateFromTimestamp(timestamp[0]));
         let data = {
             labels: labels,
             datasets: [{
@@ -95,8 +96,8 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
 function createDateCollectionFromTimestamp(data) {
     var collection = [];
     data.forEach(timestamp => {
-        let date = new Date(timestamp);
-        let dateString = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        let date = new Date(timestamp)
+        let dateString = `${date.getHours() + 2}:${date.getMinutes()}:${date.getSeconds()}`;
         collection.push(dateString);
     });
     return collection;
