@@ -18,6 +18,11 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let cryptoName = data[0];
      let cryptoPrice = data[1];
 
+     if (cryptoName === undefined || cryptoPrice === undefined) {
+          sendErrorMessageToBot(chatId);
+          return
+     }
+
      database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
