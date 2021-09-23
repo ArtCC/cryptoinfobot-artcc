@@ -142,8 +142,6 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
           var message = `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.\n\n`;
           message += constants.infoPriceText;
 
-          bot.sendMessage(chatId, message);
-
           var marketChart = [];
           responseMarketChart.data["prices"].forEach(price => {
                let value = {
@@ -153,7 +151,13 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
                marketChart.push(value);
           });
           charts.createLinechartForMarketPrices(crypto, marketChart).then(function (response) {
-               helpers.log(response);
+               bot.sendPhoto(chatId, response.urlChart).then(function (result) {
+                    helpers.log(result);
+                    bot.sendMessage(chatId, message);
+               }).catch(function (err) {
+                    helpers.log(err);
+                    sendErrorMessageToBot(chatId);
+               });
           }).catch(function (err) {
                helpers.log(err);
           });
