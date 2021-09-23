@@ -60,7 +60,8 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
         });
 
         let labels = createDateCollectionFromTimestamp(timestamp);
-        let titleLabel = getDateFromTimestamp();
+        let date = new Date();
+        let titleLabel = `${date.getDate()}/${date.getMonth() + 1()}/${date.getFullYear()}`;
         let data = {
             labels: labels,
             datasets: [{
@@ -100,12 +101,6 @@ function createDateCollectionFromTimestamp(data) {
         collection.push(dateString);
     });
     return collection;
-};
-
-function getDateFromTimestamp() {
-    let date = new Date();
-    let dateString = `${date.getDate()}/${date.getMonth() + 1()}/${date.getFullYear()}`;
-    return dateString;
 };
 
 module.exports.createChartForTotalWallet = createChartForTotalWallet;
