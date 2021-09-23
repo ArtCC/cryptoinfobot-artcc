@@ -60,8 +60,7 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
         });
 
         let labels = createDateCollectionFromTimestamp(timestamp);
-        let date = new Date(Date.now())
-        let titleLabel = `${date.getDate()}/${date.getMonth() + 1()}/${date.getFullYear()}`;
+        let titleLabel = "23/09/2021";
         let data = {
             labels: labels,
             datasets: [{
