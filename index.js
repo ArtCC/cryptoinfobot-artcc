@@ -3,7 +3,7 @@ require("dotenv").config();
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require('axios');
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
-const charts = require('./charts');
+const charts = require('./src/charts');
 const constants = require('./src/constants');
 const cron = require('node-cron');
 const database = require('./src/database');
