@@ -154,7 +154,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
                };
                marketChart.push(value);
           });
-          charts.createLinechartForMarketPrice(crypto, marketChart).then(function (response) {
+          charts.createLinechartForMarketPrices(crypto, marketChart).then(function (response) {
                helpers.log(response);
           }).catch(function (err) {
                helpers.log(err);
