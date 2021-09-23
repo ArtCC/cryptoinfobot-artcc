@@ -130,10 +130,12 @@ bot.onText(/^\/notificaciones/, (msg) => {
 
 bot.onText(/^\/precio (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
-     let crypto = match[1];
+     let data = match[1].split(" ");
+     let crypto = data[0];
+     let days = data[1];
 
      let requestPrice = axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`);
-     let requestMarketChart = axios.get(constants.coingeckoBaseUrl + `/coins/${crypto}/market_chart?vs_currency=${constants.currencyParam}&days=0.1&interval=seconds`);
+     let requestMarketChart = axios.get(constants.coingeckoBaseUrl + `/coins/${crypto}/market_chart?vs_currency=${constants.currencyParam}&days=${days}`);
      let request = [requestPrice, requestMarketChart];
 
      axios.all(request).then(axios.spread(function (responsePrice, responseMarketChart) {
@@ -144,11 +146,14 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
 
           var marketChart = [];
           responseMarketChart.data["prices"].forEach(price => {
-               let value = {
-                    timestamp: price[0],
+               let date = new Date(price[0])
+               let dateString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+               let obj = {
+                    date: new Date(price[0]),
+                    dateString: dateString,
                     price: price[1]
                };
-               marketChart.push(value);
+               marketChart.push(obj);
           });
           charts.createLinechartForMarketPrices(crypto, marketChart).then(function (response) {
                bot.sendPhoto(chatId, response.urlChart).then(function (result) {

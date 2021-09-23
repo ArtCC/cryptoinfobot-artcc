@@ -52,24 +52,20 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
 
 function createLinechartForMarketPrices(cryptoName, marketChart) {
     return new Promise(function (resolve, reject) {
-        var timestamp = [];
-        var marketPrice = [];
-        marketChart.forEach(value => {
-            timestamp.push(value.timestamp);
-            marketPrice.push(value.price);
+        let sortedForDays = sortedMarketChartCollectionForDay(marketChart);
+
+        var dates = [];
+        var prices = [];
+        sortedForDays.forEach(obj => {
+            dates.push(obj.dateString);
+            prices.push(obj.price);
         });
 
-        let labels = createDateCollectionFromTimestamp(timestamp);
-        let date = new Date();
-        let day = ("0" + date.getDate()).slice(-2);
-        let month = ("0" + (date.getMonth() + 1)).slice(-2);
-        let year = date.getFullYear();
-        let titleLabel = `${day}/${month}/${year}`;
         let data = {
-            labels: labels,
+            labels: dates,
             datasets: [{
-                label: `Precio de ${cryptoName} (${titleLabel})`,
-                data: marketPrice,
+                label: `Precio de ${helpers.capitalizeFirstLetter(cryptoName)} en los últimos ${sortedForDays.length} días.`,
+                data: prices,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
@@ -96,14 +92,38 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
     });
 };
 
-function createDateCollectionFromTimestamp(data) {
-    var collection = [];
-    data.forEach(timestamp => {
-        let date = new Date(timestamp)
-        let dateString = `${date.getHours() + 2}:${date.getMinutes()}:${date.getSeconds()}`;
-        collection.push(dateString);
+function sortedMarketChartCollectionForDay(data) {
+    var tempCollection = [];
+    var finalCollection = [];
+    data.forEach(obj1 => {
+        if (!tempCollection.includes(obj1)) {
+            tempCollection = [];
+            data.forEach(obj2 => {
+                if (obj1.dateString === obj2.dateString) {
+                    tempCollection.push(obj2);
+                }
+            });
+            finalCollection.push(tempCollection);
+        }
     });
-    return collection;
+    let sortedForDays = [];
+    finalCollection.forEach(collection => {
+        var date;
+        var dateString;
+        var priceDay = 0;
+        collection.forEach(obj => {
+            date = obj.date;
+            dateString = obj.dateString;
+            priceDay = priceDay + obj.price;
+        });
+        let object = {
+            date: date,
+            dateString: dateString,
+            price: priceDay / collection.length
+        };
+        sortedForDays.push(object);
+    });
+    return sortedForDays;
 };
 
 module.exports.createChartForTotalWallet = createChartForTotalWallet;
