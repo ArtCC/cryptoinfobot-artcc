@@ -64,8 +64,6 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
         let day = ("0" + date.getDate()).slice(-2);
         let month = ("0" + (date.getMonth() + 1)).slice(-2);
         let year = date.getFullYear();
-        console.log(day + "/" + month + "/" + year);
-
         let titleLabel = `${day}/${month}/${year}`;
         let data = {
             labels: labels,
