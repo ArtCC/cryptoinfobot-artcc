@@ -18,10 +18,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let cryptoName = data[0];
      let cryptoPrice = data[1];
 
-     if (data === undefined) {
-          sendErrorMessageToBot(chatId);
-          return
-     }
+     console.log(data);
 
      database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice).then(function (message) {
           bot.sendMessage(chatId, message);
