@@ -133,7 +133,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      let crypto = match[1];
 
      let requestPrice = axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`);
-     let requestMarketChart = axios.get(constants.coingeckoBaseUrl + `/coins/${crypto}/market_chart?vs_currency=${constants.currencyParam}&days=30&interval=seconds`);
+     let requestMarketChart = axios.get(constants.coingeckoBaseUrl + `/coins/${crypto}/market_chart?vs_currency=${constants.currencyParam}&days=1&interval=seconds`);
      let request = [requestPrice, requestMarketChart];
 
      axios.all(request).then(axios.spread(function (responsePrice, responseMarketChart) {
