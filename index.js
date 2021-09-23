@@ -130,12 +130,10 @@ bot.onText(/^\/notificaciones/, (msg) => {
 
 bot.onText(/^\/precio (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
-     let data = match[1].split(" ");
-     let crypto = data[0];
-     let days = data[1];
+     let crypto = data[1];
 
      let requestPrice = axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`);
-     let requestMarketChart = axios.get(constants.coingeckoBaseUrl + `/coins/${crypto}/market_chart?vs_currency=${constants.currencyParam}&days=${days}&interval=minute`);
+     let requestMarketChart = axios.get(constants.coingeckoBaseUrl + `/coins/${crypto}/market_chart?vs_currency=${constants.currencyParam}&days=30&interval=seconds`);
      let request = [requestPrice, requestMarketChart];
 
      axios.all(request).then(axios.spread(function (responsePrice, responseMarketChart) {

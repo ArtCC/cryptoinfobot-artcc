@@ -59,11 +59,11 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
             marketPrice.push(value.price);
         });
 
-        const labels = timestamp;
+        const labels = createDateCollectionFromTimestamp(timestamp);
         const data = {
             labels: labels,
             datasets: [{
-                label: `Precio de ${cryptoName}`,
+                label: `Precio de ${cryptoName} (${getDateFromTimeStamp(timestamp[0])})`,
                 data: marketPrice,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
@@ -90,6 +90,22 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
 
         resolve(response);
     });
+};
+
+function createDateCollectionFromTimestamp(data) {
+    var collection = [];
+    data.forEach(timestamp => {
+        let date = new Date(timestamp);
+        let dateString = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        collection.push(dateString);
+    });
+    return collection;
+};
+
+function getDateFromTimeStamp(timestamp) {
+    let date = new Date(timestamp);
+    let dateString = `${date.getDate()}/${date.getMonth() + 1()}/${date.getFullYear()}`;
+    return dateString;
 };
 
 module.exports.createChartForTotalWallet = createChartForTotalWallet;
