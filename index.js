@@ -147,7 +147,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      axios.all(request).then(axios.spread(function (responsePrice, responseMarketChart) {
           let price = responsePrice.data[crypto][constants.currencyParam];
 
-          var message = `El precio actual del ${crypto} es ${helpers.formatterAmount(2, 8).format(price)} €.\n\n`;
+          var message = (constants.infoPriceTitleText, crypto, helpers.formatterAmount(2, 8).format(price));
           message += constants.infoPriceText;
 
           var marketChart = [];
@@ -264,17 +264,17 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
 });
 
 bot.on('pre_checkout_query', function onCallbackQuery(result) {
-     helpers.log(`pre_checkout_query: ${result}`)
+     helpers.log(result)
      bot.answerPreCheckoutQuery(result.id, true);
 });
 
 bot.on('shipping_query', function onCallbackQuery(result) {
-     helpers.log(`shipping_query: ${result}`)
+     helpers.log(result)
      bot.answerShippingQuery(result.id, false);
 });
 
 bot.on('successful_payment', function onCallbackQuery(result) {
-     helpers.log(`successful_payment: ${result}`);
+     helpers.log(result)
 });
 
 function getInfoWallet(chatId, userId, userName) {
@@ -287,14 +287,14 @@ function getInfoWallet(chatId, userId, userName) {
                          response.message, { parse_mode: "HTML" }
                     ).then(function (message) {
                          helpers.log(message);
-                         resolve("Success.")
+                         resolve();
                     }).catch(function (err) {
                          helpers.log(err);
-                         resolve(err)
+                         resolve(err);
                     });
                }).catch(function (err) {
                     helpers.log(err);
-                    resolve(err)
+                    resolve(err);
                });
           }).catch(function (err) {
                helpers.log(err);

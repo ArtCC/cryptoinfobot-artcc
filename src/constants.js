@@ -5,6 +5,7 @@ module.exports = {
     helloMessageText: "\n\nEscribe la barra / para ver en qué te puedo ayudar.\n\nAñade tus criptomonedas y recibe el valor total de tu cartera usando el API de Coingecko.\n\nMás información: https://github.com/ArtCC/cryptoinfobot-artcc\n\n",
     cancelText: "Cancelar",
     deleteText: "¿Qué criptomoneda quieres borrar de tu cartera?",
+    infoPriceTitleText: "El precio actual del %s es %s €.\n\n",
     infoPriceText: "Puedes consultar el listado de criptomonedas disponibles en https://www.coingecko.com/es",
     errorText: "¡Vaya! Parece que ha habido un problema con tu solicitud. Inténtalo de nuevo por favor.",
     notificationsTitleText: "¿Quieres activar las notificaciones automáticas del valor de tu cartera?",
