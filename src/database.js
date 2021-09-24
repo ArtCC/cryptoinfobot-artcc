@@ -261,7 +261,7 @@ function getInfoWalletForUserId(userId, userName) {
                                    let priceAmount = crypto.amount * currency.price;
                                    let message = `<b>${currency.alias} (${currency.price} €):</b> Cantidad: ${helpers.formatterAmount(2, 8).format(crypto.amount)} - Total: ${helpers.formatterAmount(2, 8).format(priceAmount)} €\n`;
 
-                                   cryptoAmount.push(priceAmount);
+                                   cryptoAmount.push(helpers.formatterAmount(2, 2).format(priceAmount));
                                    messages.push(message);
 
                                    totalWallet += priceAmount;
