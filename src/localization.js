@@ -8,7 +8,8 @@ i18n.configure({
 });
 
 function testLocalization() {
-    console.log(i18n.__('hello'));
+    console.log(i18n.__('Hello'));
+    console.log(i18n.__('This is a test'));
 };
 
 module.exports.testLocalization = testLocalization;
