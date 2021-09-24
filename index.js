@@ -8,7 +8,12 @@ const constants = require('./src/constants');
 const cron = require('node-cron');
 const database = require('./src/database');
 const helpers = require('./src/helpers');
+const localization = require('./src/localization');
 const updateToken = process.env.UPDATE_TOKEN;
+
+bot.onText(/^\/test/, (msg) => {
+     localization.testLocalization();
+});
 
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let chatId = msg.chat.id;
