@@ -4,7 +4,7 @@ i18n.configure({
     locales: ['en', 'es'],
     defaultLocale: 'es',
     register: global,
-    directory: '../locales'
+    directory: './locales'
 });
 
 function testLocalization() {
