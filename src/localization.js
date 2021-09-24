@@ -2,9 +2,9 @@ const i18n = require("i18n");
 
 i18n.configure({
     locales: ['en', 'es'],
-    defaultLocale: 'es',
+    defaultLocale: 'en',
     register: global,
-    directory: __dirname + '/locales'
+    directory: './locales'
 });
 
 function testLocalization() {
