@@ -10,6 +10,7 @@ const database = require('./src/database');
 const helpers = require('./src/helpers');
 const localization = require('./src/localization');
 const updateToken = process.env.UPDATE_TOKEN;
+const util = require('util');
 
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
      // msg.from.language_code
@@ -147,7 +148,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      axios.all(request).then(axios.spread(function (responsePrice, responseMarketChart) {
           let price = responsePrice.data[crypto][constants.currencyParam];
 
-          var message = ("El precio actual del %s es %s €.\n\n", crypto, helpers.formatterAmount(2, 8).format(price));
+          var message = util.format(constants.infoPriceTitleText, crypto, helpers.formatterAmount(2, 8).format(price));
           message += constants.infoPriceText;
 
           var marketChart = [];
