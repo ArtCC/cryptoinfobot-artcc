@@ -186,7 +186,23 @@ bot.onText(/^\/start/, (msg) => {
           helpers.log(err);
      });
 
-     sendInfo(chatId, userName);
+     const commands = [
+          { command: 'alerta', description: 'Activa una alerta de precios para una criptomoneda (Para borrar enviar el precio a 0. Ej: /alerta ethereum 3500' },
+          { command: 'alertas', description: 'Te muestro todas las alertas de precios que tienes configuradas' },
+          { command: 'borrar', description: 'Puedes borrar una criptomoneda de tu cartera' },
+          { command: 'cartera', description: 'Te digo el valor total de tu cartera de criptomonedas' },
+          { command: 'cripto', description: 'Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10' },
+          { command: 'donar', description: 'Puedes apoyar económicamente el proyecto' },
+          { command: 'hola', description: 'Te saludo amablemente por tu nombre y te doy información sobre mí' },
+          { command: 'notificaciones', description: 'Puedes activar o desactivar notificaciones automáticas del valor de tu cartera' },
+          { command: 'precio', description: 'Dime una criptomoneda para darte su precio actual y evolución en una gráfica por días. Ej: /precio cardano 1' },
+          { command: 'start', description: 'Te doy información sobre mí e inicio mi actividad contigo' }
+     ];
+
+     bot.setMyCommands(commands).then(function (info) {
+          helpers.log(info);
+          sendInfo(chatId, userName);
+     });;
 });
 
 bot.onText(/^\/update (.+)/, (msg, match) => {
