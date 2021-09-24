@@ -145,7 +145,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      axios.all(request).then(axios.spread(function (responsePrice, responseMarketChart) {
           let price = responsePrice.data[crypto][constants.currencyParam];
 
-          var message = `El precio actual del ${crypto} es ${helpers.formatter.format(price)} €.\n\n`;
+          var message = `El precio actual del ${crypto} es ${helpers.formatterAmount(2, 8).format(price)} €.\n\n`;
           message += constants.infoPriceText;
 
           var marketChart = [];

@@ -60,13 +60,13 @@ function getAllAlerts() {
                          let price = response.data[alert.crypto][constants.currencyParam];
 
                          if (price >= alert.price) {
-                              var message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatter.format(price)} € en estos momentos. `;
+                              var message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatterAmount(2, 8).format(price)} € en estos momentos. `;
 
                               let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
 
                               queryDatabase(deleteQuery).then(function (result) {
                                    helpers.log(result);
-                                   message += `He borrado la alerta para ${alert.crypto} de ${helpers.formatter.format(alert.price)} € correctamente.`;
+                                   message += `He borrado la alerta para ${alert.crypto} de ${helpers.formatterAmount(2, 8).format(alert.price)} € correctamente.`;
 
                                    let data = {
                                         chatId: alert.chatId,
@@ -111,7 +111,7 @@ function getAllAlertsForUserId(userId, chatId, name) {
                               price: obj.price
                          };
 
-                         dataMessage.push(`${helpers.capitalizeFirstLetter(alert.crypto)}: ${helpers.formatter.format(alert.price)} €.\n`);
+                         dataMessage.push(`${helpers.capitalizeFirstLetter(alert.crypto)}: ${helpers.formatterAmount(2, 8).format(alert.price)} €.\n`);
                     }
 
                     dataMessage.sort();
@@ -259,7 +259,7 @@ function getInfoWalletForUserId(userId, userName) {
                          collection.forEach(currency => {
                               if (crypto.name == currency.name) {
                                    let priceAmount = crypto.amount * currency.price;
-                                   let message = `<b>${currency.alias} (${currency.price} €):</b> Cantidad: ${helpers.formatter.format(crypto.amount)} - Total: ${helpers.formatter.format(priceAmount)} €\n`;
+                                   let message = `<b>${currency.alias} (${currency.price} €):</b> Cantidad: ${helpers.formatterAmount(2, 8).format(crypto.amount)} - Total: ${helpers.formatterAmount(2, 8).format(priceAmount)} €\n`;
 
                                    cryptoAmount.push(priceAmount);
                                    messages.push(message);
@@ -274,7 +274,7 @@ function getInfoWalletForUserId(userId, userName) {
                     messages.forEach(text => {
                          finalMessage += text;
                     });
-                    let total = `\n<b>Total en cartera: </b><i> ${helpers.formatter.format(totalWallet)} €</i>\n`;
+                    let total = `\n<b>Total en cartera: </b><i> ${helpers.formatterAmount(2, 8).format(totalWallet)} €</i>\n`;
                     finalMessage += total;
 
                     charts.createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName).then(function (response) {
