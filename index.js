@@ -12,7 +12,7 @@ const localization = require('./src/localization');
 const updateToken = process.env.UPDATE_TOKEN;
 
 bot.onText(/^\/test/, (msg) => {
-     console.log(msg.from.localization);
+     console.log(msg.from.language_code);
      localization.setLocale = msg.from.localization;
      localization.testLocalization();
 });
