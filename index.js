@@ -11,13 +11,8 @@ const helpers = require('./src/helpers');
 const localization = require('./src/localization');
 const updateToken = process.env.UPDATE_TOKEN;
 
-bot.onText(/^\/test/, (msg) => {
-     console.log(msg.from.language_code);
-     localization.setLocale = msg.from.localization;
-     localization.testLocalization();
-});
-
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
+     // msg.from.language_code
      let chatId = msg.chat.id;
      let userId = msg.from.id;
      let userName = msg.from.first_name;

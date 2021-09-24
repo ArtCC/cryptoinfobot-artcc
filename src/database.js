@@ -2,6 +2,7 @@ const axios = require('axios');
 const charts = require('./charts');
 const constants = require('./constants');
 const helpers = require('./helpers');
+const localization = require('./localization');
 const { Pool } = require('pg');
 const pool = new Pool({
      connectionString: process.env.DATABASE_URL,

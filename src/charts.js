@@ -1,5 +1,5 @@
-const constants = require('./constants');
 const helpers = require('./helpers');
+const localization = require('./localization');
 const QuickChart = require('quickchart-js');
 
 function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName) {
