@@ -12,6 +12,8 @@ const localization = require('./src/localization');
 const updateToken = process.env.UPDATE_TOKEN;
 
 bot.onText(/^\/test/, (msg) => {
+     console.log(msg.from.localization);
+     localization.setLocale = msg.from.localization;
      localization.testLocalization();
 });
 
