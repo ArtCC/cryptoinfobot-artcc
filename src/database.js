@@ -10,6 +10,7 @@ const pool = new Pool({
           rejectUnauthorized: false
      }
 });
+const util = require('util');
 
 function deleteCryptoForUserId(cryptoName, userId) {
      return new Promise(function (resolve, reject) {
