@@ -149,7 +149,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
           days = 3;
      }
 
-     let requestPrice = axios.get(constants.coingeckoBaseUrl + util.format(constants.requestPriceUrl, crypto, constants.currencyParam, days));
+     let requestPrice = axios.get(constants.coingeckoBaseUrl + util.format(constants.requestPriceUrl, crypto, constants.currencyParam));
      let requestMarketChart = axios.get(constants.coingeckoBaseUrl + util.format(constants.requestMarketChartUrl, crypto, constants.currencyParam, days));
      let request = [requestPrice, requestMarketChart];
 
