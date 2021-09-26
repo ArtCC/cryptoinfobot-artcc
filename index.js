@@ -365,9 +365,9 @@ cron.schedule('* * * * *', () => {
      // For total wallet notifications.
      let date = new Date();
      let hour = date.getHours() + 2; // (UTC+2. Spain timezone.)
+     let minutes = date.getMinutes();
 
-     /**
-     if (hour === 8 || hour === 15 || hour === 22) {
+     if (hour === 8 || hour === 15 || hour === 22 && minutes === 0) {
           database.getAllSchedulers().then(function (schedulers) {
                schedulers.forEach(scheduler => {
                     getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name).then(function (message) {
@@ -379,5 +379,5 @@ cron.schedule('* * * * *', () => {
           }).catch(function (err) {
                helpers.log(err);
           });
-     } */
+     }
 });
