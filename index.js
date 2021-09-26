@@ -369,35 +369,20 @@ function sendTotalWalletAlerts() {
 };
 
 cron.schedule('* * * * *', () => {
+     // For crypto alert price.
      database.getAllAlerts().then(function (data) {
           bot.sendMessage(data.chatId, data.message);
      }).catch(function (err) {
           helpers.log(err);
      });
 
+     // For total wallet notifications.
      let date = new Date().toLocaleString("es-ES", { timeZone: constants.timezoneSpain });
-     let hour = date.getHour();
-     let minutes = date.getMinutes();
-     console.log(`${hour}:${minutes}`);
-});
+     let time = `${date.getHour()}:${date.getMinutes()}`;
 
-cron.schedule('0 8 * * *', () => {
-     sendTotalWalletAlerts();
-}, {
-     scheduled: true,
-     timezone: constants.timezoneSpain
-});
+     helpers.log(time);
 
-cron.schedule('0 15 * * *', () => {
-     sendTotalWalletAlerts();
-}, {
-     scheduled: true,
-     timezone: constants.timezoneSpain
-});
-
-cron.schedule('0 22 * * *', () => {
-     sendTotalWalletAlerts();
-}, {
-     scheduled: true,
-     timezone: constants.timezoneSpain
+     if (time === "08:00" || time === "15:00" || time === "22:00") {
+          sendTotalWalletAlerts();
+     }
 });
