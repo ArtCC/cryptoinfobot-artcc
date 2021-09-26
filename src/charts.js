@@ -1,3 +1,4 @@
+const constants = require('./src/constants');
 const helpers = require('./helpers');
 const localization = require('./localization');
 const QuickChart = require('quickchart-js');
