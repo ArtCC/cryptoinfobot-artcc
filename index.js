@@ -379,9 +379,10 @@ cron.schedule('* * * * *', () => {
      });
 
      // For total wallet notifications.
-     let date = new Date().toLocaleString("es-ES", { timeZone: constants.timezoneSpain });
-     let hour = date.getHours();
-     let minutes = date.getMinutes();
+     let localeStringDate = new Date().toLocaleString("es-ES", { timeZone: constants.timezoneSpain });
+     let stringToDate = new Date(localeStringDate);
+     let hour = stringToDate.getHours();
+     let minutes = stringToDate.getMinutes();
      
      console.log(hour);
      console.log(minutes);
