@@ -366,6 +366,7 @@ cron.schedule('* * * * *', () => {
      let date = new Date();
      let hour = date.getHours() + 2; // (UTC+2. Spain timezone.)
 
+     /**
      if (hour === 8 || hour === 15 || hour === 22) {
           database.getAllSchedulers().then(function (schedulers) {
                schedulers.forEach(scheduler => {
@@ -378,5 +379,5 @@ cron.schedule('* * * * *', () => {
           }).catch(function (err) {
                helpers.log(err);
           });
-     }
+     } */
 });
