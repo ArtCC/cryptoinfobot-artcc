@@ -380,17 +380,17 @@ cron.schedule('* * * * *', () => {
 
      // For total wallet notifications.
      let date = new Date().toLocaleString("es-ES", { timeZone: constants.timezoneSpain });
-     let hour = date.getHour();
+     let hour = date.getHours();
      let minutes = date.getMinutes();
-     let time = `${hour}:${minutes}`;
+     
+     console.log(hour);
+     console.log(minutes);
 
-     console.log(time);
+     // if (time === "17:26") {
+     //      console.log("alert ok");
+     // }
 
-     if (time === "17:26") {
-          console.log("alert ok");
-     }
-
-     if (time === constants.firstCronAlert || time === constants.secondCronAlert || time === constants.thirdCronAlert) {
-          sendTotalWalletAlerts();
-     }
+     // if (time === constants.firstCronAlert || time === constants.secondCronAlert || time === constants.thirdCronAlert) {
+     //      sendTotalWalletAlerts();
+     // }
 });
