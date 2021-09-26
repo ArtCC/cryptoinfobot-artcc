@@ -1,7 +1,7 @@
 module.exports = {
     timezone: "Europe/Madrid",
     coingeckoBaseUrl: "https://api.coingecko.com/api/v3",
-    requestPriceUrl: "/simple/price?ids=$s&vs_currencies=%s",
+    requestPriceUrl: "/simple/price?ids=%s&vs_currencies=%s",
     requestMarketChartUrl: "/coins/%s/market_chart?vs_currency=%s&days=%s",
     currencyParam: "eur",
     parseMode: "HTML",
