@@ -18,7 +18,7 @@ function deleteCryptoForUserId(cryptoName, userId) {
 
           queryDatabase(deleteQuery).then(function (result) {
                helpers.log(result);
-               resolve(`La criptomoneda ${cryptoName} se ha borrado correctamente de tu cartera.`);
+               resolve(util.format(constants.deleteMessage, cryptoName));
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
@@ -63,13 +63,13 @@ function getAllAlerts() {
                          let price = response.data[alert.crypto][constants.currencyParam];
 
                          if (price >= alert.price) {
-                              var message = `${alert.name} el precio de ${alert.crypto} es de ${helpers.formatterAmount(2, 8).format(price)} € en estos momentos. `;
+                              var message = util.format(constants.alertMessage, alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
 
                               let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
 
                               queryDatabase(deleteQuery).then(function (result) {
                                    helpers.log(result);
-                                   message += `He borrado la alerta para ${alert.crypto} de ${helpers.formatterAmount(2, 8).format(alert.price)} € correctamente.`;
+                                   message += util.format(constants.deleteAlertMessage, alert.crypto, helpers.formatterAmount(2, 8).format(alert.price));
 
                                    let data = {
                                         chatId: alert.chatId,
@@ -99,7 +99,7 @@ function getAllAlertsForUserId(userId, chatId, name) {
           let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId};`
 
           queryDatabase(selectQuery).then(function (result) {
-               var message = `${name}, actualmente tienes añadidas las siguientes alertas de precios:\n\n`;
+               var message = util.format(constants.alertUserMessage, name);
 
                var dataMessage = [];
                if (result.rowCount > 0) {
@@ -262,7 +262,11 @@ function getInfoWalletForUserId(userId, userName) {
                          collection.forEach(currency => {
                               if (crypto.name == currency.name) {
                                    let priceAmount = crypto.amount * currency.price;
-                                   let message = `<b>${currency.alias} (${currency.price} €):</b> Cantidad: ${helpers.formatterAmount(2, 8).format(crypto.amount)} - Total: ${helpers.formatterAmount(2, 8).format(priceAmount)} €\n`;
+                                   let message = util.format(constants.infoWalletCrypto,
+                                        currency.alias,
+                                        currency.price,
+                                        helpers.formatterAmount(2, 8).format(crypto.amount),
+                                        helpers.formatterAmount(2, 8).format(priceAmount));
 
                                    cryptoAmount.push(priceAmount);
                                    messages.push(message);
@@ -272,12 +276,12 @@ function getInfoWalletForUserId(userId, userName) {
                          });
                     });
 
-                    var finalMessage = `Este es el total en euros de tu cartera de criptomonedas <b>${userName}</b>:\n\n`;
+                    var finalMessage = util.format(constants.infoWalletTotal, userName);
                     messages.sort();
                     messages.forEach(text => {
                          finalMessage += text;
                     });
-                    let total = `\n<b>Total en cartera: </b><i> ${helpers.formatterAmount(2, 8).format(totalWallet)} €</i>\n`;
+                    let total = util.format(constants.infoWalletTotalMessage, helpers.formatterAmount(2, 8).format(totalWallet));
                     finalMessage += total;
 
                     charts.createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName).then(function (response) {
@@ -359,7 +363,7 @@ function setChatIdForUpdate(chatId) {
 
           queryDatabase(insertQuery).then(function (result) {
                helpers.log(result);
-               resolve();
+               resolve(constants.success);
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
@@ -376,19 +380,19 @@ function setCryptoForUserId(amountCrypto, userId, nameCrypto, aliasCrypto) {
                if (result.rowCount == 0) {
                     queryDatabase(insertQuery).then(function (result) {
                          helpers.log(result);
-                         resolve(`Has añadido ${nameCrypto} correctamente a tu cartera.`);
+                         resolve(util.format(constants.addCrypto, nameCrypto));
                     }).catch(function (err) {
                          helpers.log(err);
                          reject(err);
                     });
                } else {
-                    resolve(`Has actualizado el valor de ${nameCrypto} correctamente en tu cartera.`);
+                    resolve(util.format(constants.updateCrypto, nameCrypto));
                }
           }).catch(function (err) {
                helpers.log(err);
                queryDatabase(insertQuery).then(function (result) {
                     helpers.log(result);
-                    resolve(`Has añadido ${nameCrypto} correctamente a tu cartera.`);
+                    resolve(util.format(constants.addCrypto, nameCrypto));
                }).catch(function (err) {
                     helpers.log(err);
                     reject(err);

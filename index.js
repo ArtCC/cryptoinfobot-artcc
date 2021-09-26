@@ -298,7 +298,7 @@ function getInfoWallet(chatId, userId, userName) {
                          response.message, { parse_mode: constants.parseMode }
                     ).then(function (message) {
                          helpers.log(message);
-                         resolve();
+                         resolve(constants.success);
                     }).catch(function (err) {
                          helpers.log(err);
                          resolve(err);

@@ -56,5 +56,17 @@ module.exports = {
     priceCommand: 'precio',
     priceCommandDescription: 'Dime una criptomoneda para darte su precio actual y evolución en una gráfica por días. Ej: /precio cardano 1',
     startCommand: 'start',
-    startCommandDescription: 'Te doy información sobre mí e inicio mi actividad contigo'
+    startCommandDescription: 'Te doy información sobre mí e inicio mi actividad contigo',
+    success: "Success",
+    chartMessage: "Cartera de %s:\n%s €",
+    lineMessage: "Precio de %s en los últimos %s días.",
+    deleteMessage: "La criptomoneda %s se ha borrado correctamente de tu cartera.",
+    alertMessage: "%s el precio de %s es de %s € en estos momentos. ",
+    deleteAlertMessage: "He borrado la alerta para %s de %s € correctamente.",
+    alertUserMessage: "%s, actualmente tienes añadidas las siguientes alertas de precios:\n\n",
+    infoWalletCrypto: "<b>%s (%s €):</b> Cantidad: %s - Total: %s €\n",
+    infoWalletTotal: "Este es el total en euros de tu cartera de criptomonedas <b>%s</b>:\n\n",
+    infoWalletTotalMessage: "\n<b>Total en cartera: </b><i> %s €</i>\n",
+    addCrypto: "Has añadido %s correctamente a tu cartera.",
+    updateCrypto: "Has actualizado el valor de %s correctamente en tu cartera."
 };
