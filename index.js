@@ -378,9 +378,15 @@ cron.schedule('* * * * *', () => {
 
      // For total wallet notifications.
      let date = new Date().toLocaleString("es-ES", { timeZone: constants.timezoneSpain });
-     let time = `${date.getHour()}:${date.getMinutes()}`;
+     let hour = date.getHour();
+     let minutes = date.getMinutes();
+     let time = `${hour}:${minutes}`;
 
-     helpers.log(time);
+     console.log(time);
+
+     if (time === "17:23") {
+          console.log("alert ok");
+     }
 
      if (time === "08:00" || time === "15:00" || time === "22:00") {
           sendTotalWalletAlerts();
