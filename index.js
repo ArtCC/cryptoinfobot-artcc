@@ -354,23 +354,7 @@ function sendInfo(chatId, name) {
      });
 };
 
-function sendTotalWalletAlerts() {
-     database.getAllSchedulers().then(function (schedulers) {
-          schedulers.forEach(scheduler => {
-               getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name).then(function (message) {
-                    helpers.log(message);
-               }).catch(function (err) {
-                    helpers.log(err);
-               });
-          })
-     }).catch(function (err) {
-          helpers.log(err);
-     });
-};
-
 cron.schedule('* * * * *', () => {
-     console.log("cron");
-
      // For crypto alert price.
      database.getAllAlerts().then(function (data) {
           bot.sendMessage(data.chatId, data.message);
@@ -380,14 +364,19 @@ cron.schedule('* * * * *', () => {
 
      // For total wallet notifications.
      let date = new Date();
-     let hour = date.getHours() + 2; // UTC + 2. Spain timezone.
-     let minutes = date.getMinutes();
+     let hour = date.getHours() + 2; // (UTC+2. Spain timezone.)
 
-     if (minutes === 47) {
-          console.log("alert ok");
-     }
-
-     if (hour === 8 || hour === 15 || hou === 22) {
-          sendTotalWalletAlerts();
+     if (hour === 8 || hour === 15 || hour === 22) {
+          database.getAllSchedulers().then(function (schedulers) {
+               schedulers.forEach(scheduler => {
+                    getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name).then(function (message) {
+                         helpers.log(message);
+                    }).catch(function (err) {
+                         helpers.log(err);
+                    });
+               })
+          }).catch(function (err) {
+               helpers.log(err);
+          });
      }
 });
