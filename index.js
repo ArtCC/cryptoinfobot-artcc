@@ -369,6 +369,8 @@ function sendTotalWalletAlerts() {
 };
 
 cron.schedule('* * * * *', () => {
+     console.log("cron");
+
      // For crypto alert price.
      database.getAllAlerts().then(function (data) {
           bot.sendMessage(data.chatId, data.message);
@@ -384,11 +386,11 @@ cron.schedule('* * * * *', () => {
 
      console.log(time);
 
-     if (time === "17:23") {
+     if (time === "17:26") {
           console.log("alert ok");
      }
 
-     if (time === "08:00" || time === "15:00" || time === "22:00") {
+     if (time === constants.firstCronAlert || time === constants.secondCronAlert || time === constants.thirdCronAlert) {
           sendTotalWalletAlerts();
      }
 });
