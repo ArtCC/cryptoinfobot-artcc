@@ -5,7 +5,7 @@ module.exports = {
     currencyParam: "eur",
     parseMode: "HTML",
     donatePhotoUrl: "https://cdn.pixabay.com/photo/2020/04/22/11/59/thank-you-5077738_960_720.jpg",
-    timezone: "Europe/Madrid",
+    timezoneSpain: "Europe/Madrid",
     helloMessageText: "\n\nEscribe la barra / para ver en qué te puedo ayudar.\n\nAñade tus criptomonedas y recibe el valor total de tu cartera usando el API de Coingecko.\n\nMás información: https://github.com/ArtCC/cryptoinfobot-artcc\n\n",
     cancelText: "Cancelar",
     deleteText: "¿Qué criptomoneda quieres borrar de tu cartera?",
