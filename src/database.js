@@ -55,9 +55,10 @@ function getAllAlerts() {
                          price: obj.price
                     };
 
-                    axios.all([
-                         axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${alert.crypto}&vs_currencies=${constants.currencyParam}`)
-                    ]).then(axios.spread((response) => {
+                    let requestPrice = axios.get(constants.coingeckoBaseUrl + util.format(constants.requestPriceUrl, alert.crypto, constants.currencyParam));
+                    let request = [requestPrice];
+
+                    axios.all(request).then(axios.spread((response) => {
                          let price = response.data[alert.crypto][constants.currencyParam];
 
                          if (price >= alert.price) {
@@ -236,7 +237,7 @@ function getInfoWalletForUserId(userId, userName) {
 
                var urls = [];
                cryptoNames.forEach(name => {
-                    urls.push(axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${name}&vs_currencies=${constants.currencyParam}`));
+                    urls.push(axios.get(constants.coingeckoBaseUrl + util.format(constants.requestPriceUrl, name, constants.currencyParam)));
                });
 
                var collection = [];
@@ -357,7 +358,7 @@ function setChatIdForUpdate(chatId) {
 
           queryDatabase(insertQuery).then(function (result) {
                helpers.log(result);
-               resolve("setChatIdForUpdate:Success");
+               resolve();
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
