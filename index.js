@@ -13,7 +13,7 @@ const updateToken = process.env.UPDATE_TOKEN;
 const util = require('util');
 
 bot.onText(/^\/alerta (.+)/, (msg, match) => {
-     // msg.from.language_code
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let userId = msg.from.id;
      let userName = msg.from.first_name;
@@ -30,6 +30,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
 });
 
 bot.onText(/^\/alertas/, (msg) => {
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let userId = msg.from.id;
      let userName = msg.from.first_name;
@@ -42,6 +43,7 @@ bot.onText(/^\/alertas/, (msg) => {
 });
 
 bot.onText(/^\/borrar/, (msg) => {
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let userId = msg.from.id;
 
@@ -62,6 +64,7 @@ bot.onText(/^\/borrar/, (msg) => {
 });
 
 bot.onText(/^\/cartera/, (msg) => {
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let userId = msg.from.id;
      let userName = msg.from.first_name;
@@ -74,6 +77,7 @@ bot.onText(/^\/cartera/, (msg) => {
 });
 
 bot.onText(/^\/cripto (.+)/, (msg, match) => {
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let userId = msg.from.id;
      let data = match[1].split(" ");
@@ -90,6 +94,7 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
 });
 
 bot.onText(/^\/donar/, (msg) => {
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let buttons = {
           reply_markup: {
@@ -108,6 +113,7 @@ bot.onText(/^\/donar/, (msg) => {
 });
 
 bot.onText(/^\/hola/, (msg) => {
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let userName = msg.from.first_name;
 
@@ -115,6 +121,7 @@ bot.onText(/^\/hola/, (msg) => {
 });
 
 bot.onText(/^\/notificaciones/, (msg) => {
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let buttons = {
           reply_markup: {
@@ -132,6 +139,7 @@ bot.onText(/^\/notificaciones/, (msg) => {
 });
 
 bot.onText(/^\/precio (.+)/, (msg, match) => {
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let data = match[1].split(" ");
      let crypto = data[0];
@@ -141,8 +149,8 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
           days = 3;
      }
 
-     let requestPrice = axios.get(constants.coingeckoBaseUrl + `/simple/price?ids=${crypto}&vs_currencies=${constants.currencyParam}`);
-     let requestMarketChart = axios.get(constants.coingeckoBaseUrl + `/coins/${crypto}/market_chart?vs_currency=${constants.currencyParam}&days=${days}`);
+     let requestPrice = axios.get(constants.coingeckoBaseUrl + util.format(constants.requestPriceUrl, crypto, constants.currencyParam, days));
+     let requestMarketChart = axios.get(constants.coingeckoBaseUrl + util.format(constants.requestMarketChartUrl, crypto, constants.currencyParam, days));
      let request = [requestPrice, requestMarketChart];
 
      axios.all(request).then(axios.spread(function (responsePrice, responseMarketChart) {
@@ -180,6 +188,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
 });
 
 bot.onText(/^\/start/, (msg) => {
+     let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let userName = msg.from.first_name;
 
@@ -190,16 +199,16 @@ bot.onText(/^\/start/, (msg) => {
      });
 
      const commands = [
-          { command: 'alerta', description: 'Activa una alerta de precios para una criptomoneda (Para borrar enviar el precio a 0. Ej: /alerta ethereum 3500' },
-          { command: 'alertas', description: 'Te muestro todas las alertas de precios que tienes configuradas' },
-          { command: 'borrar', description: 'Puedes borrar una criptomoneda de tu cartera' },
-          { command: 'cartera', description: 'Te digo el valor total de tu cartera de criptomonedas' },
-          { command: 'cripto', description: 'Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10' },
-          { command: 'donar', description: 'Puedes apoyar económicamente el proyecto' },
-          { command: 'hola', description: 'Te saludo amablemente por tu nombre y te doy información sobre mí' },
-          { command: 'notificaciones', description: 'Puedes activar o desactivar notificaciones automáticas del valor de tu cartera' },
-          { command: 'precio', description: 'Dime una criptomoneda para darte su precio actual y evolución en una gráfica por días. Ej: /precio cardano 1' },
-          { command: 'start', description: 'Te doy información sobre mí e inicio mi actividad contigo' }
+          { command: constants.alertCommand, description: constants.alertCommandDescription },
+          { command: constants.alertsCommand, description: constants.alertsCommandDescription },
+          { command: constants.deleteCommand, description: constants.deleteCommandDescription },
+          { command: constants.walletCommand, description: constants.walletCommandDescription },
+          { command: constants.cryptoCommand, description: constants.cryptoCommandDescription },
+          { command: constants.donateCommand, description: constants.donateCommandDescription },
+          { command: constants.helloCommand, description: constants.helloCommandDescription },
+          { command: constants.notificationsCommand, description: constants.notificationsCommandDescription },
+          { command: constants.priceCommand, description: constants.priceCommandDescription },
+          { command: constants.startCommand, description: constants.startCommandDescription },
      ];
 
      bot.setMyCommands(commands).then(function (info) {
@@ -209,6 +218,7 @@ bot.onText(/^\/start/, (msg) => {
 });
 
 bot.onText(/^\/update (.+)/, (msg, match) => {
+     let languageCode = msg.from.language_code;
      let data = match[1].split("-");
      let token = data[0];
      let message = data[1];
@@ -285,7 +295,7 @@ function getInfoWallet(chatId, userId, userName) {
                     helpers.log(result);
                     bot.sendMessage(
                          chatId,
-                         response.message, { parse_mode: "HTML" }
+                         response.message, { parse_mode: constants.parseMode }
                     ).then(function (message) {
                          helpers.log(message);
                          resolve();
@@ -314,7 +324,7 @@ function paymentWithAmount(chatId, amount) {
      let currency = constants.paymentCurrencyText;
      let prices = [{ "label": constants.paymentPriceLabelText, "amount": amount }];
      let options = {
-          photo_url: "https://cdn.pixabay.com/photo/2020/04/22/11/59/thank-you-5077738_960_720.jpg",
+          photo_url: constants.donatePhotoUrl,
           photo_width: 480,
           photo_height: 320,
           is_flexible: false,
@@ -333,7 +343,7 @@ function sendErrorMessageToBot(chatId) {
 };
 
 function sendInfo(chatId, name) {
-     var message = `¡Hola ${name}!${constants.helloMessageText}`;
+     var message = util.format(constants.sendInfoText, name, constants.helloMessageText);
 
      bot.getMyCommands().then(function (info) {
           for (let obj of info) {

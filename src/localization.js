@@ -7,13 +7,9 @@ i18n.configure({
     directory: './locales'
 });
 
-function getText(text) {
+function getText(text, languageCode) {
+    i18n.setLocale = languageCode;
     return i18n.__(text);
 };
 
-function setLocale(locale) {
-    i18n.setLocale = locale;
-};
-
 module.exports.getText = getText;
-module.exports.setLocale = setLocale;
