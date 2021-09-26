@@ -375,8 +375,8 @@ cron.schedule('* * * * *', () => {
           helpers.log(err);
      });
 
-     let localDateString = new Date().toLocaleString("es-ES", { timeZone: constants.timezoneSpain });
-     let date = new Date(localDateString);
+     var date = new Date();
+     date.toLocaleString("es-ES", { timeZone: constants.timezoneSpain });
      console.log(date);
 });
 
