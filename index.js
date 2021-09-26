@@ -375,8 +375,10 @@ cron.schedule('* * * * *', () => {
           helpers.log(err);
      });
 
-     var date = new Date().toLocaleString("es-ES", { timeZone: constants.timezoneSpain });
-     console.log(date);
+     let date = new Date().toLocaleString("es-ES", { timeZone: constants.timezoneSpain });
+     let hour = date.getHour();
+     let minutes = date.getMinutes();
+     console.log(`${hour}:${minutes}`);
 });
 
 cron.schedule('0 8 * * *', () => {
