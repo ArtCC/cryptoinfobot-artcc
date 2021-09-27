@@ -21,11 +21,11 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let cryptoName = data[0];
      let cryptoPrice = data[1];
 
-     database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice).then(function (message) {
+     database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, languageCode).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
           helpers.log(err);
-          sendErrorMessageToBot(chatId);
+          sendErrorMessageToBot(chatId, languageCode);
      });
 });
 
@@ -35,7 +35,7 @@ bot.onText(/^\/alertas/, (msg) => {
      let userId = msg.from.id;
      let userName = msg.from.first_name;
 
-     database.getAllAlertsForUserId(userId, chatId, userName).then(function (message) {
+     database.getAllAlertsForUserId(userId, chatId, userName, languageCode).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
           helpers.log(err);
@@ -47,7 +47,7 @@ bot.onText(/^\/borrar/, (msg) => {
      let chatId = msg.chat.id;
      let userId = msg.from.id;
 
-     database.getCryptocurrenciesForUserId(userId).then(function (buttonData) {
+     database.getCryptocurrenciesForUserId(userId, languageCode).then(function (buttonData) {
           let buttons = {
                reply_markup: {
                     inline_keyboard: [
@@ -56,10 +56,10 @@ bot.onText(/^\/borrar/, (msg) => {
                }
           }
 
-          bot.sendMessage(chatId, localization.getText("deleteText", constants.esLanguageCode), buttons);
+          bot.sendMessage(chatId, localization.getText("deleteText", languageCode), buttons);
      }).catch(function (err) {
           helpers.log(err);
-          sendErrorMessageToBot(chatId);
+          sendErrorMessageToBot(chatId, languageCode);
      });
 });
 
@@ -69,7 +69,7 @@ bot.onText(/^\/cartera/, (msg) => {
      let userId = msg.from.id;
      let userName = msg.from.first_name;
 
-     getInfoWallet(chatId, userId, userName).then(function (message) {
+     getInfoWallet(chatId, userId, userName, languageCode).then(function (message) {
           helpers.log(message);
      }).catch(function (err) {
           helpers.log(err);
@@ -85,11 +85,11 @@ bot.onText(/^\/cripto (.+)/, (msg, match) => {
      let aliasCrypto = data[1];
      let amountCrypto = data[2];
 
-     database.setCryptoForUserId(amountCrypto, userId, nameCrypto, aliasCrypto).then(function (message) {
+     database.setCryptoForUserId(amountCrypto, userId, nameCrypto, aliasCrypto, languageCode).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
           helpers.log(err);
-          sendErrorMessageToBot(chatId);
+          sendErrorMessageToBot(chatId, languageCode);
      });
 });
 
@@ -101,27 +101,27 @@ bot.onText(/^\/donar/, (msg) => {
                inline_keyboard: [
                     [
                          {
-                              text: localization.getText("oneCoinText", constants.esLanguageCode),
-                              callback_data: localization.getText("oneCoinText", constants.esLanguageCode)
+                              text: localization.getText("oneCoinText", languageCode),
+                              callback_data: localization.getText("oneCoinText", languageCode)
                          },
                          {
-                              text: localization.getText("threeCoinText", constants.esLanguageCode),
-                              callback_data: localization.getText("threeCoinText", constants.esLanguageCode)
+                              text: localization.getText("threeCoinText", languageCode),
+                              callback_data: localization.getText("threeCoinText", languageCode)
                          },
                          {
-                              text: localization.getText("fiveCoinText", constants.esLanguageCode),
-                              callback_data: localization.getText("fiveCoinText", constants.esLanguageCode)
+                              text: localization.getText("fiveCoinText", languageCode),
+                              callback_data: localization.getText("fiveCoinText", languageCode)
                          },
                          {
-                              text: localization.getText("cancelText", constants.esLanguageCode),
-                              callback_data: localization.getText("cancelText", constants.esLanguageCode)
+                              text: localization.getText("cancelText", languageCode),
+                              callback_data: localization.getText("cancelText", languageCode)
                          }
                     ]
                ]
           }
      };
 
-     bot.sendMessage(chatId, localization.getText("coinPaymentTitleText", constants.esLanguageCode), buttons);
+     bot.sendMessage(chatId, localization.getText("coinPaymentTitleText", languageCode), buttons);
 });
 
 bot.onText(/^\/hola/, (msg) => {
@@ -129,7 +129,7 @@ bot.onText(/^\/hola/, (msg) => {
      let chatId = msg.chat.id;
      let userName = msg.from.first_name;
 
-     sendInfo(chatId, userName);
+     sendInfo(chatId, userName, languageCode);
 });
 
 bot.onText(/^\/notificaciones/, (msg) => {
@@ -140,23 +140,23 @@ bot.onText(/^\/notificaciones/, (msg) => {
                inline_keyboard: [
                     [
                          {
-                              text: localization.getText("enabledNotificationsText", constants.esLanguageCode),
-                              callback_data: localization.getText("enabledNotificationsText", constants.esLanguageCode)
+                              text: localization.getText("enabledNotificationsText", languageCode),
+                              callback_data: localization.getText("enabledNotificationsText", languageCode)
                          },
                          {
-                              text: localization.getText("disabledNotificationsText", constants.esLanguageCode),
-                              callback_data: localization.getText("disabledNotificationsText", constants.esLanguageCode)
+                              text: localization.getText("disabledNotificationsText", languageCode),
+                              callback_data: localization.getText("disabledNotificationsText", languageCode)
                          },
                          {
-                              text: localization.getText("cancelText", constants.esLanguageCode),
-                              callback_data: localization.getText("cancelText", constants.esLanguageCode)
+                              text: localization.getText("cancelText", languageCode),
+                              callback_data: localization.getText("cancelText", languageCode)
                          }
                     ]
                ]
           }
      };
 
-     bot.sendMessage(chatId, localization.getText("notificationsTitleText", constants.esLanguageCode), buttons);
+     bot.sendMessage(chatId, localization.getText("notificationsTitleText", languageCode), buttons);
 });
 
 bot.onText(/^\/precio (.+)/, (msg, match) => {
@@ -177,8 +177,8 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      axios.all(request).then(axios.spread(function (responsePrice, responseMarketChart) {
           let price = responsePrice.data[crypto][constants.currencyParam];
 
-          var message = util.format(localization.getText("infoPriceTitleText", constants.esLanguageCode), crypto, helpers.formatterAmount(2, 8).format(price));
-          message += localization.getText("infoPriceText", constants.esLanguageCode);
+          var message = util.format(localization.getText("infoPriceTitleText", languageCode), crypto, helpers.formatterAmount(2, 8).format(price));
+          message += localization.getText("infoPriceText", languageCode);
 
           var marketChart = [];
           responseMarketChart.data["prices"].forEach(price => {
@@ -191,20 +191,20 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
                };
                marketChart.push(obj);
           });
-          charts.createLinechartForMarketPrices(crypto, marketChart).then(function (response) {
+          charts.createLinechartForMarketPrices(crypto, marketChart, languageCode).then(function (response) {
                bot.sendPhoto(chatId, response.urlChart).then(function (result) {
                     helpers.log(result);
                     bot.sendMessage(chatId, message);
                }).catch(function (err) {
                     helpers.log(err);
-                    sendErrorMessageToBot(chatId);
+                    sendErrorMessageToBot(chatId, languageCode);
                });
           }).catch(function (err) {
                helpers.log(err);
           });
      })).catch(error => {
           helpers.log(error);
-          sendErrorMessageToBot(chatId);
+          sendErrorMessageToBot(chatId, languageCode);
      });
 });
 
@@ -213,7 +213,7 @@ bot.onText(/^\/start/, (msg) => {
      let chatId = msg.chat.id;
      let userName = msg.from.first_name;
 
-     database.setChatIdForUpdate(chatId).then(function (result) {
+     database.setChatIdForUpdate(chatId, languageCode).then(function (result) {
           helpers.log(result);
      }).catch(function (err) {
           helpers.log(err);
@@ -221,50 +221,50 @@ bot.onText(/^\/start/, (msg) => {
 
      const commands = [
           {
-               command: localization.getText("alertCommand", constants.esLanguageCode),
-               description: localization.getText("alertCommandDescription", constants.esLanguageCode)
+               command: localization.getText("alertCommand", languageCode),
+               description: localization.getText("alertCommandDescription", languageCode)
           },
           {
-               command: localization.getText("alertsCommand", constants.esLanguageCode),
-               description: localization.getText("alertsCommandDescription", constants.esLanguageCode)
+               command: localization.getText("alertsCommand", languageCode),
+               description: localization.getText("alertsCommandDescription", languageCode)
           },
           {
-               command: localization.getText("deleteCommand", constants.esLanguageCode),
-               description: localization.getText("deleteCommandDescription", constants.esLanguageCode)
+               command: localization.getText("deleteCommand", languageCode),
+               description: localization.getText("deleteCommandDescription", languageCode)
           },
           {
-               command: localization.getText("walletCommand", constants.esLanguageCode),
-               description: localization.getText("walletCommandDescription", constants.esLanguageCode)
+               command: localization.getText("walletCommand", languageCode),
+               description: localization.getText("walletCommandDescription", languageCode)
           },
           {
-               command: localization.getText("cryptoCommand", constants.esLanguageCode),
-               description: localization.getText("cryptoCommandDescription", constants.esLanguageCode)
+               command: localization.getText("cryptoCommand", languageCode),
+               description: localization.getText("cryptoCommandDescription", languageCode)
           },
           {
-               command: localization.getText("donateCommand", constants.esLanguageCode),
-               description: localization.getText("donateCommandDescription", constants.esLanguageCode)
+               command: localization.getText("donateCommand", languageCode),
+               description: localization.getText("donateCommandDescription", languageCode)
           },
           {
-               command: localization.getText("helloCommand", constants.esLanguageCode),
-               description: localization.getText("helloCommandDescription", constants.esLanguageCode)
+               command: localization.getText("helloCommand", languageCode),
+               description: localization.getText("helloCommandDescription", languageCode)
           },
           {
-               command: localization.getText("notificationsCommand", constants.esLanguageCode),
-               description: localization.getText("notificationsCommandDescription", constants.esLanguageCode)
+               command: localization.getText("notificationsCommand", languageCode),
+               description: localization.getText("notificationsCommandDescription", languageCode)
           },
           {
-               command: localization.getText("priceCommand", constants.esLanguageCode),
-               description: localization.getText("priceCommandDescription", constants.esLanguageCode)
+               command: localization.getText("priceCommand", languageCode),
+               description: localization.getText("priceCommandDescription", languageCode)
           },
           {
-               command: localization.getText("startCommand", constants.esLanguageCode),
-               description: localization.getText("startCommandDescription", constants.esLanguageCode)
+               command: localization.getText("startCommand", languageCode),
+               description: localization.getText("startCommandDescription", languageCode)
           },
      ];
 
      bot.setMyCommands(commands).then(function (info) {
           helpers.log(info);
-          sendInfo(chatId, userName);
+          sendInfo(chatId, userName, languageCode);
      });;
 });
 
@@ -283,7 +283,7 @@ bot.onText(/^\/update (.+)/, (msg, match) => {
                helpers.log(err);
           });
      } else {
-          helpers.log(localization.getText("tokenError", constants.esLanguageCode));
+          helpers.log(localization.getText("tokenError", languageCode));
      }
 });
 
@@ -291,36 +291,37 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let chatId = buttonAction.message.chat.id;
      let userId = buttonAction.from.id;
      let userName = buttonAction.from.first_name;
+     let languageCode = buttonAction.from.language_code;
      let data = buttonAction.data;
 
-     if (data == localization.getText("enabledNotificationsText", constants.esLanguageCode)) {
-          database.setSchedulerForUserId(userId, chatId, userName).then(function (message) {
+     if (data == localization.getText("enabledNotificationsText", languageCode)) {
+          database.setSchedulerForUserId(userId, chatId, userName, languageCode).then(function (message) {
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
                helpers.log(err);
-               sendErrorMessageToBot(chatId);
+               sendErrorMessageToBot(chatId, languageCode);
           });
-     } else if (data == localization.getText("disabledNotificationsText", constants.esLanguageCode)) {
-          database.deleteSchedulerForUserId(userId, chatId).then(function (message) {
+     } else if (data == localization.getText("disabledNotificationsText", languageCode)) {
+          database.deleteSchedulerForUserId(userId, chatId, languageCode).then(function (message) {
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
                helpers.log(err);
-               sendErrorMessageToBot(chatId);
+               sendErrorMessageToBot(chatId, languageCode);
           });
-     } else if (data == localization.getText("oneCoinText", constants.esLanguageCode)) {
-          paymentWithAmount(chatId, 100);
-     } else if (data == localization.getText("threeCoinText", constants.esLanguageCode)) {
-          paymentWithAmount(chatId, 300);
-     } else if (data == localization.getText("fiveCoinText", constants.esLanguageCode)) {
-          paymentWithAmount(chatId, 500);
-     } else if (data == localization.getText("cancelText", constants.esLanguageCode)) {
-          bot.sendMessage(chatId, localization.getText("noText", constants.esLanguageCode));
+     } else if (data == localization.getText("oneCoinText", languageCode)) {
+          paymentWithAmount(chatId, 100, languageCode);
+     } else if (data == localization.getText("threeCoinText", languageCode)) {
+          paymentWithAmount(chatId, 300, languageCode);
+     } else if (data == localization.getText("fiveCoinText", languageCode)) {
+          paymentWithAmount(chatId, 500, languageCode);
+     } else if (data == localization.getText("cancelText", languageCode)) {
+          bot.sendMessage(chatId, localization.getText("noText", languageCode));
      } else {
-          database.deleteCryptoForUserId(data, userId).then(function (message) {
+          database.deleteCryptoForUserId(data, userId, languageCode).then(function (message) {
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
                helpers.log(err);
-               sendErrorMessageToBot(chatId);
+               sendErrorMessageToBot(chatId, languageCode);
           });
      }
 });
@@ -339,9 +340,9 @@ bot.on('successful_payment', function onCallbackQuery(result) {
      helpers.log(result)
 });
 
-function getInfoWallet(chatId, userId, userName) {
+function getInfoWallet(chatId, userId, userName, languageCode) {
      return new Promise(function (resolve, reject) {
-          database.getInfoWalletForUserId(userId, userName).then(function (response) {
+          database.getInfoWalletForUserId(userId, userName, languageCode).then(function (response) {
                bot.sendPhoto(chatId, response.urlChart).then(function (result) {
                     helpers.log(result);
                     bot.sendMessage(
@@ -349,7 +350,7 @@ function getInfoWallet(chatId, userId, userName) {
                          response.message, { parse_mode: constants.parseMode }
                     ).then(function (message) {
                          helpers.log(message);
-                         resolve(localization.getText("success", constants.esLanguageCode));
+                         resolve(localization.getText("success", languageCode));
                     }).catch(function (err) {
                          helpers.log(err);
                          resolve(err);
@@ -360,20 +361,20 @@ function getInfoWallet(chatId, userId, userName) {
                });
           }).catch(function (err) {
                helpers.log(err);
-               sendErrorMessageToBot(chatId);
+               sendErrorMessageToBot(chatId, languageCode);
                reject(err);
           });
      });
 };
 
-function paymentWithAmount(chatId, amount) {
-     let title = localization.getText("paymentTitleText", constants.esLanguageCode);
-     let description = localization.getText("paymentDescriptionText", constants.esLanguageCode);
-     let payload = localization.getText("paymentPayloadText", constants.esLanguageCode);
+function paymentWithAmount(chatId, amount, languageCode) {
+     let title = localization.getText("paymentTitleText", languageCode);
+     let description = localization.getText("paymentDescriptionText", languageCode);
+     let payload = localization.getText("paymentPayloadText", languageCode);
      let providerToken = process.env.STRIPE_PAYMENT_TOKEN;
-     let startParameter = localization.getText("paymentStartParameterText", constants.esLanguageCode);
-     let currency = localization.getText("paymentCurrencyText", constants.esLanguageCode);
-     let prices = [{ "label": localization.getText("paymentPriceLabelText", constants.esLanguageCode), "amount": amount }];
+     let startParameter = localization.getText("paymentStartParameterText", languageCode);
+     let currency = localization.getText("paymentCurrencyText", languageCode);
+     let prices = [{ "label": localization.getText("paymentPriceLabelText", languageCode), "amount": amount }];
      let options = {
           photo_url: constants.donatePhotoUrl,
           photo_width: 480,
@@ -389,13 +390,13 @@ function paymentWithAmount(chatId, amount) {
      });
 };
 
-function sendErrorMessageToBot(chatId) {
-     bot.sendMessage(chatId, localization.getText("errorText", constants.esLanguageCode));
+function sendErrorMessageToBot(chatId, languageCode) {
+     bot.sendMessage(chatId, localization.getText("errorText", languageCode));
 };
 
-function sendInfo(chatId, name) {
-     let helloText = util.format(localization.getText("sendInfoText", constants.esLanguageCode), name);
-     let infoText = localization.getText("helloMessageText", constants.esLanguageCode);
+function sendInfo(chatId, name, languageCode) {
+     let helloText = util.format(localization.getText("sendInfoText", languageCode), name);
+     let infoText = localization.getText("helloMessageText", languageCode);
      var message = `${helloText}${infoText}`;
 
      bot.getMyCommands().then(function (info) {
@@ -407,9 +408,13 @@ function sendInfo(chatId, name) {
      });
 };
 
+/**
+ * The user's language needs to be stored in the database with which the notification was 
+ * created and the texts need to be sent in that language.
+ */
 cron.schedule('* * * * *', () => {
      // For crypto alert price.
-     database.getAllAlerts().then(function (data) {
+     database.getAllAlerts(constants.esLanguageCode).then(function (data) {
           bot.sendMessage(data.chatId, data.message);
      }).catch(function (err) {
           helpers.log(err);
@@ -426,7 +431,7 @@ cron.schedule('* * * * *', () => {
           time === localization.getText("thirdNotificationHour", constants.esLanguageCode)) {
           database.getAllSchedulers().then(function (schedulers) {
                schedulers.forEach(scheduler => {
-                    getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name).then(function (message) {
+                    getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name, constants.esLanguageCode).then(function (message) {
                          helpers.log(message);
                     }).catch(function (err) {
                          helpers.log(err);

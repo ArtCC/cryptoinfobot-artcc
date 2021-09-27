@@ -9,6 +9,5 @@ module.exports = {
     firstNotificationHour: "8:00",
     secondNotificationHour: "15:00",
     thirdNotificationHour: "22:00",
-    esLanguageCode: "es",
-    enLanguageCode: "en"
+    esLanguageCode: "es"
 };

@@ -12,13 +12,13 @@ const pool = new Pool({
 });
 const util = require('util');
 
-function deleteCryptoForUserId(cryptoName, userId) {
+function deleteCryptoForUserId(cryptoName, userId, languageCode) {
      return new Promise(function (resolve, reject) {
           let deleteQuery = `delete from cryptocurrencies where name = '${cryptoName}' and user_id = ${userId};`
 
           queryDatabase(deleteQuery).then(function (result) {
                helpers.log(result);
-               resolve(util.format(localization.getText("deleteMessage", constants.esLanguageCode), cryptoName));
+               resolve(util.format(localization.getText("deleteMessage", languageCode), cryptoName));
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
@@ -26,13 +26,13 @@ function deleteCryptoForUserId(cryptoName, userId) {
      });
 };
 
-function deleteSchedulerForUserId(userId, chatId) {
+function deleteSchedulerForUserId(userId, chatId, languageCode) {
      return new Promise(function (resolve, reject) {
           query = `delete from scheduler where user_id = ${userId} and chat_id = ${chatId};`;
 
           queryDatabase(query).then(function (result) {
                helpers.log(result);
-               resolve(localization.getText("disabledNotificationsMessageText", constants.esLanguageCode));
+               resolve(localization.getText("disabledNotificationsMessageText", languageCode));
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
@@ -40,7 +40,7 @@ function deleteSchedulerForUserId(userId, chatId) {
      });
 };
 
-function getAllAlerts() {
+function getAllAlerts(languageCode) {
      return new Promise(function (resolve, reject) {
           let selectQuery = "select * from alerts;";
 
@@ -63,13 +63,13 @@ function getAllAlerts() {
                          let price = response.data[alert.crypto][constants.currencyParam];
 
                          if (price >= alert.price) {
-                              var message = util.format(localization.getText("alertMessage", constants.esLanguageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
+                              var message = util.format(localization.getText("alertMessage", languageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
 
                               let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
 
                               queryDatabase(deleteQuery).then(function (result) {
                                    helpers.log(result);
-                                   message += util.format(localization.getText("deleteAlertMessage", constants.esLanguageCode), alert.crypto, helpers.formatterAmount(2, 8).format(alert.price));
+                                   message += util.format(localization.getText("deleteAlertMessage", languageCode), alert.crypto, helpers.formatterAmount(2, 8).format(alert.price));
 
                                    let data = {
                                         chatId: alert.chatId,
@@ -94,12 +94,12 @@ function getAllAlerts() {
      });
 };
 
-function getAllAlertsForUserId(userId, chatId, name) {
+function getAllAlertsForUserId(userId, chatId, name, languageCode) {
      return new Promise(function (resolve, reject) {
           let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId};`
 
           queryDatabase(selectQuery).then(function (result) {
-               var message = util.format(localization.getText("alertUserMessage", constants.esLanguageCode), name);
+               var message = util.format(localization.getText("alertUserMessage", languageCode), name);
 
                var dataMessage = [];
                if (result.rowCount > 0) {
@@ -124,7 +124,7 @@ function getAllAlertsForUserId(userId, chatId, name) {
 
                     resolve(message);
                } else {
-                    resolve(localization.getText("emptyAlertText", constants.esLanguageCode));
+                    resolve(localization.getText("emptyAlertText", languageCode));
                }
           }).catch(function (err) {
                helpers.log(err);
@@ -179,7 +179,7 @@ function getAllSchedulers() {
      });
 };
 
-function getCryptocurrenciesForUserId(userId) {
+function getCryptocurrenciesForUserId(userId, languageCode) {
      return new Promise(function (resolve, reject) {
           let selectQuery = `select * from cryptocurrencies where user_id = ${userId};`
 
@@ -206,8 +206,8 @@ function getCryptocurrenciesForUserId(userId) {
                     buttonData.push({ text: nameText, callback_data: `${name}` });
                });
                buttonData.push({
-                    text: localization.getText("cancelText", constants.esLanguageCode),
-                    callback_data: localization.getText("cancelText", constants.esLanguageCode)
+                    text: localization.getText("cancelText", languageCode),
+                    callback_data: localization.getText("cancelText", languageCode)
                });
 
                resolve(buttonData);
@@ -218,7 +218,7 @@ function getCryptocurrenciesForUserId(userId) {
      });
 };
 
-function getInfoWalletForUserId(userId, userName) {
+function getInfoWalletForUserId(userId, userName, languageCode) {
      return new Promise(function (resolve, reject) {
           let selectQuery = `select * from cryptocurrencies where user_id = ${userId};`
 
@@ -265,7 +265,7 @@ function getInfoWalletForUserId(userId, userName) {
                          collection.forEach(currency => {
                               if (crypto.name == currency.name) {
                                    let priceAmount = crypto.amount * currency.price;
-                                   let message = util.format(localization.getText("infoWalletCrypto", constants.esLanguageCode),
+                                   let message = util.format(localization.getText("infoWalletCrypto", languageCode),
                                         currency.alias,
                                         currency.price,
                                         helpers.formatterAmount(2, 8).format(crypto.amount),
@@ -279,15 +279,15 @@ function getInfoWalletForUserId(userId, userName) {
                          });
                     });
 
-                    var finalMessage = util.format(localization.getText("infoWalletTotal", constants.esLanguageCode), userName);
+                    var finalMessage = util.format(localization.getText("infoWalletTotal", languageCode), userName);
                     messages.sort();
                     messages.forEach(text => {
                          finalMessage += text;
                     });
-                    let total = util.format(localization.getText("infoWalletTotalMessage", constants.esLanguageCode), helpers.formatterAmount(2, 8).format(totalWallet));
+                    let total = util.format(localization.getText("infoWalletTotalMessage", languageCode), helpers.formatterAmount(2, 8).format(totalWallet));
                     finalMessage += total;
 
-                    charts.createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName).then(function (response) {
+                    charts.createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName, languageCode).then(function (response) {
                          resolve(response);
                     }).catch(function (err) {
                          helpers.log(err);
@@ -323,14 +323,14 @@ function queryDatabase(query) {
      });
 };
 
-function setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice) {
+function setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, languageCode) {
      return new Promise(function (resolve, reject) {
           if (cryptoPrice == "0") {
                let deleteQuery = `delete from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}';`
 
                queryDatabase(deleteQuery).then(function (result) {
                     helpers.log(result);
-                    resolve(localization.getText("disabledAlertText", constants.esLanguageCode));
+                    resolve(localization.getText("disabledAlertText", languageCode));
                }).catch(function (err) {
                     helpers.log(err);
                     reject(err);
@@ -340,13 +340,13 @@ function setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice) {
 
                queryDatabase(selectQuery).then(function (result) {
                     if (result.rowCount > 0) {
-                         resolve(localization.getText("statusEnabledAlertText", constants.esLanguageCode));
+                         resolve(localization.getText("statusEnabledAlertText", languageCode));
                     } else {
                          let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},'${userName}',${chatId},'${cryptoName}',${cryptoPrice});`;
 
                          queryDatabase(insertQuery).then(function (result) {
                               helpers.log(result);
-                              resolve(localization.getText("enabledAlertText", constants.esLanguageCode));
+                              resolve(localization.getText("enabledAlertText", languageCode));
                          }).catch(function (err) {
                               helpers.log(err);
                               reject(err);
@@ -360,13 +360,13 @@ function setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice) {
      });
 };
 
-function setChatIdForUpdate(chatId) {
+function setChatIdForUpdate(chatId, languageCode) {
      return new Promise(function (resolve, reject) {
           let insertQuery = `insert into update (chat_id) values (${chatId});`;
 
           queryDatabase(insertQuery).then(function (result) {
                helpers.log(result);
-               resolve(localization.getText("success", constants.esLanguageCode));
+               resolve(localization.getText("success", languageCode));
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
@@ -374,7 +374,7 @@ function setChatIdForUpdate(chatId) {
      });
 };
 
-function setCryptoForUserId(amountCrypto, userId, nameCrypto, aliasCrypto) {
+function setCryptoForUserId(amountCrypto, userId, nameCrypto, aliasCrypto, languageCode) {
      return new Promise(function (resolve, reject) {
           let updateQuery = `update cryptocurrencies set amount = ${amountCrypto} where user_id = ${userId} and name = '${nameCrypto}' and alias = '${aliasCrypto}';`
           let insertQuery = `insert into cryptocurrencies (user_id, name, alias, amount) values (${userId},'${nameCrypto}','${aliasCrypto}',${amountCrypto});`;
@@ -383,19 +383,19 @@ function setCryptoForUserId(amountCrypto, userId, nameCrypto, aliasCrypto) {
                if (result.rowCount == 0) {
                     queryDatabase(insertQuery).then(function (result) {
                          helpers.log(result);
-                         resolve(util.format(localization.getText("addCrypto", constants.esLanguageCode), nameCrypto));
+                         resolve(util.format(localization.getText("addCrypto", languageCode), nameCrypto));
                     }).catch(function (err) {
                          helpers.log(err);
                          reject(err);
                     });
                } else {
-                    resolve(util.format(localization.getText("updateCrypto", constants.esLanguageCode), nameCrypto));
+                    resolve(util.format(localization.getText("updateCrypto", languageCode), nameCrypto));
                }
           }).catch(function (err) {
                helpers.log(err);
                queryDatabase(insertQuery).then(function (result) {
                     helpers.log(result);
-                    resolve(util.format(localization.getText("addCrypto", constants.esLanguageCode), nameCrypto));
+                    resolve(util.format(localization.getText("addCrypto", languageCode), nameCrypto));
                }).catch(function (err) {
                     helpers.log(err);
                     reject(err);
@@ -404,19 +404,19 @@ function setCryptoForUserId(amountCrypto, userId, nameCrypto, aliasCrypto) {
      });
 };
 
-function setSchedulerForUserId(userId, chatId, userName) {
+function setSchedulerForUserId(userId, chatId, userName, languageCode) {
      return new Promise(function (resolve, reject) {
           let selectQuery = `select * from scheduler where user_id = ${userId} and chat_id = ${chatId};`;
 
           queryDatabase(selectQuery).then(function (result) {
                if (result.rowCount > 0) {
-                    resolve(localization.getText("statusEnabledNotificationsText", constants.esLanguageCode));
+                    resolve(localization.getText("statusEnabledNotificationsText", languageCode));
                } else {
                     let insertQuery = `insert into scheduler (user_id, name, chat_id) values (${userId},'${userName}','${chatId}');`;
 
                     queryDatabase(insertQuery).then(function (result) {
                          helpers.log(result);
-                         resolve(localization.getText("enabledNotificationsMessageText", constants.esLanguageCode));
+                         resolve(localization.getText("enabledNotificationsMessageText", languageCode));
                     }).catch(function (err) {
                          helpers.log(err);
                          reject(err);

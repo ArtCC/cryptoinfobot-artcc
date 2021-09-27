@@ -4,7 +4,7 @@ const localization = require('./localization');
 const QuickChart = require('quickchart-js');
 const util = require('util');
 
-function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName) {
+function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName, languageCode) {
     return new Promise(function (resolve, reject) {
         let myChart = new QuickChart();
         myChart
@@ -29,7 +29,7 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                         },
                         doughnutlabel: {
                             labels: [{
-                                text: util.format(localization.getText("chartMessage", constants.esLanguageCode), userName, helpers.formatterAmount(2, 2).format(totalWallet)),
+                                text: util.format(localization.getText("chartMessage", languageCode), userName, helpers.formatterAmount(2, 2).format(totalWallet)),
                                 font: {
                                     size: 16,
                                     weight: 'bold'
@@ -52,7 +52,7 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
     });
 };
 
-function createLinechartForMarketPrices(cryptoName, marketChart) {
+function createLinechartForMarketPrices(cryptoName, marketChart, languageCode) {
     return new Promise(function (resolve, reject) {
         let sortedForDays = sortedMarketChartCollectionForDay(marketChart);
 
@@ -66,7 +66,7 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
         let data = {
             labels: dates,
             datasets: [{
-                label: util.format(localization.getText("lineMessage", constants.esLanguageCode), helpers.capitalizeFirstLetter(cryptoName), sortedForDays.length),
+                label: util.format(localization.getText("lineMessage", languageCode), helpers.capitalizeFirstLetter(cryptoName), sortedForDays.length),
                 data: prices,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
