@@ -8,7 +8,7 @@ i18n.configure({
 });
 
 function getText(text, languageCode) {
-    i18n.setLocale = languageCode;
+    // i18n.setLocale = languageCode;
     return i18n.__(text);
 };
 
