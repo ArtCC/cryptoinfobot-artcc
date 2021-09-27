@@ -426,9 +426,9 @@ cron.schedule('* * * * *', () => {
      let minutes = date.getMinutes();
      let time = `${hour}:${minutes}`;
 
-     if (time === localization.getText("firstNotificationHour", constants.esLanguageCode) ||
-          time === localization.getText("secondNotificationHour", constants.esLanguageCode) ||
-          time === localization.getText("thirdNotificationHour", constants.esLanguageCode)) {
+     if (time === constants.firstNotificationHour ||
+          time === constants.secondNotificationHour ||
+          time === constants.thirdNotificationHour) {
           database.getAllSchedulers().then(function (schedulers) {
                schedulers.forEach(scheduler => {
                     getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name, constants.esLanguageCode).then(function (message) {
