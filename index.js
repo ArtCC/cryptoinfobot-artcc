@@ -366,8 +366,11 @@ cron.schedule('* * * * *', () => {
      let date = new Date();
      let hour = date.getHours() + 2; // (UTC+2. Spain timezone.)
      let minutes = date.getMinutes();
+     let time = `${hour}:${minutes}`;
 
-     if (hour === 8 || hour === 15 || hour === 22 && minutes === 0) {
+     console.log(time);
+
+     if (time === "08:00" || time === "15:00" || time === "22:00") {
           database.getAllSchedulers().then(function (schedulers) {
                schedulers.forEach(scheduler => {
                     getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name).then(function (message) {
