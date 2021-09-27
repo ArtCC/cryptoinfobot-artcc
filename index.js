@@ -368,9 +368,7 @@ cron.schedule('* * * * *', () => {
      let minutes = date.getMinutes();
      let time = `${hour}:${minutes}`;
 
-     console.log(time);
-
-     if (time === "08:00" || time === "15:00" || time === "22:00") {
+     if (time === constants.firstNotificationHour || time === constants.secondNotificationHour || time === constants.thirdNotificationHour) {
           database.getAllSchedulers().then(function (schedulers) {
                schedulers.forEach(scheduler => {
                     getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name).then(function (message) {
