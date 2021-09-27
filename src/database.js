@@ -18,7 +18,7 @@ function deleteCryptoForUserId(cryptoName, userId) {
 
           queryDatabase(deleteQuery).then(function (result) {
                helpers.log(result);
-               resolve(util.format(constants.deleteMessage, cryptoName));
+               resolve(util.format(localization.getText(deleteMessage, constants.esLanguageCode), cryptoName));
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
@@ -32,7 +32,7 @@ function deleteSchedulerForUserId(userId, chatId) {
 
           queryDatabase(query).then(function (result) {
                helpers.log(result);
-               resolve(constants.disabledNotificationsMessageText);
+               resolve(localization.getText(disabledNotificationsMessageText, constants.esLanguageCode));
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
@@ -63,13 +63,13 @@ function getAllAlerts() {
                          let price = response.data[alert.crypto][constants.currencyParam];
 
                          if (price >= alert.price) {
-                              var message = util.format(constants.alertMessage, alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
+                              var message = util.format(localization.getText(alertMessage, constants.esLanguageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
 
                               let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
 
                               queryDatabase(deleteQuery).then(function (result) {
                                    helpers.log(result);
-                                   message += util.format(constants.deleteAlertMessage, alert.crypto, helpers.formatterAmount(2, 8).format(alert.price));
+                                   message += util.format(localization.getText(deleteAlertMessage, constants.esLanguageCode), alert.crypto, helpers.formatterAmount(2, 8).format(alert.price));
 
                                    let data = {
                                         chatId: alert.chatId,
@@ -99,7 +99,7 @@ function getAllAlertsForUserId(userId, chatId, name) {
           let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId};`
 
           queryDatabase(selectQuery).then(function (result) {
-               var message = util.format(constants.alertUserMessage, name);
+               var message = util.format(localization.getText(alertUserMessage, constants.esLanguageCode), name);
 
                var dataMessage = [];
                if (result.rowCount > 0) {
@@ -124,7 +124,7 @@ function getAllAlertsForUserId(userId, chatId, name) {
 
                     resolve(message);
                } else {
-                    resolve(constants.emptyAlertText);
+                    resolve(localization.getText(emptyAlertText, constants.esLanguageCode));
                }
           }).catch(function (err) {
                helpers.log(err);
@@ -205,7 +205,7 @@ function getCryptocurrenciesForUserId(userId) {
                     let nameText = helpers.capitalizeFirstLetter(name);
                     buttonData.push({ text: nameText, callback_data: `${name}` });
                });
-               buttonData.push({ text: constants.cancelText, callback_data: constants.cancelText });
+               buttonData.push({ text: localization.getText(cancelText, constants.esLanguageCode), callback_data: localization.getText(cancelText, constants.esLanguageCode) });
 
                resolve(buttonData);
           }).catch(function (err) {
@@ -262,7 +262,7 @@ function getInfoWalletForUserId(userId, userName) {
                          collection.forEach(currency => {
                               if (crypto.name == currency.name) {
                                    let priceAmount = crypto.amount * currency.price;
-                                   let message = util.format(constants.infoWalletCrypto,
+                                   let message = util.format(localization.getText(infoWalletCrypto, constants.esLanguageCode),
                                         currency.alias,
                                         currency.price,
                                         helpers.formatterAmount(2, 8).format(crypto.amount),
@@ -276,12 +276,12 @@ function getInfoWalletForUserId(userId, userName) {
                          });
                     });
 
-                    var finalMessage = util.format(constants.infoWalletTotal, userName);
+                    var finalMessage = util.format(localization.getText(infoWalletTotal, constants.esLanguageCode), userName);
                     messages.sort();
                     messages.forEach(text => {
                          finalMessage += text;
                     });
-                    let total = util.format(constants.infoWalletTotalMessage, helpers.formatterAmount(2, 8).format(totalWallet));
+                    let total = util.format(localization.getText(infoWalletTotalMessage, constants.esLanguageCode), helpers.formatterAmount(2, 8).format(totalWallet));
                     finalMessage += total;
 
                     charts.createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName).then(function (response) {
@@ -327,7 +327,7 @@ function setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice) {
 
                queryDatabase(deleteQuery).then(function (result) {
                     helpers.log(result);
-                    resolve(constants.disabledAlertText);
+                    resolve(localization.getText(disabledAlertText, constants.esLanguageCode));
                }).catch(function (err) {
                     helpers.log(err);
                     reject(err);
@@ -337,13 +337,13 @@ function setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice) {
 
                queryDatabase(selectQuery).then(function (result) {
                     if (result.rowCount > 0) {
-                         resolve(constants.statusEnabledAlertText);
+                         resolve(localization.getText(statusEnabledAlertText, constants.esLanguageCode));
                     } else {
                          let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},'${userName}',${chatId},'${cryptoName}',${cryptoPrice});`;
 
                          queryDatabase(insertQuery).then(function (result) {
                               helpers.log(result);
-                              resolve(constants.enabledAlertText);
+                              resolve(localization.getText(enabledAlertText, constants.esLanguageCode));
                          }).catch(function (err) {
                               helpers.log(err);
                               reject(err);
@@ -363,7 +363,7 @@ function setChatIdForUpdate(chatId) {
 
           queryDatabase(insertQuery).then(function (result) {
                helpers.log(result);
-               resolve(constants.success);
+               resolve(localization.getText(success, constants.esLanguageCode));
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
@@ -380,19 +380,19 @@ function setCryptoForUserId(amountCrypto, userId, nameCrypto, aliasCrypto) {
                if (result.rowCount == 0) {
                     queryDatabase(insertQuery).then(function (result) {
                          helpers.log(result);
-                         resolve(util.format(constants.addCrypto, nameCrypto));
+                         resolve(util.format(localization.getText(addCrypto, constants.esLanguageCode), nameCrypto));
                     }).catch(function (err) {
                          helpers.log(err);
                          reject(err);
                     });
                } else {
-                    resolve(util.format(constants.updateCrypto, nameCrypto));
+                    resolve(util.format(localization.getText(updateCrypto, constants.esLanguageCode), nameCrypto));
                }
           }).catch(function (err) {
                helpers.log(err);
                queryDatabase(insertQuery).then(function (result) {
                     helpers.log(result);
-                    resolve(util.format(constants.addCrypto, nameCrypto));
+                    resolve(util.format(localization.getText(addCrypto, constants.esLanguageCode), nameCrypto));
                }).catch(function (err) {
                     helpers.log(err);
                     reject(err);
@@ -407,13 +407,13 @@ function setSchedulerForUserId(userId, chatId, userName) {
 
           queryDatabase(selectQuery).then(function (result) {
                if (result.rowCount > 0) {
-                    resolve(constants.statusEnabledNotificationsText);
+                    resolve(localization.getText(statusEnabledNotificationsText, constants.esLanguageCode));
                } else {
                     let insertQuery = `insert into scheduler (user_id, name, chat_id) values (${userId},'${userName}','${chatId}');`;
 
                     queryDatabase(insertQuery).then(function (result) {
                          helpers.log(result);
-                         resolve(constants.enabledNotificationsMessageText);
+                         resolve(localization.getText(enabledNotificationsMessageText, constants.esLanguageCode));
                     }).catch(function (err) {
                          helpers.log(err);
                          reject(err);

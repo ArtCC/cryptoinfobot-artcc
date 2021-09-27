@@ -29,7 +29,7 @@ function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, final
                         },
                         doughnutlabel: {
                             labels: [{
-                                text: util.format(constants.chartMessage, userName, helpers.formatterAmount(2, 2).format(totalWallet)),
+                                text: util.format(localization.getText(chartMessage, constants.esLanguageCode), userName, helpers.formatterAmount(2, 2).format(totalWallet)),
                                 font: {
                                     size: 16,
                                     weight: 'bold'
@@ -66,7 +66,7 @@ function createLinechartForMarketPrices(cryptoName, marketChart) {
         let data = {
             labels: dates,
             datasets: [{
-                label: util.format(constants.lineMessage, helpers.capitalizeFirstLetter(cryptoName), sortedForDays.length),
+                label: util.format(localization.getText(lineMessage, constants.esLanguageCode), helpers.capitalizeFirstLetter(cryptoName), sortedForDays.length),
                 data: prices,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
