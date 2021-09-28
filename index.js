@@ -433,8 +433,6 @@ cron.schedule('* * * * *', () => {
           time = `${hour}:${minutes}`;
      }
 
-     console.log(time);
-
      if (time === constants.firstNotificationHour ||
           time === constants.secondNotificationHour ||
           time === constants.thirdNotificationHour) {
