@@ -424,7 +424,14 @@ cron.schedule('* * * * *', () => {
      let date = new Date();
      let hour = date.getHours() + 2; // (UTC+2. Spain timezone.)
      let minutes = date.getMinutes();
-     let time = `${hour}:${minutes}`;
+     
+     var time;
+
+     if (minutes < 10) {
+          time = `${hour}:0${minutes}`;
+     } else {
+          time = `${hour}:${minutes}`;
+     }
 
      console.log(time);
 
