@@ -22,10 +22,19 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let cryptoPrice = data[1];
 
      if (cryptoName == localization.getText("deleteCommandText", languageCode)) {
-          database.getAllAlertsForUserId(userId, chatId, userName, languageCode, true).then(function (alerts) {
-               helpers.log(alerts);
+          database.getAllAlertsForUserId(userId, chatId, userName, languageCode, true).then(function (buttonData) {
+               let buttons = {
+                    reply_markup: {
+                         inline_keyboard: [
+                              buttonData
+                         ]
+                    }
+               }
+
+               bot.sendMessage(chatId, localization.getText("deleteAlertButtonsTitle", languageCode), buttons);
           }).catch(function (err) {
                helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
           });
      } else {
           database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, languageCode).then(function (message) {
@@ -106,26 +115,22 @@ bot.onText(/^\/donar/, (msg) => {
      let chatId = msg.chat.id;
      let buttons = {
           reply_markup: {
-               inline_keyboard: [
-                    [
-                         {
-                              text: localization.getText("oneCoinText", languageCode),
-                              callback_data: localization.getText("oneCoinText", languageCode)
-                         },
-                         {
-                              text: localization.getText("threeCoinText", languageCode),
-                              callback_data: localization.getText("threeCoinText", languageCode)
-                         },
-                         {
-                              text: localization.getText("fiveCoinText", languageCode),
-                              callback_data: localization.getText("fiveCoinText", languageCode)
-                         },
-                         {
-                              text: localization.getText("cancelText", languageCode),
-                              callback_data: localization.getText("cancelText", languageCode)
-                         }
-                    ]
-               ]
+               inline_keyboard: [[{
+                    text: localization.getText("oneCoinText", languageCode),
+                    callback_data: localization.getText("oneCoinText", languageCode)
+               },
+               {
+                    text: localization.getText("threeCoinText", languageCode),
+                    callback_data: localization.getText("threeCoinText", languageCode)
+               },
+               {
+                    text: localization.getText("fiveCoinText", languageCode),
+                    callback_data: localization.getText("fiveCoinText", languageCode)
+               },
+               {
+                    text: localization.getText("cancelText", languageCode),
+                    callback_data: localization.getText("cancelText", languageCode)
+               }]]
           }
      };
 
@@ -145,22 +150,18 @@ bot.onText(/^\/notificaciones/, (msg) => {
      let chatId = msg.chat.id;
      let buttons = {
           reply_markup: {
-               inline_keyboard: [
-                    [
-                         {
-                              text: localization.getText("enabledNotificationsText", languageCode),
-                              callback_data: localization.getText("enabledNotificationsText", languageCode)
-                         },
-                         {
-                              text: localization.getText("disabledNotificationsText", languageCode),
-                              callback_data: localization.getText("disabledNotificationsText", languageCode)
-                         },
-                         {
-                              text: localization.getText("cancelText", languageCode),
-                              callback_data: localization.getText("cancelText", languageCode)
-                         }
-                    ]
-               ]
+               inline_keyboard: [[{
+                    text: localization.getText("enabledNotificationsText", languageCode),
+                    callback_data: localization.getText("enabledNotificationsText", languageCode)
+               },
+               {
+                    text: localization.getText("disabledNotificationsText", languageCode),
+                    callback_data: localization.getText("disabledNotificationsText", languageCode)
+               },
+               {
+                    text: localization.getText("cancelText", languageCode),
+                    callback_data: localization.getText("cancelText", languageCode)
+               }]]
           }
      };
 
@@ -175,7 +176,7 @@ bot.onText(/^\/precio (.+)/, (msg, match) => {
      var days = data[1];
 
      if (days === undefined || days === 0) {
-          days = 3;
+          days = 5;
      }
 
      let requestPrice = axios.get(constants.coingeckoBaseUrl + util.format(constants.requestPriceUrl, crypto, constants.currencyParam));
@@ -281,6 +282,9 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
           paymentWithAmount(chatId, 500, languageCode);
      } else if (data == localization.getText("cancelText", languageCode)) {
           bot.sendMessage(chatId, localization.getText("noText", languageCode));
+     } else if (data.indexOf(localization.getText("deleteCommandText", languageCode)) > -1) {
+          console.log("Seleccionada alerta para borrar");
+          console.log(data);
      } else {
           database.deleteCryptoForUserId(data, userId, languageCode).then(function (message) {
                bot.sendMessage(chatId, message);

@@ -128,7 +128,18 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) 
                     });
 
                     if (isForDelete) {
-                         resolve(alerts);
+                         var buttonData = []
+                         alerts.forEach(alert => {
+                              let nameText = `${helpers.capitalizeFirstLetter(alert.name)}: ${helpers.formatterAmount(2, 8).format(alert.price)} €}`;
+                              let callbackData = `${localization.getText("deleteCommandText", languageCode)}.id:${alert.alertId}`;
+                              buttonData.push({ text: nameText, callback_data: callbackData });
+                         });
+                         buttonData.push({
+                              text: localization.getText("cancelText", languageCode),
+                              callback_data: localization.getText("cancelText", languageCode)
+                         });
+
+                         resolve(buttonData);
                     } else {
                          resolve(message);
                     }

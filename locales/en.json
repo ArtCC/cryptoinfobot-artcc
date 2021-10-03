@@ -63,5 +63,6 @@
     "addCrypto": "Has añadido %s correctamente a tu cartera.",
     "updateCrypto": "Has actualizado el valor de %s correctamente en tu cartera.",
     "deleteAlertTitleText": "Para borrar una alerta: /alerta borrar\n\n",
-    "deleteCommandText": "borrar" 
+    "deleteCommandText": "borrar",
+    "deleteAlertButtonsTitle": "¿Qué alerta quieres eliminar?"
 }
