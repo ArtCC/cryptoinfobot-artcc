@@ -132,16 +132,16 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) 
                          alerts.forEach(alert => {
                               let nameText = `${helpers.capitalizeFirstLetter(alert.crypto)}\n${helpers.formatterAmount(2, 2).format(alert.price)} €`;
                               let callbackData = `${localization.getText("deleteCommandText", languageCode)}.id:${alert.alertId}`;
-                              let array = [];
-                              array.push({ text: nameText, callback_data: callbackData });
-                              buttonData.push(array);
+                              let firstLevel = [{ text: nameText, callback_data: callbackData }];
+                              let secondLevel = [firstLevel];
+                              buttonData.push(secondLevel);
                          });
-                         let cancelData = [];
-                         cancelData.push({
+                         let cancelFirstLevel = [{
                               text: localization.getText("cancelText", languageCode),
                               callback_data: localization.getText("cancelText", languageCode)
-                         });
-                         buttonData.push(cancelData);
+                         }];
+                         let cancelSecondLevel = [cancelFirstLevel];
+                         buttonData.push(cancelSecondLevel);
 
                          console.log(buttonData);
                     } else {
