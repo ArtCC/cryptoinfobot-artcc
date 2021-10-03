@@ -28,8 +28,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
                          inline_keyboard: [
                               buttonData
                          ]
-                    },
-                    resize_keyboard: true
+                    }
                }
 
                bot.sendMessage(chatId, localization.getText("deleteAlertButtonsTitle", languageCode), buttons);
