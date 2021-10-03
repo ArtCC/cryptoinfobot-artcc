@@ -49,6 +49,7 @@ function getAllAlerts(languageCode) {
                     let json = JSON.stringify(row);
                     let obj = JSON.parse(json);
                     let alert = {
+                         alertId: obj.id,
                          userId: obj.user_id,
                          name: obj.name,
                          chatId: obj.chat_id,
@@ -65,7 +66,7 @@ function getAllAlerts(languageCode) {
                          if (price >= alert.price) {
                               var message = util.format(localization.getText("alertMessage", languageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
 
-                              let deleteQuery = `delete from alerts where user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
+                              let deleteQuery = `delete from alerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
 
                               queryDatabase(deleteQuery).then(function (result) {
                                    helpers.log(result);
@@ -108,6 +109,7 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) 
                          let json = JSON.stringify(row);
                          let obj = JSON.parse(json);
                          let alert = {
+                              alertId: obj.id,
                               userId: obj.user_id,
                               name: obj.name,
                               chatId: obj.chat_id,
