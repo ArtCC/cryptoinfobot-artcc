@@ -14,7 +14,7 @@ const util = require('util');
 
 function deleteAlertForId(alertId, userId, chatId, cryptoName, languageCode) {
      return new Promise(function (resolve, reject) {
-          let deleteQuery = `delete from alerts where id = ${alertId} user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}';`
+          let deleteQuery = `delete from alerts where id = ${alertId} and user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}';`
 
           queryDatabase(deleteQuery).then(function (result) {
                helpers.log(result);
@@ -147,15 +147,13 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) 
                               let nameText = `${helpers.capitalizeFirstLetter(alert.crypto)}\n${helpers.formatterAmount(2, 2).format(alert.price)} €`;
                               let callbackData = `${localization.getText("deleteCommandText", languageCode)}.id:${alert.alertId}`;
                               let firstLevel = [{ text: nameText, callback_data: callbackData }];
-                              let secondLevel = [firstLevel];
-                              buttonData.push(secondLevel);
+                              buttonData.push(firstLevel);
                          });
                          let cancelFirstLevel = [{
                               text: localization.getText("cancelText", languageCode),
                               callback_data: localization.getText("cancelText", languageCode)
                          }];
-                         let cancelSecondLevel = [cancelFirstLevel];
-                         buttonData.push(cancelSecondLevel);
+                         buttonData.push(cancelFirstLevel);
 
                          resolve(buttonData);
                     } else {
