@@ -21,8 +21,12 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let cryptoName = data[0];
      let cryptoPrice = data[1];
 
-     if (cryptoName == "borrar") {
-          console.log("Borrar alerta.");
+     if (cryptoName == localization.getText("deleteCommandText", languageCode)) {
+          database.getAllAlertsForUserId(userId, chatId, userName, languageCode, true).then(function (alerts) {
+               helpers.log(alerts);
+          }).catch(function (err) {
+               helpers.log(err);
+          });
      } else {
           database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, languageCode).then(function (message) {
                bot.sendMessage(chatId, message);
@@ -39,7 +43,7 @@ bot.onText(/^\/alertas/, (msg) => {
      let userId = msg.from.id;
      let userName = msg.from.first_name;
 
-     database.getAllAlertsForUserId(userId, chatId, userName, languageCode).then(function (message) {
+     database.getAllAlertsForUserId(userId, chatId, userName, languageCode, false).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
           helpers.log(err);

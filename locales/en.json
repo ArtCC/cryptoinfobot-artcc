@@ -62,5 +62,6 @@
     "infoWalletTotalMessage": "\n<b>Total en cartera: </b><i> %s €</i>\n",
     "addCrypto": "Has añadido %s correctamente a tu cartera.",
     "updateCrypto": "Has actualizado el valor de %s correctamente en tu cartera.",
-    "deleteAlertTitleText": "Para borrar una alerta: /alertas borrar\n\n"
+    "deleteAlertTitleText": "Para borrar una alerta: /alerta borrar\n\n",
+    "deleteCommandText": "borrar" 
 }

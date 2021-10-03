@@ -94,13 +94,14 @@ function getAllAlerts(languageCode) {
      });
 };
 
-function getAllAlertsForUserId(userId, chatId, name, languageCode) {
+function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) {
      return new Promise(function (resolve, reject) {
           let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId};`
 
           queryDatabase(selectQuery).then(function (result) {
                var message = util.format(localization.getText("alertUserMessage", languageCode), name);
 
+               var alerts = [];
                var dataMessage = [];
                if (result.rowCount > 0) {
                     for (let row of result.rows) {
@@ -114,6 +115,8 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode) {
                               price: obj.price
                          };
 
+                         alerts.push(alert);
+
                          dataMessage.push(`${helpers.capitalizeFirstLetter(alert.crypto)}: ${helpers.formatterAmount(2, 8).format(alert.price)} €.\n`);
                     }
 
@@ -122,7 +125,11 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode) {
                          message += text
                     });
 
-                    resolve(message);
+                    if (isForDelete) {
+                         resolve(alerts);
+                    } else {
+                         resolve(message);
+                    }
                } else {
                     resolve(localization.getText("emptyAlertText", languageCode));
                }
