@@ -325,38 +325,26 @@ function queryDatabase(query) {
 
 function setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, languageCode) {
      return new Promise(function (resolve, reject) {
-          if (cryptoPrice == "0") {
-               let deleteQuery = `delete from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}';`
+          let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}' and price = ${cryptoPrice};`
 
-               queryDatabase(deleteQuery).then(function (result) {
-                    helpers.log(result);
-                    resolve(localization.getText("disabledAlertText", languageCode));
-               }).catch(function (err) {
-                    helpers.log(err);
-                    reject(err);
-               });
-          } else {
-               let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}' and price = ${cryptoPrice};`
+          queryDatabase(selectQuery).then(function (result) {
+               if (result.rowCount > 0) {
+                    resolve(localization.getText("statusEnabledAlertText", languageCode));
+               } else {
+                    let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},'${userName}',${chatId},'${cryptoName}',${cryptoPrice});`;
 
-               queryDatabase(selectQuery).then(function (result) {
-                    if (result.rowCount > 0) {
-                         resolve(localization.getText("statusEnabledAlertText", languageCode));
-                    } else {
-                         let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},'${userName}',${chatId},'${cryptoName}',${cryptoPrice});`;
-
-                         queryDatabase(insertQuery).then(function (result) {
-                              helpers.log(result);
-                              resolve(localization.getText("enabledAlertText", languageCode));
-                         }).catch(function (err) {
-                              helpers.log(err);
-                              reject(err);
-                         });
-                    }
-               }).catch(function (err) {
-                    helpers.log(err);
-                    reject(err);
-               });
-          }
+                    queryDatabase(insertQuery).then(function (result) {
+                         helpers.log(result);
+                         resolve(localization.getText("enabledAlertText", languageCode));
+                    }).catch(function (err) {
+                         helpers.log(err);
+                         reject(err);
+                    });
+               }
+          }).catch(function (err) {
+               helpers.log(err);
+               reject(err);
+          });
      });
 };
 

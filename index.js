@@ -21,12 +21,16 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let cryptoName = data[0];
      let cryptoPrice = data[1];
 
-     database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, languageCode).then(function (message) {
-          bot.sendMessage(chatId, message);
-     }).catch(function (err) {
-          helpers.log(err);
-          sendErrorMessageToBot(chatId, languageCode);
-     });
+     if (cryptoName == "borrar") {
+          console.log("Borrar alerta.");
+     } else {
+          database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, languageCode).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
+          });
+     }
 });
 
 bot.onText(/^\/alertas/, (msg) => {
@@ -219,50 +223,7 @@ bot.onText(/^\/start/, (msg) => {
           helpers.log(err);
      });
 
-     const commands = [
-          {
-               command: localization.getText("alertCommand", languageCode),
-               description: localization.getText("alertCommandDescription", languageCode)
-          },
-          {
-               command: localization.getText("alertsCommand", languageCode),
-               description: localization.getText("alertsCommandDescription", languageCode)
-          },
-          {
-               command: localization.getText("deleteCommand", languageCode),
-               description: localization.getText("deleteCommandDescription", languageCode)
-          },
-          {
-               command: localization.getText("walletCommand", languageCode),
-               description: localization.getText("walletCommandDescription", languageCode)
-          },
-          {
-               command: localization.getText("cryptoCommand", languageCode),
-               description: localization.getText("cryptoCommandDescription", languageCode)
-          },
-          {
-               command: localization.getText("donateCommand", languageCode),
-               description: localization.getText("donateCommandDescription", languageCode)
-          },
-          {
-               command: localization.getText("helloCommand", languageCode),
-               description: localization.getText("helloCommandDescription", languageCode)
-          },
-          {
-               command: localization.getText("notificationsCommand", languageCode),
-               description: localization.getText("notificationsCommandDescription", languageCode)
-          },
-          {
-               command: localization.getText("priceCommand", languageCode),
-               description: localization.getText("priceCommandDescription", languageCode)
-          },
-          {
-               command: localization.getText("startCommand", languageCode),
-               description: localization.getText("startCommandDescription", languageCode)
-          },
-     ];
-
-     bot.setMyCommands(commands).then(function (info) {
+     bot.setMyCommands(helpers.getCommands(languageCode)).then(function (info) {
           helpers.log(info);
           sendInfo(chatId, userName, languageCode);
      });;
@@ -424,7 +385,7 @@ cron.schedule('* * * * *', () => {
      let date = new Date();
      let hour = date.getHours() + 2; // (UTC+2. Spain timezone.)
      let minutes = date.getMinutes();
-     
+
      var time;
 
      if (minutes < 10) {
