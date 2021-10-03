@@ -29,7 +29,11 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
                     }
                }
 
-               bot.sendMessage(chatId, localization.getText("deleteAlertButtonsTitle", languageCode), buttons);
+               if (buttonData.length == 0) {
+                    localization.getText("emptyAlertText", languageCode);
+               } else {
+                    bot.sendMessage(chatId, localization.getText("deleteAlertButtonsTitle", languageCode), buttons);
+               }
           }).catch(function (err) {
                helpers.log(err);
                sendErrorMessageToBot(chatId, languageCode);
