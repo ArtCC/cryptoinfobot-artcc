@@ -12,9 +12,9 @@ const pool = new Pool({
 });
 const util = require('util');
 
-function deleteAlertForId(alertId, userId, chatId, cryptoName, languageCode) {
+function deleteAlertForId(alertId, userId, chatId, languageCode) {
      return new Promise(function (resolve, reject) {
-          let deleteQuery = `delete from alerts where id = ${alertId} and user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}';`
+          let deleteQuery = `delete from alerts where id = ${alertId} and user_id = ${userId} and chat_id = ${chatId};`
 
           queryDatabase(deleteQuery).then(function (result) {
                helpers.log(result);
@@ -144,7 +144,7 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) 
                     if (isForDelete) {
                          var buttonData = []
                          alerts.forEach(alert => {
-                              let nameText = `${helpers.capitalizeFirstLetter(alert.crypto)}\n${helpers.formatterAmount(2, 2).format(alert.price)} €`;
+                              let nameText = `${helpers.capitalizeFirstLetter(alert.crypto)} (${helpers.formatterAmount(2, 2).format(alert.price)} €)`;
                               let callbackData = `${localization.getText("deleteCommandText", languageCode)}.id:${alert.alertId}`;
                               buttonData.push([{ text: nameText, callback_data: callbackData }]);
                          });
