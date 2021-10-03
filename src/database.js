@@ -130,7 +130,7 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) 
                     if (isForDelete) {
                          var buttonData = []
                          alerts.forEach(alert => {
-                              let nameText = `${helpers.capitalizeFirstLetter(alert.name)}: ${helpers.formatterAmount(2, 8).format(alert.price)} €}`;
+                              let nameText = `${helpers.capitalizeFirstLetter(alert.crypto)}\n${helpers.formatterAmount(2, 2).format(alert.price)} €`;
                               let callbackData = `${localization.getText("deleteCommandText", languageCode)}.id:${alert.alertId}`;
                               buttonData.push({ text: nameText, callback_data: callbackData });
                          });
