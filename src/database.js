@@ -12,6 +12,20 @@ const pool = new Pool({
 });
 const util = require('util');
 
+function deleteAlertForId(alertId, userId, chatId, cryptoName, languageCode) {
+     return new Promise(function (resolve, reject) {
+          let deleteQuery = `delete from alerts where id = ${alertId} user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}';`
+
+          queryDatabase(deleteQuery).then(function (result) {
+               helpers.log(result);
+               resolve(localization.getText("disabledAlertText", languageCode));
+          }).catch(function (err) {
+               helpers.log(err);
+               reject(err);
+          });
+     });
+};
+
 function deleteCryptoForUserId(cryptoName, userId, languageCode) {
      return new Promise(function (resolve, reject) {
           let deleteQuery = `delete from cryptocurrencies where name = '${cryptoName}' and user_id = ${userId};`
@@ -143,7 +157,7 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) 
                          let cancelSecondLevel = [cancelFirstLevel];
                          buttonData.push(cancelSecondLevel);
 
-                         console.log(buttonData);
+                         resolve(buttonData);
                     } else {
                          resolve(message);
                     }
@@ -443,6 +457,7 @@ function setSchedulerForUserId(userId, chatId, userName, languageCode) {
      })
 };
 
+module.exports.deleteAlertForId = deleteAlertForId;
 module.exports.deleteCryptoForUserId = deleteCryptoForUserId;
 module.exports.deleteSchedulerForUserId = deleteSchedulerForUserId;
 module.exports.getAllAlerts = getAllAlerts;
