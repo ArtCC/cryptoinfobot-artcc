@@ -282,14 +282,13 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
           bot.sendMessage(chatId, localization.getText("noText", languageCode));
      } else if (data.indexOf(localization.getText("deleteCommandText", languageCode)) > -1) {
           let alertId = data.replace(localization.getText("deleteControl", languageCode), "");
-          console.log(alertId);
 
-          // database.deleteAlertForId(alertId, userId, chatId, languageCode).then(function (message) {
-          //      bot.sendMessage(chatId, message);
-          // }).catch(function (err) {
-          //      helpers.log(err);
-          //      sendErrorMessageToBot(chatId, languageCode);
-          // });
+          database.deleteAlertForId(alertId, userId, chatId, languageCode).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
+          });
      } else {
           database.deleteCryptoForUserId(data, userId, languageCode).then(function (message) {
                bot.sendMessage(chatId, message);
