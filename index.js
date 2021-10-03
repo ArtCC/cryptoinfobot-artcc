@@ -25,13 +25,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
           database.getAllAlertsForUserId(userId, chatId, userName, languageCode, true).then(function (buttonData) {
                let buttons = {
                     reply_markup: {
-                         inline_keyboard: [
-                              [{ text: "Text 1", callback_data: "action1" }],
-                              [{ text: "Text 2", callback_data: "action2" }],
-                              [{ text: "Text 3", callback_data: "action3" }],
-                              [{ text: "Text 4", callback_data: "action4" }],
-                              [{ text: "Text 5", callback_data: "action5" }]
-                         ]
+                         inline_keyboard: buttonData
                     }
                }
 
