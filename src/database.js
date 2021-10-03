@@ -335,7 +335,9 @@ function setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, la
 
                     queryDatabase(insertQuery).then(function (result) {
                          helpers.log(result);
-                         resolve(localization.getText("enabledAlertText", languageCode));
+                         var message = localization.getText("deleteAlertTitleText", languageCode);
+                         message += localization.getText("enabledAlertText", languageCode);
+                         resolve(message);
                     }).catch(function (err) {
                          helpers.log(err);
                          reject(err);

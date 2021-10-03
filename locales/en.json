@@ -1,8 +1,8 @@
 {
-    "helloMessageText": "\n\nEscribe la barra / para ver en qué te puedo ayudar.\n\nAñade tus criptomonedas y recibe el valor total de tu cartera usando el API de Coingecko.\n\nMás información: https://github.com/ArtCC/cryptoinfobot-artcc\n\n",
+    "helloMessageText": "\n\nEscribe la barra / para ver en qué te puedo ayudar.\n\nAñade tus criptomonedas y recibe el valor total de tu cartera usando el API de Coingecko, además de otras funcionalidades muy útiles.\n\nMás información: https://github.com/ArtCC/cryptoinfobot-artcc\n\n",
     "cancelText": "Cancelar",
     "deleteText": "¿Qué criptomoneda quieres borrar de tu cartera?",
-    "sendInfoText": "¡Hola %s!%s",
+    "sendInfoText": "¡Hola %s!",
     "infoPriceTitleText": "El precio actual del %s es %s €.\n\n",
     "infoPriceText": "Puedes consultar el listado de criptomonedas disponibles en https://www.coingecko.com/es",
     "errorText": "¡Vaya! Parece que ha habido un problema con tu solicitud. Inténtalo de nuevo por favor.",
@@ -31,9 +31,9 @@
     "threeCoinText": "3 €",
     "fiveCoinText": "5 €",
     "alertCommand": "alerta",
-    "alertCommandDescription": "Activa una alerta de precios para una criptomoneda. Ej: /alerta ethereum 3500",
+    "alertCommandDescription": "Activa o borra una alerta de precios para una criptomoneda. Ej: /alerta ethereum 3500",
     "alertsCommand": "alertas",
-    "alertsCommandDescription": "Te muestro todas tus alertas de precios y puedes borrarlas",
+    "alertsCommandDescription": "Te muestro todas tus alertas de precios",
     "deleteCommand": "borrar",
     "deleteCommandDescription": "Puedes borrar una criptomoneda de tu cartera",
     "walletCommand": "cartera",
@@ -62,5 +62,5 @@
     "infoWalletTotalMessage": "\n<b>Total en cartera: </b><i> %s €</i>\n",
     "addCrypto": "Has añadido %s correctamente a tu cartera.",
     "updateCrypto": "Has actualizado el valor de %s correctamente en tu cartera.",
-    "deleteAlertTitleText": "Para borrar una alerta: /alertas borrar"
+    "deleteAlertTitleText": "Para borrar una alerta: /alertas borrar\n\n"
 }

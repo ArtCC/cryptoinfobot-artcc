@@ -6,8 +6,8 @@ This bot is anonymous, it does not capture data if it is added to a group and th
 
 <p><strong>Commands in Spanish language to use the bot:</p></strong>
 
-<p>alerta - Activa una alerta de precios para una criptomoneda. Ej: /alerta ethereum 3500</p>
-<p>alertas - Te muestro todas tus alertas de precios y puedes borrarlas</p>
+<p>alerta - Activa o borra una alerta de precios para una criptomoneda. Ej: /alerta ethereum 3500</p>
+<p>alertas - Te muestro todas tus alertas de precios</p>
 <p>borrar - Puedes borrar una criptomoneda de tu cartera</p>
 <p>cartera - Te digo el valor total de tu cartera de criptomonedas</p>
 <p>cripto - Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10</p>
