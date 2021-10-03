@@ -23,15 +23,15 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
 
      if (cryptoName == localization.getText("deleteCommandText", languageCode)) {
           database.getAllAlertsForUserId(userId, chatId, userName, languageCode, true).then(function (buttonData) {
-               let buttons = {
-                    reply_markup: {
-                         inline_keyboard: buttonData
-                    }
-               }
-
                if (buttonData.length == 0) {
-                    localization.getText("emptyAlertText", languageCode);
+                    bot.sendMessage(chatId, localization.getText("emptyAlertText", languageCode));
                } else {
+                    let buttons = {
+                         reply_markup: {
+                              inline_keyboard: buttonData
+                         }
+                    }
+
                     bot.sendMessage(chatId, localization.getText("deleteAlertButtonsTitle", languageCode), buttons);
                }
           }).catch(function (err) {
