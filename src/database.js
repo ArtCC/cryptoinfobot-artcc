@@ -143,7 +143,7 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) 
                          });
                          buttonData.push(cancelData);
 
-                         resolve(buttonData);
+                         console.log(buttonData);
                     } else {
                          resolve(message);
                     }
