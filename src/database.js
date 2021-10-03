@@ -141,6 +141,12 @@ function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) 
                          message += text
                     });
 
+                    Array.prototype.sortBy = function (p) {
+                         return this.slice(0).sort(function (a, b) {
+                              return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
+                         });
+                    }
+
                     if (isForDelete) {
                          var buttonData = []
                          var sortedAlerts = alerts.sortBy('price');
