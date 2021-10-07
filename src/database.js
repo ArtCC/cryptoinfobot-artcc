@@ -200,7 +200,11 @@ function getAllAlertsForUserId(upPriceAlert, userId, chatId, name, languageCode,
                          resolve(message);
                     }
                } else {
-                    resolve(localization.getText("emptyAlertText", languageCode));
+                    if (upPriceAlert) { // Up price alerts.
+                         resolve(localization.getText("emptyAlertText", languageCode));
+                    } else { // Down price alerts.
+                         resolve(localization.getText("emptyLowAlertText", languageCode));
+                    }
                }
           }).catch(function (err) {
                helpers.log(err);

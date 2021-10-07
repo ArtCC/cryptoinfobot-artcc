@@ -16,6 +16,7 @@
     "enabledAlertText": "He activado la alerta correctamente.",
     "disabledAlertText": "He borrado la alerta correctamente.",
     "emptyAlertText": "No tienes ninguna alerta de precios añadida actualmente. Puedes añadirlas por ejemplo con /alerta ethereum 3500",
+    "emptyLowAlertText": "No tienes ninguna alerta de bajada de precios añadida actualmente. Puedes añadirlas por ejemplo con /alertabaja cardano 1.5",
     "noText": "De acuerdo.",
     "tokenError": "El token es incorrecto.",
     "amountText": "Importe",
