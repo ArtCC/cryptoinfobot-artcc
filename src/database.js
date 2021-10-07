@@ -77,26 +77,7 @@ function getAllAlerts(languageCode) {
                     axios.all(request).then(axios.spread((response) => {
                          let price = response.data[alert.crypto][constants.currencyParam];
 
-                         if (price < alert.price) {
-                              var message = util.format(localization.getText("alertDownMessage", languageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
-
-                              let deleteQuery = `delete from alerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
-
-                              queryDatabase(deleteQuery).then(function (result) {
-                                   helpers.log(result);
-                                   message += util.format(localization.getText("deleteAlertMessage", languageCode), alert.crypto, helpers.formatterAmount(2, 8).format(alert.price));
-
-                                   let data = {
-                                        chatId: alert.chatId,
-                                        message: message
-                                   }
-
-                                   resolve(data);
-                              }).catch(function (err) {
-                                   helpers.log(err);
-                                   reject(err);
-                              });
-                         } else if (price > alert.price) {
+                         if (price >= alert.price) {
                               var message = util.format(localization.getText("alertMessage", languageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
 
                               let deleteQuery = `delete from alerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
@@ -115,8 +96,6 @@ function getAllAlerts(languageCode) {
                                    helpers.log(err);
                                    reject(err);
                               });
-                         } else {
-                              // Nothing yet.
                          }
                     })).catch(error => {
                          helpers.log(error);
