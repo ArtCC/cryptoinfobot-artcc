@@ -54,9 +54,15 @@ function deleteSchedulerForUserId(userId, chatId, languageCode) {
      });
 };
 
-function getAllAlerts(languageCode) {
+function getAllAlerts(upPriceAlert, languageCode) {
      return new Promise(function (resolve, reject) {
-          let selectQuery = "select * from alerts;";
+          var selectQuery = "";
+
+          if (upPriceAlert) { // Up price alerts.
+               selectQuery = "select * from alerts;";
+          } else { // Down price alerts.
+               selectQuery = "select * from lowalerts;";
+          }
 
           queryDatabase(selectQuery).then(function (result) {
                for (let row of result.rows) {
@@ -80,7 +86,13 @@ function getAllAlerts(languageCode) {
                          if (price >= alert.price) {
                               var message = util.format(localization.getText("alertMessage", languageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
 
-                              let deleteQuery = `delete from alerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
+                              var deleteQuery = "";
+
+                              if (upPriceAlert) { // Up price alerts.
+                                   deleteQuery = `delete from alerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
+                              } else { // Down price alerts.
+                                   deleteQuery = `delete from lowalerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
+                              }
 
                               queryDatabase(deleteQuery).then(function (result) {
                                    helpers.log(result);
@@ -109,9 +121,15 @@ function getAllAlerts(languageCode) {
      });
 };
 
-function getAllAlertsForUserId(userId, chatId, name, languageCode, isForDelete) {
+function getAllAlertsForUserId(upPriceAlert, userId, chatId, name, languageCode, isForDelete) {
      return new Promise(function (resolve, reject) {
-          let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId};`
+          var selectQuery = "";
+
+          if (upPriceAlert) { // Up price alerts.
+               selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId};`
+          } else { // Down price alerts.
+               selectQuery = `select * from lowalerts where user_id = ${userId} and chat_id = ${chatId};`
+          }
 
           queryDatabase(selectQuery).then(function (result) {
                var message = util.format(localization.getText("alertUserMessage", languageCode), name);
@@ -364,15 +382,27 @@ function queryDatabase(query) {
      });
 };
 
-function setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, languageCode) {
+function setAlertForUserId(upPriceAlert, chatId, userId, userName, cryptoName, cryptoPrice, languageCode) {
      return new Promise(function (resolve, reject) {
-          let selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}' and price = ${cryptoPrice};`
+          var selectQuery = "";
+
+          if (upPriceAlert) { // Up price alerts.
+               selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}' and price = ${cryptoPrice};`
+          } else { // Down price alerts.
+               selectQuery = `select * from lowalerts where user_id = ${userId} and chat_id = ${chatId} and crypto = '${cryptoName}' and price = ${cryptoPrice};`
+          }
 
           queryDatabase(selectQuery).then(function (result) {
                if (result.rowCount > 0) {
                     resolve(localization.getText("statusEnabledAlertText", languageCode));
                } else {
-                    let insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},'${userName}',${chatId},'${cryptoName}',${cryptoPrice});`;
+                    var insertQuery = "";
+
+                    if (upPriceAlert) { // Up price alerts.
+                         insertQuery = `insert into alerts (user_id, name, chat_id, crypto, price) values (${userId},'${userName}',${chatId},'${cryptoName}',${cryptoPrice});`;
+                    } else { // Down price alerts.
+                         insertQuery = `insert into lowalerts (user_id, name, chat_id, crypto, price) values (${userId},'${userName}',${chatId},'${cryptoName}',${cryptoPrice});`;
+                    }
 
                     queryDatabase(insertQuery).then(function (result) {
                          helpers.log(result);

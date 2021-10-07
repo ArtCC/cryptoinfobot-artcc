@@ -7,6 +7,7 @@ This bot is anonymous, it does not capture data if it is added to a group and th
 <p><strong>Commands in Spanish language to use the bot:</p></strong>
 
 <p>alerta - Activa o borra una alerta de precios para una criptomoneda. Ej: /alerta ethereum 3500</p>
+<p>alertabaja - Activa o borra una alerta de bajada de precios para una criptomoneda. Ej: /alerta cardano 1.50</p>
 <p>alertas - Te muestro todas tus alertas de precios</p>
 <p>borrar - Puedes borrar una criptomoneda de tu cartera</p>
 <p>cartera - Te digo el valor total de tu cartera de criptomonedas</p>
@@ -37,6 +38,17 @@ CREATE TABLE CRYPTOCURRENCIES(
    NAME TEXT NOT NULL,
    ALIAS TEXT NOT NULL,
    AMOUNT DOUBLE PRECISION NOT NULL
+);
+```
+
+```
+CREATE TABLE LOWALERTS(
+   ID SERIAL PRIMARY KEY NOT NULL,
+   USER_ID INT NOT NULL,
+   NAME TEXT NOT NULL,
+   CHAT_ID INT NOT NULL,
+   CRYPTO TEXT NOT NULL,
+   PRICE DOUBLE PRECISION NOT NULL
 );
 ```
 

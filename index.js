@@ -22,7 +22,7 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
      let cryptoPrice = data[1];
 
      if (cryptoName == localization.getText("deleteCommandText", languageCode)) {
-          database.getAllAlertsForUserId(userId, chatId, userName, languageCode, true).then(function (buttonData) {
+          database.getAllAlertsForUserId(true, userId, chatId, userName, languageCode, true).then(function (buttonData) {
                let buttons = {
                     reply_markup: {
                          inline_keyboard: buttonData
@@ -40,7 +40,44 @@ bot.onText(/^\/alerta (.+)/, (msg, match) => {
                sendErrorMessageToBot(chatId, languageCode);
           });
      } else {
-          database.setAlertForUserId(chatId, userId, userName, cryptoName, cryptoPrice, languageCode).then(function (message) {
+          database.setAlertForUserId(true, chatId, userId, userName, cryptoName, cryptoPrice, languageCode).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
+          });
+     }
+});
+
+bot.onText(/^\/alertabaja (.+)/, (msg, match) => {
+     let languageCode = msg.from.language_code;
+     let chatId = msg.chat.id;
+     let userId = msg.from.id;
+     let userName = msg.from.first_name;
+     let data = match[1].split(" ");
+     let cryptoName = data[0];
+     let cryptoPrice = data[1];
+
+     if (cryptoName == localization.getText("deleteCommandText", languageCode)) {
+          database.getAllAlertsForUserId(false, userId, chatId, userName, languageCode, true).then(function (buttonData) {
+               let buttons = {
+                    reply_markup: {
+                         inline_keyboard: buttonData
+                    }
+               }
+
+               bot.sendMessage(chatId, localization.getText("deleteAlertButtonsTitle", languageCode), buttons).then(function (result) {
+                    helpers.log(result);
+               }).catch(function (err) {
+                    helpers.log(err);
+                    bot.sendMessage(chatId, localization.getText("emptyAlertText", languageCode));
+               });
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
+          });
+     } else {
+          database.setAlertForUserId(false, chatId, userId, userName, cryptoName, cryptoPrice, languageCode).then(function (message) {
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
                helpers.log(err);
@@ -55,7 +92,20 @@ bot.onText(/^\/alertas/, (msg) => {
      let userId = msg.from.id;
      let userName = msg.from.first_name;
 
-     database.getAllAlertsForUserId(userId, chatId, userName, languageCode, false).then(function (message) {
+     database.getAllAlertsForUserId(true, userId, chatId, userName, languageCode, false).then(function (message) {
+          bot.sendMessage(chatId, message);
+     }).catch(function (err) {
+          helpers.log(err);
+     });
+});
+
+bot.onText(/^\/alertasbajas/, (msg) => {
+     let languageCode = msg.from.language_code;
+     let chatId = msg.chat.id;
+     let userId = msg.from.id;
+     let userName = msg.from.first_name;
+
+     database.getAllAlertsForUserId(false, userId, chatId, userName, languageCode, false).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
           helpers.log(err);
@@ -392,7 +442,7 @@ function sendInfo(chatId, name, languageCode) {
  */
 cron.schedule('* * * * *', () => {
      // For crypto alert price.
-     database.getAllAlerts(constants.esLanguageCode).then(function (data) {
+     database.getAllAlerts(true, constants.esLanguageCode).then(function (data) {
           bot.sendMessage(data.chatId, data.message);
      }).catch(function (err) {
           helpers.log(err);
