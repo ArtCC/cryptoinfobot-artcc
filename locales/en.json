@@ -55,6 +55,7 @@
     "lineMessage": "Precio de %s en los últimos %s días.",
     "deleteMessage": "La criptomoneda %s se ha borrado correctamente de tu cartera.",
     "alertMessage": "%s el precio de %s es de %s € en estos momentos. ",
+    "alertDownMessage": "%s el precio de %s es de %s € en estos momentos. Ha bajado su precio al nivel de tu alerta. ",
     "deleteAlertMessage": "He borrado la alerta para %s de %s € correctamente.",
     "alertUserMessage": "%s, actualmente tienes añadidas las siguientes alertas de precios:\n\n",
     "infoWalletCrypto": "<b>%s (%s €):</b> Cantidad: %s - Total: %s €\n",
