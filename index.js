@@ -263,45 +263,44 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      let languageCode = buttonAction.from.language_code;
      let data = buttonAction.data;
 
-     switch (data) {
-          case localization.getText("enabledNotificationsText", languageCode):
-               database.setSchedulerForUserId(userId, chatId, userName, languageCode).then(function (message) {
-                    bot.sendMessage(chatId, message);
-               }).catch(function (err) {
-                    helpers.log(err);
-                    sendErrorMessageToBot(chatId, languageCode);
-               });
-          case localization.getText("disabledNotificationsText", languageCode):
-               database.deleteSchedulerForUserId(userId, chatId, languageCode).then(function (message) {
-                    bot.sendMessage(chatId, message);
-               }).catch(function (err) {
-                    helpers.log(err);
-                    sendErrorMessageToBot(chatId, languageCode);
-               });
-          case localization.getText("oneCoinText", languageCode):
-               paymentWithAmount(chatId, 100, languageCode);
-          case localization.getText("threeCoinText", languageCode):
-               paymentWithAmount(chatId, 300, languageCode);
-          case localization.getText("fiveCoinText", languageCode):
-               paymentWithAmount(chatId, 500, languageCode);
-          case localization.getText("cancelText", languageCode):
-               bot.sendMessage(chatId, localization.getText("noText", languageCode));
-          case data.indexOf(localization.getText("deleteCommandText", languageCode)) > -1:
-               let alertId = data.replace(localization.getText("deleteControl", languageCode), "");
+     if (data == localization.getText("enabledNotificationsText", languageCode)) {
+          database.setSchedulerForUserId(userId, chatId, userName, languageCode).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
+          });
+     } else if (data == localization.getText("disabledNotificationsText", languageCode)) {
+          database.deleteSchedulerForUserId(userId, chatId, languageCode).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
+          });
+     } else if (data == localization.getText("oneCoinText", languageCode)) {
+          paymentWithAmount(chatId, 100, languageCode);
+     } else if (data == localization.getText("threeCoinText", languageCode)) {
+          paymentWithAmount(chatId, 300, languageCode);
+     } else if (data == localization.getText("fiveCoinText", languageCode)) {
+          paymentWithAmount(chatId, 500, languageCode);
+     } else if (data == localization.getText("cancelText", languageCode)) {
+          bot.sendMessage(chatId, localization.getText("noText", languageCode));
+     } else if (data.indexOf(localization.getText("deleteCommandText", languageCode)) > -1) {
+          let alertId = data.replace(localization.getText("deleteControl", languageCode), "");
 
-               database.deleteAlertForId(alertId, userId, chatId, languageCode).then(function (message) {
-                    bot.sendMessage(chatId, message);
-               }).catch(function (err) {
-                    helpers.log(err);
-                    sendErrorMessageToBot(chatId, languageCode);
-               });
-          default:
-               database.deleteCryptoForUserId(data, userId, languageCode).then(function (message) {
-                    bot.sendMessage(chatId, message);
-               }).catch(function (err) {
-                    helpers.log(err);
-                    sendErrorMessageToBot(chatId, languageCode);
-               });
+          database.deleteAlertForId(alertId, userId, chatId, languageCode).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
+          });
+     } else {
+          database.deleteCryptoForUserId(data, userId, languageCode).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
+          });
      }
 });
 
