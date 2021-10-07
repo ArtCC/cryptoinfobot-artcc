@@ -92,8 +92,6 @@ bot.onText(/^\/alertas/, (msg) => {
      let userId = msg.from.id;
      let userName = msg.from.first_name;
 
-     console.log("ALERTAS LLAMADA");
-
      database.getAllAlertsForUserId(true, userId, chatId, userName, languageCode, false).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
@@ -101,13 +99,11 @@ bot.onText(/^\/alertas/, (msg) => {
      });
 });
 
-bot.onText(/^\/alertasbajas/, (msg) => {
+bot.onText(/^\/bajas/, (msg) => {
      let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let userId = msg.from.id;
      let userName = msg.from.first_name;
-
-     console.log("ALERTAS LOW LLAMADA");
 
      database.getAllAlertsForUserId(false, userId, chatId, userName, languageCode, false).then(function (message) {
           bot.sendMessage(chatId, message);
