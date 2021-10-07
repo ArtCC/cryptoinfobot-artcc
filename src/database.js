@@ -147,16 +147,17 @@ function getAllAlerts(upPriceAlert, languageCode) {
 function getAllAlertsForUserId(upPriceAlert, userId, chatId, name, languageCode, isForDelete) {
      return new Promise(function (resolve, reject) {
           var selectQuery = "";
+          var message = "";
 
           if (upPriceAlert) { // Up price alerts.
                selectQuery = `select * from alerts where user_id = ${userId} and chat_id = ${chatId};`
+               message = util.format(localization.getText("alertUserMessage", languageCode), name);
           } else { // Down price alerts.
                selectQuery = `select * from lowalerts where user_id = ${userId} and chat_id = ${chatId};`
+               message = util.format(localization.getText("alertDownUserMessage", languageCode), name);
           }
 
           queryDatabase(selectQuery).then(function (result) {
-               var message = util.format(localization.getText("alertUserMessage", languageCode), name);
-
                var alerts = [];
                var dataMessage = [];
                if (result.rowCount > 0) {
