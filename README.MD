@@ -55,11 +55,6 @@ CREATE TABLE UPDATE(
 );
 ```
 
-## TO DO LIST
-<ul>
-  <li>Add automatic notifications about the value of your portfolio at times chosen by the user.</li>
-</ul>
-
 ## LICENSE
 
 This project is free and use <b>MIT license</b>.
