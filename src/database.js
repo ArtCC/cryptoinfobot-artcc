@@ -83,31 +83,48 @@ function getAllAlerts(upPriceAlert, languageCode) {
                     axios.all(request).then(axios.spread((response) => {
                          let price = response.data[alert.crypto][constants.currencyParam];
 
-                         if (price >= alert.price) {
-                              var message = util.format(localization.getText("alertMessage", languageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
+                         if (upPriceAlert) { // Up price alerts.
+                              if (price > alert.price) {
+                                   var message = util.format(localization.getText("alertMessage", languageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
 
-                              var deleteQuery = "";
+                                   let deleteQuery = `delete from alerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
 
-                              if (upPriceAlert) { // Up price alerts.
-                                   deleteQuery = `delete from alerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
-                              } else { // Down price alerts.
-                                   deleteQuery = `delete from lowalerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
+                                   queryDatabase(deleteQuery).then(function (result) {
+                                        helpers.log(result);
+                                        message += util.format(localization.getText("deleteAlertMessage", languageCode), alert.crypto, helpers.formatterAmount(2, 8).format(alert.price));
+
+                                        let data = {
+                                             chatId: alert.chatId,
+                                             message: message
+                                        }
+
+                                        resolve(data);
+                                   }).catch(function (err) {
+                                        helpers.log(err);
+                                        reject(err);
+                                   });
                               }
+                         } else { // Down price alerts.
+                              if (price < alert.price) {
+                                   var message = util.format(localization.getText("alertMessage", languageCode), alert.name, alert.crypto, helpers.formatterAmount(2, 8).format(price));
 
-                              queryDatabase(deleteQuery).then(function (result) {
-                                   helpers.log(result);
-                                   message += util.format(localization.getText("deleteAlertMessage", languageCode), alert.crypto, helpers.formatterAmount(2, 8).format(alert.price));
+                                   let deleteQuery = `delete from lowalerts where id = ${alert.alertId} and user_id = ${alert.userId} and chat_id = ${alert.chatId} and name = '${alert.name}' and crypto = '${alert.crypto}';`
 
-                                   let data = {
-                                        chatId: alert.chatId,
-                                        message: message
-                                   }
+                                   queryDatabase(deleteQuery).then(function (result) {
+                                        helpers.log(result);
+                                        message += util.format(localization.getText("deleteAlertMessage", languageCode), alert.crypto, helpers.formatterAmount(2, 8).format(alert.price));
 
-                                   resolve(data);
-                              }).catch(function (err) {
-                                   helpers.log(err);
-                                   reject(err);
-                              });
+                                        let data = {
+                                             chatId: alert.chatId,
+                                             message: message
+                                        }
+
+                                        resolve(data);
+                                   }).catch(function (err) {
+                                        helpers.log(err);
+                                        reject(err);
+                                   });
+                              }
                          }
                     })).catch(error => {
                          helpers.log(error);

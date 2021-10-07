@@ -441,8 +441,15 @@ function sendInfo(chatId, name, languageCode) {
  * created and the texts need to be sent in that language.
  */
 cron.schedule('* * * * *', () => {
-     // For crypto alert price.
+     // For crypto up alert price.
      database.getAllAlerts(true, constants.esLanguageCode).then(function (data) {
+          bot.sendMessage(data.chatId, data.message);
+     }).catch(function (err) {
+          helpers.log(err);
+     });
+
+     // For crypto down alert price.
+     database.getAllAlerts(false, constants.esLanguageCode).then(function (data) {
           bot.sendMessage(data.chatId, data.message);
      }).catch(function (err) {
           helpers.log(err);
