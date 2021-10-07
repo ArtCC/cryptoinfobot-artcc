@@ -71,5 +71,8 @@
     "deleteAlertTitleText": "Para borrar una alerta: /alerta borrar\n\n",
     "deleteCommandText": "borrar",
     "deleteAlertButtonsTitle": "¿Qué alerta quieres eliminar?",
-    "deleteControl": "borrar.id:"
+    "deleteUpControl": "borrar.up.id:",
+    "deleteDownControl": "borrar.down.id:",
+    "deleteUpAlert": "borrar.up",
+    "deleteDownAlert": "borrar.down"
 }

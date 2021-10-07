@@ -92,6 +92,8 @@ bot.onText(/^\/alertas/, (msg) => {
      let userId = msg.from.id;
      let userName = msg.from.first_name;
 
+     console.log("ALERTAS LLAMADA");
+
      database.getAllAlertsForUserId(true, userId, chatId, userName, languageCode, false).then(function (message) {
           bot.sendMessage(chatId, message);
      }).catch(function (err) {
@@ -104,6 +106,8 @@ bot.onText(/^\/alertasbajas/, (msg) => {
      let chatId = msg.chat.id;
      let userId = msg.from.id;
      let userName = msg.from.first_name;
+
+     console.log("ALERTAS LOW LLAMADA");
 
      database.getAllAlertsForUserId(false, userId, chatId, userName, languageCode, false).then(function (message) {
           bot.sendMessage(chatId, message);
@@ -336,9 +340,18 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
      } else if (data == localization.getText("cancelText", languageCode)) {
           bot.sendMessage(chatId, localization.getText("noText", languageCode));
      } else if (data.indexOf(localization.getText("deleteCommandText", languageCode)) > -1) {
-          let alertId = data.replace(localization.getText("deleteControl", languageCode), "");
+          var alertId = "";
+          var upPriceAlert;
 
-          database.deleteAlertForId(alertId, userId, chatId, languageCode).then(function (message) {
+          if (data.indexOf(localization.getText("deleteUpControl", languageCode)) > -1) {
+               alertId = data.replace(localization.getText("deleteUpControl", languageCode), "");
+               upPriceAlert = true;
+          } else if (data.indexOf(localization.getText("deleteDownControl", languageCode)) > -1) {
+               alertId = data.replace(localization.getText("deleteDownControl", languageCode), "");
+               upPriceAlert = false;
+          }
+
+          database.deleteAlertForId(upPriceAlert, alertId, userId, chatId, languageCode).then(function (message) {
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
                helpers.log(err);

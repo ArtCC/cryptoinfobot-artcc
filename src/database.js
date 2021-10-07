@@ -12,9 +12,15 @@ const pool = new Pool({
 });
 const util = require('util');
 
-function deleteAlertForId(alertId, userId, chatId, languageCode) {
+function deleteAlertForId(upPriceAlert, alertId, userId, chatId, languageCode) {
      return new Promise(function (resolve, reject) {
-          let deleteQuery = `delete from alerts where id = ${alertId} and user_id = ${userId} and chat_id = ${chatId};`
+          var deleteQuery = "";
+
+          if (upPriceAlert) { // Up price alerts.
+               deleteQuery = `delete from alerts where id = ${alertId} and user_id = ${userId} and chat_id = ${chatId};`
+          } else { // Down price alerts.
+               deleteQuery = `delete from lowalerts where id = ${alertId} and user_id = ${userId} and chat_id = ${chatId};`
+          }
 
           queryDatabase(deleteQuery).then(function (result) {
                helpers.log(result);
@@ -187,7 +193,16 @@ function getAllAlertsForUserId(upPriceAlert, userId, chatId, name, languageCode,
                          var sortedAlerts = alerts.sortBy('crypto');
                          sortedAlerts.forEach(alert => {
                               let nameText = `${helpers.capitalizeFirstLetter(alert.crypto)} (${helpers.formatterAmount(2, 2).format(alert.price)} €)`;
-                              let callbackData = `${localization.getText("deleteCommandText", languageCode)}.id:${alert.alertId}`;
+
+                              var deleteControl = "";
+
+                              if (upPriceAlert) { // Up price alerts.
+                                   deleteControl = localization.getText("deleteUpAlert", languageCode);
+                              } else { // Down price alerts.
+                                   deleteControl = localization.getText("deleteDownAlert", languageCode);
+                              }
+
+                              let callbackData = `${deleteControl}.id:${alert.alertId}`;
                               buttonData.push([{ text: nameText, callback_data: callbackData }]);
                          });
                          buttonData.push([{
