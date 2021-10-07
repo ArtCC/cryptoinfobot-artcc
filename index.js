@@ -89,27 +89,25 @@ bot.onText(/^\/alertabaja (.+)/, (msg, match) => {
 bot.onText(/^\/alertas/, (msg) => {
      let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
-     let userId = msg.from.id;
-     let userName = msg.from.first_name;
 
-     database.getAllAlertsForUserId(true, userId, chatId, userName, languageCode, false).then(function (message) {
-          bot.sendMessage(chatId, message);
-     }).catch(function (err) {
-          helpers.log(err);
-     });
-});
+     let buttons = {
+          reply_markup: {
+               inline_keyboard: [[{
+                    text: localization.getText("upPriceButton", languageCode),
+                    callback_data: localization.getText("upPriceButton", languageCode)
+               },
+               {
+                    text: localization.getText("downPriceButton", languageCode),
+                    callback_data: localization.getText("downPriceButton", languageCode)
+               },
+               {
+                    text: localization.getText("cancelText", languageCode),
+                    callback_data: localization.getText("cancelText", languageCode)
+               }]]
+          }
+     };
 
-bot.onText(/^\/alertas_bajas/, (msg) => {
-     let languageCode = msg.from.language_code;
-     let chatId = msg.chat.id;
-     let userId = msg.from.id;
-     let userName = msg.from.first_name;
-
-     database.getAllAlertsForUserId(false, userId, chatId, userName, languageCode, false).then(function (message) {
-          bot.sendMessage(chatId, message);
-     }).catch(function (err) {
-          helpers.log(err);
-     });
+     bot.sendMessage(chatId, localization.getText("upAndDownTitle", languageCode), buttons);
 });
 
 bot.onText(/^\/borrar/, (msg) => {
@@ -352,6 +350,18 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
           }).catch(function (err) {
                helpers.log(err);
                sendErrorMessageToBot(chatId, languageCode);
+          });
+     } else if (data == localization.getText("upPriceButton", languageCode)) {
+          database.getAllAlertsForUserId(true, userId, chatId, userName, languageCode, false).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+          });
+     } else if (data == localization.getText("downPriceButton", languageCode)) {
+          database.getAllAlertsForUserId(false, userId, chatId, userName, languageCode, false).then(function (message) {
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
           });
      } else {
           database.deleteCryptoForUserId(data, userId, languageCode).then(function (message) {

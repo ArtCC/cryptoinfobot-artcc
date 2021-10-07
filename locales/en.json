@@ -35,8 +35,6 @@
     "alertCommandDescription": "Activa o borra una alerta de precios para una criptomoneda. Ej: /alerta ethereum 3500",
     "alertsCommand": "alertas",
     "alertsCommandDescription": "Te muestro todas tus alertas de precios",
-    "lowAlertsCommand": "alertas_bajas",
-    "lowAlertsCommandDescription": "Te muestro todas tus alertas de bajada de precios",
     "lowAlertCommand": "alertabaja",
     "lowAlertCommandDescription": "Activa o borra una alerta de bajada de precios para una criptomoneda. Ej: /alerta cardano 1.50",
     "deleteCommand": "borrar",
@@ -74,5 +72,8 @@
     "deleteUpControl": "borrar.up.id:",
     "deleteDownControl": "borrar.down.id:",
     "deleteUpAlert": "borrar.up",
-    "deleteDownAlert": "borrar.down"
+    "deleteDownAlert": "borrar.down",
+    "upAndDownTitle": "¿Qué tipo de alertas quieres que te muestre?",
+    "upPriceButton": "Subida de precio",
+    "downPriceButton": "Bajada de precio"
 }
