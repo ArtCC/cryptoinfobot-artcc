@@ -35,7 +35,7 @@
     "alertCommandDescription": "Activa o borra una alerta de precios para una criptomoneda. Ej: /alerta ethereum 3500",
     "alertsCommand": "alertas",
     "alertsCommandDescription": "Te muestro todas tus alertas de precios",
-    "lowAlertsCommand": "bajas",
+    "lowAlertsCommand": "alertas_bajas",
     "lowAlertsCommandDescription": "Te muestro todas tus alertas de bajada de precios",
     "lowAlertCommand": "alertabaja",
     "lowAlertCommandDescription": "Activa o borra una alerta de bajada de precios para una criptomoneda. Ej: /alerta cardano 1.50",

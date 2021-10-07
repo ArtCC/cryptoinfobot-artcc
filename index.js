@@ -99,7 +99,7 @@ bot.onText(/^\/alertas/, (msg) => {
      });
 });
 
-bot.onText(/^\/bajas/, (msg) => {
+bot.onText(/^\/alertas_bajas/, (msg) => {
      let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
      let userId = msg.from.id;
