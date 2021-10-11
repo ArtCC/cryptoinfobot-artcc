@@ -6,6 +6,7 @@ const util = require('util');
 
 function createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName, languageCode) {
     return new Promise(function (resolve, reject) {
+        console.log(cryptoAmount);
         let myChart = new QuickChart();
         myChart
             .setConfig({
