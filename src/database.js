@@ -364,11 +364,11 @@ function getInfoWalletForUserId(userId, userName, languageCode) {
                                    let message = util.format(localization.getText("infoWalletCrypto", languageCode),
                                         currency.alias,
                                         currency.price,
-                                        helpers.formatterAmount(2, 8).format(crypto.amount),
-                                        helpers.formatterAmount(2, 8).format(priceAmount));
+                                        helpers.formatterAmount(2, 6).format(crypto.amount),
+                                        helpers.formatterAmount(2, 6).format(priceAmount));
 
-                                   cryptoAmount.push(parseFloat(helpers.formatterAmount(2, 2).format(priceAmount)));
-                                   console.log(cryptoAmount);
+                                   cryptoAmount.push(priceAmount.toFixed(2));
+                                   
                                    messages.push(message);
 
                                    totalWallet += priceAmount;
@@ -381,7 +381,7 @@ function getInfoWalletForUserId(userId, userName, languageCode) {
                     messages.forEach(text => {
                          finalMessage += text;
                     });
-                    let total = util.format(localization.getText("infoWalletTotalMessage", languageCode), helpers.formatterAmount(2, 8).format(totalWallet));
+                    let total = util.format(localization.getText("infoWalletTotalMessage", languageCode), helpers.formatterAmount(2, 6).format(totalWallet));
                     finalMessage += total;
 
                     charts.createChartForTotalWallet(cryptoNames, cryptoAmount, totalWallet, finalMessage, userName, languageCode).then(function (response) {
