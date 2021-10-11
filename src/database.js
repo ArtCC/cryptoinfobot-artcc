@@ -367,7 +367,8 @@ function getInfoWalletForUserId(userId, userName, languageCode) {
                                         helpers.formatterAmount(2, 8).format(crypto.amount),
                                         helpers.formatterAmount(2, 8).format(priceAmount));
 
-                                   cryptoAmount.push(Number(helpers.formatterAmount(2, 2).format(priceAmount)));
+                                   cryptoAmount.push(parseFloat(helpers.formatterAmount(2, 2).format(priceAmount)));
+                                   console.log(cryptoAmount);
                                    messages.push(message);
 
                                    totalWallet += priceAmount;
