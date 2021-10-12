@@ -175,8 +175,8 @@ bot.onText(/^\/donar/, (msg) => {
                {
                     text: localization.getText("fiveCoinText", languageCode),
                     callback_data: localization.getText("fiveCoinText", languageCode)
-               },
-               {
+               }],
+               [{
                     text: localization.getText("cancelText", languageCode),
                     callback_data: localization.getText("cancelText", languageCode)
                }]]
