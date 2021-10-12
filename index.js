@@ -92,26 +92,18 @@ bot.onText(/^\/alertas/, (msg) => {
 
      let buttons = {
           reply_markup: {
-               inline_keyboard: [
-                    [
-                         {
-                              text: localization.getText("upPriceButton", languageCode),
-                              callback_data: localization.getText("upPriceButton", languageCode)
-                         }
-                    ],
-                    [
-                         {
-                              text: localization.getText("downPriceButton", languageCode),
-                              callback_data: localization.getText("downPriceButton", languageCode)
-                         }
-                    ],
-                    [
-                         {
-                              text: localization.getText("cancelText", languageCode),
-                              callback_data: localization.getText("cancelText", languageCode)
-                         }
-                    ]
-               ]
+               inline_keyboard: [[{
+                    text: localization.getText("upPriceButton", languageCode),
+                    callback_data: localization.getText("upPriceButton", languageCode)
+               }],
+               [{
+                    text: localization.getText("downPriceButton", languageCode),
+                    callback_data: localization.getText("downPriceButton", languageCode)
+               }],
+               [{
+                    text: localization.getText("cancelText", languageCode),
+                    callback_data: localization.getText("cancelText", languageCode)
+               }]]
           }
      };
 
@@ -212,12 +204,12 @@ bot.onText(/^\/notificaciones/, (msg) => {
                inline_keyboard: [[{
                     text: localization.getText("enabledNotificationsText", languageCode),
                     callback_data: localization.getText("enabledNotificationsText", languageCode)
-               },
-               {
+               }],
+               [{
                     text: localization.getText("disabledNotificationsText", languageCode),
                     callback_data: localization.getText("disabledNotificationsText", languageCode)
-               },
-               {
+               }],
+               [{
                     text: localization.getText("cancelText", languageCode),
                     callback_data: localization.getText("cancelText", languageCode)
                }]]
