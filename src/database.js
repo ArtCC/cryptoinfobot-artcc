@@ -299,14 +299,19 @@ function getCryptocurrenciesForUserId(userId, languageCode) {
                cryptoNames.sort();
                cryptoNames.forEach(name => {
                     let nameText = helpers.capitalizeFirstLetter(name);
-                    buttonData.push([{ text: nameText, callback_data: `${name}` }]);
+                    buttonData.push({ text: nameText, callback_data: `${name}` });
                });
-               buttonData.push([{
+               buttonData.push({
                     text: localization.getText("cancelText", languageCode),
                     callback_data: localization.getText("cancelText", languageCode)
-               }]);
+               });
 
-               resolve(buttonData);
+               var data = [];
+               buttonData.forEach(option => {
+                    data.push([option]);
+               });
+
+               resolve(data);
           }).catch(function (err) {
                helpers.log(err);
                reject(err);
