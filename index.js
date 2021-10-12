@@ -92,18 +92,26 @@ bot.onText(/^\/alertas/, (msg) => {
 
      let buttons = {
           reply_markup: {
-               inline_keyboard: [[{
-                    text: localization.getText("upPriceButton", languageCode),
-                    callback_data: localization.getText("upPriceButton", languageCode)
-               },
-               {
-                    text: localization.getText("downPriceButton", languageCode),
-                    callback_data: localization.getText("downPriceButton", languageCode)
-               },
-               {
-                    text: localization.getText("cancelText", languageCode),
-                    callback_data: localization.getText("cancelText", languageCode)
-               }]]
+               inline_keyboard: [
+                    [
+                         {
+                              text: localization.getText("upPriceButton", languageCode),
+                              callback_data: localization.getText("upPriceButton", languageCode)
+                         }
+                    ],
+                    [
+                         {
+                              text: localization.getText("downPriceButton", languageCode),
+                              callback_data: localization.getText("downPriceButton", languageCode)
+                         }
+                    ],
+                    [
+                         {
+                              text: localization.getText("cancelText", languageCode),
+                              callback_data: localization.getText("cancelText", languageCode)
+                         }
+                    ]
+               ]
           }
      };
 
