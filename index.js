@@ -118,9 +118,7 @@ bot.onText(/^\/borrar/, (msg) => {
      database.getCryptocurrenciesForUserId(userId, languageCode).then(function (buttonData) {
           let buttons = {
                reply_markup: {
-                    inline_keyboard: [
-                         buttonData
-                    ]
+                    inline_keyboard: buttonData
                }
           }
 
