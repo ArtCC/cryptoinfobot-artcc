@@ -9,7 +9,7 @@
     "notificationsTitleText": "¿Quieres activar las notificaciones automáticas del valor de tu cartera?",
     "enabledNotificationsText": "Activar",
     "disabledNotificationsText": "Desactivar",
-    "enabledNotificationsMessageText": "He activado las notificaciones para darte el valor de tu cartera de forma automática (08h - 15h - 21h).",
+    "enabledNotificationsMessageText": "He activado las notificaciones para darte el valor de tu cartera de forma automática (08h-15h-21h UTC).",
     "disabledNotificationsMessageText": "He desactivado las notificaciones.",
     "statusEnabledNotificationsText": "Ya tienes activadas las notificaciones en este chat.",
     "statusEnabledAlertText": "Ya tienes activadas las alertas de precio para esta criptomoneda en este chat.",
