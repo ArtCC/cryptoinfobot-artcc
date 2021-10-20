@@ -453,6 +453,20 @@ function sendInfo(chatId, name, languageCode) {
      });
 };
 
+function time() {
+     let date = new Date();
+     let hour = date.getHours();
+     let minutes = date.getMinutes();
+
+     var time;
+     if (minutes < 10) {
+          time = `${hour}:0${minutes}`;
+     } else {
+          time = `${hour}:${minutes}`;
+     }
+     return time;
+};
+
 /**
  * The user's language needs to be stored in the database with which the notification was 
  * created and the texts need to be sent in that language.
@@ -473,21 +487,9 @@ cron.schedule('* * * * *', () => {
      });
 
      // For total wallet notifications.
-     let date = new Date();
-     let hour = date.getHours() + 2; // (UTC+2. Spain timezone.)
-     let minutes = date.getMinutes();
-
-     var time;
-
-     if (minutes < 10) {
-          time = `${hour}:0${minutes}`;
-     } else {
-          time = `${hour}:${minutes}`;
-     }
-
-     if (time === constants.firstNotificationHour ||
-          time === constants.secondNotificationHour ||
-          time === constants.thirdNotificationHour) {
+     if (time() === constants.firstNotificationHour ||
+          time() === constants.secondNotificationHour ||
+          time() === constants.thirdNotificationHour) {
           database.getAllSchedulers().then(function (schedulers) {
                schedulers.forEach(scheduler => {
                     getInfoWallet(scheduler.chatId, scheduler.userId, scheduler.name, constants.esLanguageCode).then(function (message) {
