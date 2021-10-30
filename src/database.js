@@ -48,7 +48,7 @@ function deleteCryptoForUserId(cryptoName, userId, languageCode) {
 
 function deleteSchedulerForUserId(userId, chatId, languageCode) {
      return new Promise(function (resolve, reject) {
-          query = `delete from scheduler where user_id = ${userId} and chat_id = ${chatId};`;
+          let query = `delete from scheduler where user_id = ${userId} and chat_id = ${chatId};`;
 
           queryDatabase(query).then(function (result) {
                helpers.log(result);
@@ -57,6 +57,53 @@ function deleteSchedulerForUserId(userId, chatId, languageCode) {
                helpers.log(err);
                reject(err);
           });
+     });
+};
+
+function eraserAllData(userId, chatId, languageCode) {
+     return new Promise(function (resolve, reject) {
+          let deleteAlertsQuery = `delete from alerts where user_id = ${userId};`
+          let deleteCryptocurrenciesQuery = `delete from cryptocurrencies where user_id = ${userId};`
+          let deleteLowAlertsQuery = `delete from lowalerts where user_id = ${userId};`
+          let deleteSchedulerQuery = `delete from scheduler where user_id = ${userId};`
+          let deleteUpdateQuery = `delete from update where chat_id = ${chatId};`
+
+          queryDatabase(deleteAlertsQuery).then(function (result) {
+               helpers.log(result);
+          }).catch(function (err) {
+               helpers.log(err);
+               reject(err);
+          });
+
+          queryDatabase(deleteCryptocurrenciesQuery).then(function (result) {
+               helpers.log(result);
+          }).catch(function (err) {
+               helpers.log(err);
+               reject(err);
+          });
+
+          queryDatabase(deleteLowAlertsQuery).then(function (result) {
+               helpers.log(result);
+          }).catch(function (err) {
+               helpers.log(err);
+               reject(err);
+          });
+
+          queryDatabase(deleteSchedulerQuery).then(function (result) {
+               helpers.log(result);
+          }).catch(function (err) {
+               helpers.log(err);
+               reject(err);
+          });
+
+          queryDatabase(deleteUpdateQuery).then(function (result) {
+               helpers.log(result);
+          }).catch(function (err) {
+               helpers.log(err);
+               reject(err);
+          });
+
+          resolve(localization.getText("eraserMessageText", languageCode));
      });
 };
 
@@ -531,6 +578,7 @@ function setSchedulerForUserId(userId, chatId, userName, languageCode) {
 module.exports.deleteAlertForId = deleteAlertForId;
 module.exports.deleteCryptoForUserId = deleteCryptoForUserId;
 module.exports.deleteSchedulerForUserId = deleteSchedulerForUserId;
+module.exports.eraserAllData = eraserAllData;
 module.exports.getAllAlerts = getAllAlerts;
 module.exports.getAllAlertsForUserId = getAllAlertsForUserId;
 module.exports.getAllChatId = getAllChatId;

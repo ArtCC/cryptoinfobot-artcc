@@ -113,8 +113,23 @@ bot.onText(/^\/alertas/, (msg) => {
 bot.onText(/^\/baja/, (msg) => {
      let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
+     let userId = msg.from.id;
 
-     helpers.log("Eliminar usuario y datos");
+     let buttonData = [[{
+          text: localization.getText("deleteYesText", languageCode),
+          callback_data: localization.getText("deleteYesText", languageCode)
+     }], [{
+          text: localization.getText("cancelText", languageCode),
+          callback_data: localization.getText("cancelText", languageCode)
+     }]]
+
+     let buttons = {
+          reply_markup: {
+               inline_keyboard: buttonData
+          }
+     }
+
+     bot.sendMessage(chatId, localization.getText("deleteTitleText", languageCode), buttons);
 });
 
 bot.onText(/^\/borrar/, (msg) => {
@@ -384,6 +399,14 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
                bot.sendMessage(chatId, message);
           }).catch(function (err) {
                helpers.log(err);
+          });
+     } else if (data == localization.getText("deleteYesText", languageCode)) {
+          database.eraserAllData(userId, chatId, languageCode).then(function (message) {
+               helpers.log(message);
+               bot.sendMessage(chatId, message);
+          }).catch(function (err) {
+               helpers.log(err);
+               sendErrorMessageToBot(chatId, languageCode);
           });
      } else {
           database.deleteCryptoForUserId(data, userId, languageCode).then(function (message) {

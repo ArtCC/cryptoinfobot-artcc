@@ -54,7 +54,7 @@
     "startCommand": "start",
     "startCommandDescription": "Te doy información sobre mí e inicio mi actividad contigo",
     "eraserCommand": "baja",
-    "eraserCommandDescription": "Elimino todos tus datos definitivamente",
+    "eraserCommandDescription": "Elimino todos los datos que tengo sobre ti definitivamente",
     "success": "Success",
     "chartMessage": "Cartera de %s:\n%s €",
     "lineMessage": "Precio de %s en los últimos %s días.",
@@ -80,5 +80,8 @@
     "upPriceButton": "Subida de precio",
     "downPriceButton": "Bajada de precio",
     "cryptoDonateTitle": "Puedes donar al proyecto mediante criptomonedas. ¡Muchas gracias!\n\n",
-    "cryptoDonateOption": "Criptomonedas"
+    "cryptoDonateOption": "Criptomonedas",
+    "eraserMessageText": "Todos tus datos han sido eliminados correctamente. ¡Muchas gracias!",
+    "deleteTitleText": "¿Seguro que quieres eliminar todos tus datos? No se pueden recuperar",
+    "deleteYesText": "Sí, seguro"
 }

@@ -9,7 +9,7 @@ This bot is anonymous, it does not capture data if it is added to a group and th
 <p>alerta - Activa o borra una alerta de precios para una criptomoneda. Ej: /alerta ethereum 3500</p>
 <p>alertabaja - Activa o borra una alerta de bajada de precios para una criptomoneda. Ej: /alerta cardano 1.50</p>
 <p>alertas - Te muestro todas tus alertas de precios</p>
-<p>baja - Elimino todos tus datos definitivamente</p>
+<p>baja - Elimino todos los datos que tengo sobre ti definitivamente</p>
 <p>borrar - Puedes borrar una criptomoneda de tu cartera</p>
 <p>cartera - Te digo el valor total de tu cartera de criptomonedas</p>
 <p>cripto - Añade una criptomoneda a tu cartera. Ej: /cripto cardano ADA 10</p>
