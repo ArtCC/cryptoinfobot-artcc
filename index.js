@@ -110,6 +110,13 @@ bot.onText(/^\/alertas/, (msg) => {
      bot.sendMessage(chatId, localization.getText("upAndDownTitle", languageCode), buttons);
 });
 
+bot.onText(/^\/baja/, (msg) => {
+     let languageCode = msg.from.language_code;
+     let chatId = msg.chat.id;
+
+     helpers.log("Eliminar usuario y datos");
+});
+
 bot.onText(/^\/borrar/, (msg) => {
      let languageCode = msg.from.language_code;
      let chatId = msg.chat.id;
@@ -175,6 +182,10 @@ bot.onText(/^\/donar/, (msg) => {
                {
                     text: localization.getText("fiveCoinText", languageCode),
                     callback_data: localization.getText("fiveCoinText", languageCode)
+               }],
+               [{
+                    text: localization.getText("cryptoDonateOption", languageCode),
+                    callback_data: localization.getText("cryptoDonateOption", languageCode)
                }],
                [{
                     text: localization.getText("cancelText", languageCode),
@@ -329,6 +340,19 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
           paymentWithAmount(chatId, 300, languageCode);
      } else if (data == localization.getText("fiveCoinText", languageCode)) {
           paymentWithAmount(chatId, 500, languageCode);
+     } else if (data == localization.getText("cryptoDonateOption", languageCode)) {
+          var message = localization.getText("cryptoDonateTitle", languageCode);
+          message += constants.bitcoin;
+          message += constants.cardano;
+          message += constants.ethereum;
+          message += constants.shibaInu;
+          message += constants.vechain;
+          bot.sendMessage(chatId, message, { parse_mode: constants.parseMode }
+          ).then(function (message) {
+               helpers.log(message);
+          }).catch(function (err) {
+               helpers.log(err);
+          });
      } else if (data == localization.getText("cancelText", languageCode)) {
           bot.sendMessage(chatId, localization.getText("noText", languageCode));
      } else if (data.indexOf(localization.getText("deleteCommandText", languageCode)) > -1) {

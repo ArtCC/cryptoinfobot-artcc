@@ -53,6 +53,8 @@
     "priceCommandDescription": "Dime una criptomoneda para darte su precio actual y gráfica por días. Ej: /precio cardano 1",
     "startCommand": "start",
     "startCommandDescription": "Te doy información sobre mí e inicio mi actividad contigo",
+    "eraserCommand": "baja",
+    "eraserCommandDescription": "Elimino todos tus datos definitivamente",
     "success": "Success",
     "chartMessage": "Cartera de %s:\n%s €",
     "lineMessage": "Precio de %s en los últimos %s días.",
@@ -76,5 +78,7 @@
     "deleteDownAlert": "borrar.down",
     "upAndDownTitle": "¿Qué tipo de alertas quieres que te muestre?",
     "upPriceButton": "Subida de precio",
-    "downPriceButton": "Bajada de precio"
+    "downPriceButton": "Bajada de precio",
+    "cryptoDonateTitle": "Puedes donar al proyecto mediante criptomonedas. ¡Muchas gracias!\n\n",
+    "cryptoDonateOption": "Criptomonedas"
 }

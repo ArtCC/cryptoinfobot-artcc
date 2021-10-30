@@ -26,6 +26,10 @@ function getCommands(languageCode) {
         description: localization.getText("alertsCommandDescription", languageCode)
     },
     {
+        command: localization.getText("eraserCommand", languageCode),
+        description: localization.getText("eraserCommandDescription", languageCode)
+    },
+    {
         command: localization.getText("deleteCommand", languageCode),
         description: localization.getText("deleteCommandDescription", languageCode)
     },
