@@ -360,8 +360,6 @@ bot.on('callback_query', function onCallbackQuery(buttonAction) {
           message += constants.bitcoin;
           message += constants.cardano;
           message += constants.ethereum;
-          message += constants.shibaInu;
-          message += constants.vechain;
           bot.sendMessage(chatId, message, { parse_mode: constants.parseMode }
           ).then(function (message) {
                helpers.log(message);

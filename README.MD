@@ -72,11 +72,9 @@ CREATE TABLE UPDATE(
 
 You can help by donating to the project with cryptocurrencies. Thanks!
 
-<p><b>Bitcoin (BTC): </b>bc1qkrh7mrvxzndek447vgzegk5hsl8l405x4v07xx</p>
-<p><b>Cardano (ADA): </b>addr1q935l63rku9pdft4z6lj6v7z5hx7qhxxrr2gvcs7naya4ktrfl4z8dc2z6jh294l95eu9fwdupwvvxx5se3pa86fmtvswyvhv4</p>
-<p><b>Ethereum (ETH): </b>0xA9334474c66ad4e9f510241D4C5253C71f103424</p>
-<p><b>Shiba Inu (SHIB): </b>0xA9334474c66ad4e9f510241D4C5253C71f103424</p>
-<p><b>VeChain (VET): </b>0xF49673f8EC4437A1Fa6860508E7a6bDC2d352aF4</p>
+<p><b>Bitcoin (BTC): </b>3E6E3h2HAhq5bKTE6AUuD7tqZDKP3qXuDt</p>
+<p><b>Cardano (ADA): </b>addr1vysww9j46q5d7h7kedy5nh8xgdtdxw28f34ppqkxnwdg38cttq33m</p>
+<p><b>Ethereum (ETH): </b>0x4698d80aD1845a9C26494E52D5dda20C0E293403</p>
 
 ## LICENSE
 

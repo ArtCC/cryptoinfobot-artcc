@@ -10,9 +10,7 @@ module.exports = {
     secondNotificationHour: "15:00",
     thirdNotificationHour: "22:00",
     esLanguageCode: "es",
-    bitcoin: "<b>Bitcoin (BTC): </b>bc1qkrh7mrvxzndek447vgzegk5hsl8l405x4v07xx\n",
-    cardano: "<b>Cardano (ADA): </b>addr1q935l63rku9pdft4z6lj6v7z5hx7qhxxrr2gvcs7naya4ktrfl4z8dc2z6jh294l95eu9fwdupwvvxx5se3pa86fmtvswyvhv4\n",
-    ethereum: "<b>Ethereum (ETH): </b>0xA9334474c66ad4e9f510241D4C5253C71f103424\n",
-    shibaInu: "<b>Shiba Inu (SHIB): </b>0xA9334474c66ad4e9f510241D4C5253C71f103424\n",
-    vechain: "<b>VeChain (VET): </b>0xF49673f8EC4437A1Fa6860508E7a6bDC2d352aF4\n"
+    bitcoin: "<b>Bitcoin (BTC): </b>3E6E3h2HAhq5bKTE6AUuD7tqZDKP3qXuDt\n",
+    cardano: "<b>Cardano (ADA): </b>addr1vysww9j46q5d7h7kedy5nh8xgdtdxw28f34ppqkxnwdg38cttq33m\n",
+    ethereum: "<b>Ethereum (ETH): </b>0x4698d80aD1845a9C26494E52D5dda20C0E293403"
 };
