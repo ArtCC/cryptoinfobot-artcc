@@ -68,14 +68,6 @@ CREATE TABLE UPDATE(
 );
 ```
 
-## DONATE WITH CRYPTOCURRENCIES
-
-You can help by donating to the project with cryptocurrencies. Thanks!
-
-<p><b>Bitcoin (BTC): </b>3E6E3h2HAhq5bKTE6AUuD7tqZDKP3qXuDt</p>
-<p><b>Cardano (ADA): </b>addr1vysww9j46q5d7h7kedy5nh8xgdtdxw28f34ppqkxnwdg38cttq33m</p>
-<p><b>Ethereum (ETH): </b>0x4698d80aD1845a9C26494E52D5dda20C0E293403</p>
-
 ## LICENSE
 
 This project is free and use <b>MIT license</b>.
