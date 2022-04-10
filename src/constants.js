@@ -10,7 +10,7 @@ module.exports = {
     secondNotificationHour: "15:00",
     thirdNotificationHour: "22:00",
     esLanguageCode: "es",
-    bitcoin: "<b>Bitcoin (BTC): </b>3E6E3h2HAhq5bKTE6AUuD7tqZDKP3qXuDt\n",
-    cardano: "<b>Cardano (ADA): </b>addr1vysww9j46q5d7h7kedy5nh8xgdtdxw28f34ppqkxnwdg38cttq33m\n",
-    ethereum: "<b>Ethereum (ETH): </b>0x4698d80aD1845a9C26494E52D5dda20C0E293403"
+    bitcoin: "<b>Bitcoin (BTC): </b>*****\n",
+    cardano: "<b>Cardano (ADA): </b>*****\n",
+    ethereum: "<b>Ethereum (ETH): </b>*****"
 };
